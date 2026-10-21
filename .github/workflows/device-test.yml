@@ -1,0 +1,115 @@
+name: Device tests
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+  pull_request:
+    paths:
+      - "app/**"
+      - "core/**"
+      - "engine/**"
+      - "designsystem/**"
+      - "codecpack/**"
+      - "scripts/**"
+      - ".github/workflows/**"
+permissions:
+  contents: read
+jobs:
+  android-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    continue-on-error: ${{ matrix.api == 24 }}
+    strategy:
+      fail-fast: false
+      matrix:
+        api: [24, 37]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Remove stale files
+        run: bash scripts/remove-stale-files.sh
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd # v4.0.4
+        with:
+          packages: 'build-tools;36.0.0'
+      - uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
+        with:
+          gradle-version: "9.7.1"
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/.ghcup /usr/local/share/boost "$AGENT_TOOLSDIRECTORY/CodeQL"
+          df -h /
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Update Android cmdline-tools
+        run: |
+          SDK="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+          yes | "$SDK/cmdline-tools/latest/bin/sdkmanager" --install "cmdline-tools;latest" > /dev/null
+          if [ -d "$SDK/cmdline-tools/latest-2" ]; then
+            rm -rf "$SDK/cmdline-tools/latest"
+            mv "$SDK/cmdline-tools/latest-2" "$SDK/cmdline-tools/latest"
+          fi
+      - name: AVD cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-${{ matrix.api }}-x86_64-pixel6-v3
+      - name: Create AVD snapshot
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
+        with:
+          api-level: ${{ matrix.api == 37 && '37.0' || matrix.api }}
+          target: ${{ matrix.api == 24 && 'default' || 'google_apis' }}
+          arch: x86_64
+          profile: pixel_6
+          ram-size: ${{ matrix.api == 24 && '2048M' || '4096M' }}
+          heap-size: 576M
+          disk-size: 6144M
+          force-avd-creation: true
+          emulator-boot-timeout: 600
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "avd ready"
+      - name: Verify AVD target
+        if: matrix.api == 37
+        run: |
+          grep -H '^target=' "$HOME"/.android/avd/*.ini
+          if grep -q '^target=android-0$' "$HOME"/.android/avd/*.ini; then
+            echo "AVD was created with outdated cmdline-tools (target=android-0)"
+            exit 1
+          fi
+      - name: Instrumentation tests
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
+        with:
+          api-level: ${{ matrix.api == 37 && '37.0' || matrix.api }}
+          target: ${{ matrix.api == 24 && 'default' || 'google_apis' }}
+          arch: x86_64
+          profile: pixel_6
+          ram-size: ${{ matrix.api == 24 && '2048M' || '4096M' }}
+          heap-size: 576M
+          disk-size: 6144M
+          force-avd-creation: false
+          emulator-boot-timeout: 600
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: bash scripts/run-full-suite.sh basic-api-${{ matrix.api }} basic
+      - name: Build report
+        if: ${{ always() && hashFiles('build/suite-results/**/results.jsonl') != '' }}
+        run: EXPECTED_DEVICES="basic-api-${{ matrix.api }}" python3 scripts/build-suite-report.py build/suite-results build/suite-report
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: device-test-api-${{ matrix.api }}
+          path: |
+            build/suite-results
+            build/suite-report
+            app/build/reports/androidTests

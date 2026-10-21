@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Frame out</string>
+    <string name="shortcut_capture_short">Capture frame</string>
+    <string name="shortcut_capture_long">Capture a frame from the last video</string>
+    <string name="tile_capture_label">Capture frame</string>
+    <string name="incoming_copy_failed">Couldn\'t keep access to a shared video. Open it from the gallery instead, or free up storage and share again.</string>
+    <string name="incoming_unsupported">This file type can\'t be opened. Share a video, GIF or image instead.</string>
+</resources>

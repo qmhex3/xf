@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="estimate">
+        <item quantity="one">≈ %1$d frame · ~%2$s MB</item>
+        <item quantity="other">≈ %1$d frames · ~%2$s MB</item>
+    </plurals>
+    <plurals name="plan_frames">
+        <item quantity="one">%1$d frame</item>
+        <item quantity="other">%1$d frames</item>
+    </plurals>
+    <plurals name="reduced_quality">
+        <item quantity="one">One frame was saved at reduced resolution because the device decoder could not return it in full size.</item>
+        <item quantity="other">%1$d frames were saved at reduced resolution because the device decoder could not return them in full size.</item>
+    </plurals>
+    <plurals name="reduced_quality_to">
+        <item quantity="one">One frame was saved at %4$d×%5$d instead of the source %2$d×%3$d to fit the device memory.</item>
+        <item quantity="other">%1$d frames were saved at %4$d×%5$d instead of the source %2$d×%3$d to fit the device memory.</item>
+    </plurals>
+    <plurals name="frame_count">
+        <item quantity="one">%1$d frame</item>
+        <item quantity="other">%1$d frames</item>
+    </plurals>
+    <plurals name="content_frames">
+        <item quantity="one">%1$d frame</item>
+        <item quantity="other">%1$d frames</item>
+    </plurals>
+    <plurals name="important_picked">
+        <item quantity="one">Selected the key moment</item>
+        <item quantity="other">Selected %1$d key moments</item>
+    </plurals>
+    <plurals name="sharpest_picked">
+        <item quantity="one">Selected the sharpest frame</item>
+        <item quantity="other">Selected %1$d sharpest frames</item>
+    </plurals>
+    <plurals name="duplicates_picked">
+        <item quantity="one">Selected %1$d duplicate frame</item>
+        <item quantity="other">Selected %1$d duplicate frames</item>
+    </plurals>
+    <plurals name="integrity_dup">
+        <item quantity="one">%1$d frame shares the same timestamp.</item>
+        <item quantity="other">%1$d frames share the same timestamp.</item>
+    </plurals>
+    <plurals name="crop_all_hint">
+        <item quantity="one">Same area for %1$d frame</item>
+        <item quantity="other">Same area for %1$d frames</item>
+    </plurals>
+    <plurals name="crop_all_applied">
+        <item quantity="one">Crop applied to %1$d frame</item>
+        <item quantity="other">Crop applied to %1$d frames</item>
+    </plurals>
+    <plurals name="jump_back">
+        <item quantity="one">Back %1$d frame</item>
+        <item quantity="other">Back %1$d frames</item>
+    </plurals>
+    <plurals name="jump_forward">
+        <item quantity="one">Forward %1$d frame</item>
+        <item quantity="other">Forward %1$d frames</item>
+    </plurals>
+    <plurals name="jump_size">
+        <item quantity="one">Jump size: %1$d frame (tap to change)</item>
+        <item quantity="other">Jump size: %1$d frames (tap to change)</item>
+    </plurals>
+    <plurals name="queue_unsaved">
+        <item quantity="one">%1$d queued frame is not saved. Press back again to leave without saving.</item>
+        <item quantity="other">%1$d queued frames are not saved. Press back again to leave without saving.</item>
+    </plurals>
+    <plurals name="share_limited">
+        <item quantity="one">Sharing the first %1$d frame only</item>
+        <item quantity="other">Sharing the first %1$d frames only</item>
+    </plurals>
+    <plurals name="frames_deleted">
+        <item quantity="one">%1$d frame moved to Deleted</item>
+        <item quantity="other">%1$d frames moved to Deleted</item>
+    </plurals>
+    <plurals name="batch_videos">
+        <item quantity="one">%1$d video</item>
+        <item quantity="other">%1$d videos</item>
+    </plurals>
+</resources>

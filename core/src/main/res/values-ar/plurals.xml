@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="estimate">
+        <item quantity="one">≈ إطار واحد · ~%2$s ميجابايت</item>
+        <item quantity="two">≈ إطاران · ~%2$s ميجابايت</item>
+        <item quantity="few">≈ %1$d إطارات · ~%2$s ميجابايت</item>
+        <item quantity="many">≈ %1$d إطارًا · ~%2$s ميجابايت</item>
+        <item quantity="other">≈ %1$d إطار · ~%2$s ميجابايت</item>
+    </plurals>
+    <plurals name="plan_frames">
+        <item quantity="one">إطار واحد</item>
+        <item quantity="two">إطاران</item>
+        <item quantity="few">%1$d إطارات</item>
+        <item quantity="many">%1$d إطارًا</item>
+        <item quantity="other">%1$d إطار</item>
+    </plurals>
+    <plurals name="reduced_quality">
+        <item quantity="one">حُفظ إطار واحد بدقة أقل لأن مفكّك الجهاز لم يعدّه بحجمه الكامل.</item>
+        <item quantity="two">حُفظ إطاران بدقة أقل لأن مفكّك الجهاز لم يعدّهما بحجمهما الكامل.</item>
+        <item quantity="few">حُفظت %1$d إطارات بدقة أقل لأن مفكّك الجهاز لم يعدّها بحجمها الكامل.</item>
+        <item quantity="many">حُفظ %1$d إطارًا بدقة أقل لأن مفكّك الجهاز لم يعدّها بحجمها الكامل.</item>
+        <item quantity="other">حُفظ %1$d إطار بدقة أقل لأن مفكّك الجهاز لم يعدّها بحجمها الكامل.</item>
+    </plurals>
+    <plurals name="reduced_quality_to">
+        <item quantity="one">حُفظ إطار واحد بدقة %4$d×%5$d بدل دقة المصدر %2$d×%3$d لتناسب ذاكرة الجهاز.</item>
+        <item quantity="two">حُفظ إطاران بدقة %4$d×%5$d بدل دقة المصدر %2$d×%3$d لتناسب ذاكرة الجهاز.</item>
+        <item quantity="few">حُفظت %1$d إطارات بدقة %4$d×%5$d بدل دقة المصدر %2$d×%3$d لتناسب ذاكرة الجهاز.</item>
+        <item quantity="many">حُفظ %1$d إطارًا بدقة %4$d×%5$d بدل دقة المصدر %2$d×%3$d لتناسب ذاكرة الجهاز.</item>
+        <item quantity="other">حُفظ %1$d إطار بدقة %4$d×%5$d بدل دقة المصدر %2$d×%3$d لتناسب ذاكرة الجهاز.</item>
+    </plurals>
+    <plurals name="frame_count">
+        <item quantity="one">إطار واحد</item>
+        <item quantity="two">إطاران</item>
+        <item quantity="few">%1$d إطارات</item>
+        <item quantity="many">%1$d إطارًا</item>
+        <item quantity="other">%1$d إطار</item>
+    </plurals>
+    <plurals name="content_frames">
+        <item quantity="one">إطار واحد</item>
+        <item quantity="two">إطاران</item>
+        <item quantity="few">%1$d إطارات</item>
+        <item quantity="many">%1$d إطارًا</item>
+        <item quantity="other">%1$d إطار</item>
+    </plurals>
+    <plurals name="important_picked">
+        <item quantity="one">تم تحديد أهم لقطة</item>
+        <item quantity="two">تم تحديد أهم لقطتين</item>
+        <item quantity="few">تم تحديد %1$d من أهم اللقطات</item>
+        <item quantity="many">تم تحديد %1$d من أهم اللقطات</item>
+        <item quantity="other">تم تحديد %1$d من أهم اللقطات</item>
+    </plurals>
+    <plurals name="sharpest_picked">
+        <item quantity="one">تم تحديد أوضح إطار</item>
+        <item quantity="two">تم تحديد أوضح إطارين</item>
+        <item quantity="few">تم تحديد %1$d من أوضح الإطارات</item>
+        <item quantity="many">تم تحديد %1$d من أوضح الإطارات</item>
+        <item quantity="other">تم تحديد %1$d من أوضح الإطارات</item>
+    </plurals>
+    <plurals name="duplicates_picked">
+        <item quantity="one">تم تحديد إطار مكرر واحد</item>
+        <item quantity="two">تم تحديد إطارين مكررين</item>
+        <item quantity="few">تم تحديد %1$d إطارات مكررة</item>
+        <item quantity="many">تم تحديد %1$d إطارًا مكررًا</item>
+        <item quantity="other">تم تحديد %1$d إطار مكرر</item>
+    </plurals>
+    <plurals name="integrity_dup">
+        <item quantity="one">إطار واحد له التوقيت نفسه.</item>
+        <item quantity="two">إطاران لهما التوقيت نفسه.</item>
+        <item quantity="few">%1$d إطارات لها التوقيت نفسه.</item>
+        <item quantity="many">%1$d إطارًا لها التوقيت نفسه.</item>
+        <item quantity="other">%1$d إطار لها التوقيت نفسه.</item>
+    </plurals>
+    <plurals name="crop_all_hint">
+        <item quantity="one">المنطقة نفسها لإطار واحد</item>
+        <item quantity="two">المنطقة نفسها لإطارين</item>
+        <item quantity="few">المنطقة نفسها لـ %1$d إطارات</item>
+        <item quantity="many">المنطقة نفسها لـ %1$d إطارًا</item>
+        <item quantity="other">المنطقة نفسها لـ %1$d إطار</item>
+    </plurals>
+    <plurals name="crop_all_applied">
+        <item quantity="one">طُبّق القص على إطار واحد</item>
+        <item quantity="two">طُبّق القص على إطارين</item>
+        <item quantity="few">طُبّق القص على %1$d إطارات</item>
+        <item quantity="many">طُبّق القص على %1$d إطارًا</item>
+        <item quantity="other">طُبّق القص على %1$d إطار</item>
+    </plurals>
+    <plurals name="jump_back">
+        <item quantity="one">رجوع إطار واحد</item>
+        <item quantity="two">رجوع إطارين</item>
+        <item quantity="few">رجوع %1$d إطارات</item>
+        <item quantity="many">رجوع %1$d إطارًا</item>
+        <item quantity="other">رجوع %1$d إطار</item>
+    </plurals>
+    <plurals name="jump_forward">
+        <item quantity="one">تقدّم إطار واحد</item>
+        <item quantity="two">تقدّم إطارين</item>
+        <item quantity="few">تقدّم %1$d إطارات</item>
+        <item quantity="many">تقدّم %1$d إطارًا</item>
+        <item quantity="other">تقدّم %1$d إطار</item>
+    </plurals>
+    <plurals name="jump_size">
+        <item quantity="one">حجم القفزة: إطار واحد (اضغط للتغيير)</item>
+        <item quantity="two">حجم القفزة: إطاران (اضغط للتغيير)</item>
+        <item quantity="few">حجم القفزة: %1$d إطارات (اضغط للتغيير)</item>
+        <item quantity="many">حجم القفزة: %1$d إطارًا (اضغط للتغيير)</item>
+        <item quantity="other">حجم القفزة: %1$d إطار (اضغط للتغيير)</item>
+    </plurals>
+    <plurals name="queue_unsaved">
+        <item quantity="one">إطار واحد في الطابور لم يُحفظ. اضغط رجوع مرة أخرى للخروج دون حفظ.</item>
+        <item quantity="two">إطاران في الطابور لم يُحفظا. اضغط رجوع مرة أخرى للخروج دون حفظ.</item>
+        <item quantity="few">%1$d إطارات في الطابور لم تُحفظ. اضغط رجوع مرة أخرى للخروج دون حفظ.</item>
+        <item quantity="many">%1$d إطارًا في الطابور لم تُحفظ. اضغط رجوع مرة أخرى للخروج دون حفظ.</item>
+        <item quantity="other">%1$d إطار في الطابور لم تُحفظ. اضغط رجوع مرة أخرى للخروج دون حفظ.</item>
+    </plurals>
+    <plurals name="share_limited">
+        <item quantity="one">تتم مشاركة أول إطار فقط</item>
+        <item quantity="two">تتم مشاركة أول إطارين فقط</item>
+        <item quantity="few">تتم مشاركة أول %1$d إطارات فقط</item>
+        <item quantity="many">تتم مشاركة أول %1$d إطارًا فقط</item>
+        <item quantity="other">تتم مشاركة أول %1$d إطار فقط</item>
+    </plurals>
+    <plurals name="frames_deleted">
+        <item quantity="one">نُقل إطار واحد إلى المحذوفة</item>
+        <item quantity="two">نُقل إطاران إلى المحذوفة</item>
+        <item quantity="few">نُقلت %1$d إطارات إلى المحذوفة</item>
+        <item quantity="many">نُقل %1$d إطارًا إلى المحذوفة</item>
+        <item quantity="other">نُقل %1$d إطار إلى المحذوفة</item>
+    </plurals>
+    <plurals name="batch_videos">
+        <item quantity="one">فيديو واحد</item>
+        <item quantity="two">فيديوان</item>
+        <item quantity="few">%1$d فيديوهات</item>
+        <item quantity="many">%1$d فيديو</item>
+        <item quantity="other">%1$d فيديو</item>
+    </plurals>
+</resources>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <inset android:insetLeft="7%" android:insetTop="7%" android:insetRight="7%" android:insetBottom="7%">
+            <shape android:shape="rectangle">
+                <solid android:color="@color/ic_launcher_bg_sunset_light" />
+                <corners android:radius="12dp" />
+            </shape>
+        </inset>
+    </item>
+    <item android:drawable="@drawable/ic_launcher_fg_sunset_light" />
+</layer-list>

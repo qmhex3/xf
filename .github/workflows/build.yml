@@ -1,0 +1,200 @@
+name: Build
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      HAS_KEYSTORE_SECRET: ${{ secrets.KEYSTORE_BASE64 != '' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Remove stale files
+        run: bash scripts/remove-stale-files.sh
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd # v4.0.4
+        with:
+          packages: 'build-tools;36.0.0'
+      - uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
+        with:
+          gradle-version: "9.7.1"
+      - name: Check lines
+        id: check_lines
+        continue-on-error: true
+        run: bash scripts/check-lines.sh
+      - name: Check comments
+        id: check_comments
+        continue-on-error: true
+        run: bash scripts/check-comments.sh
+      - name: Check binaries
+        id: check_binaries
+        continue-on-error: true
+        run: bash scripts/check-binaries.sh
+      - name: Check FFmpeg is LGPL-only (no GPL or nonfree flags)
+        id: check_ffmpeg_license
+        continue-on-error: true
+        run: |
+          bash scripts/test-check-ffmpeg-license.sh
+          bash scripts/check-ffmpeg-license.sh --source
+      - name: Check function lines
+        id: check_function_lines
+        continue-on-error: true
+        run: bash scripts/check-function-lines.sh
+      - name: Check contrast
+        id: check_contrast
+        continue-on-error: true
+        run: python3 scripts/check-contrast.py
+      - name: Check fonts
+        id: check_fonts
+        continue-on-error: true
+        run: bash scripts/check-fonts.sh
+      - name: Merge manifests
+        id: merge_manifests
+        continue-on-error: true
+        run: gradle :app:processDebugMainManifest :app:processReleaseMainManifest --no-daemon
+      - name: Check merged manifest
+        id: check_merged_manifest
+        continue-on-error: true
+        run: bash scripts/check-merged-manifest.sh
+      - name: Compile all sources
+        id: compile_all
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          gradle compileDebugKotlin compileReleaseKotlin compileDebugUnitTestKotlin compileDebugAndroidTestKotlin --continue --no-daemon 2>&1 | tee compile-all.log
+      - name: Show all compile errors
+        if: always() && steps.compile_all.outcome == 'failure'
+        run: |
+          grep -E "^e: " compile-all.log | sort -u || true
+      - name: Lint
+        id: lint
+        continue-on-error: true
+        run: gradle :app:lintDebug --continue --no-daemon
+      - name: Show all lint errors
+        if: always() && steps.lint.outcome == 'failure'
+        run: cat app/build/intermediates/lint_intermediate_text_report/debug/lintReportDebug/lint-results-debug.txt || true
+      - name: Unit tests
+        id: unit_tests
+        continue-on-error: true
+        run: gradle :engine:test :core:test :codecpack:test :app:testDebugUnitTest --continue --no-daemon
+      - name: Decode keystore
+        if: env.HAS_KEYSTORE_SECRET == 'true'
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: |
+          echo "$KEYSTORE_BASE64" | base64 -d > app/release.keystore
+          echo "HAS_KEYSTORE=true" >> "$GITHUB_ENV"
+      - name: Assemble debug
+        id: assemble_debug
+        continue-on-error: true
+        run: gradle :app:assembleDebug --continue --no-daemon
+      - name: Warn about unsigned release
+        if: env.HAS_KEYSTORE_SECRET != 'true'
+        run: echo "::warning title=Unsigned release::KEYSTORE_BASE64 is not set. The release APK is unsigned and cannot be installed."
+      - name: Assemble release
+        id: assemble_release
+        continue-on-error: true
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          CERT_SHA256: ${{ secrets.CERT_SHA256 }}
+          UNSIGNED_FLAG: ${{ env.HAS_KEYSTORE_SECRET != 'true' && '-PallowUnsignedRelease=true' || '' }}
+        run: gradle :app:assembleRelease $UNSIGNED_FLAG --continue --no-daemon
+      - name: Check APK permissions
+        id: check_apk_permissions
+        continue-on-error: true
+        run: bash scripts/check-apk-permissions.sh
+      - name: Size report
+        id: size_report
+        continue-on-error: true
+        run: bash scripts/size-report.sh
+      - name: Check 16KB APK alignment
+        id: check_16kb
+        continue-on-error: true
+        run: |
+          ZIPALIGN="$(find "$ANDROID_HOME/build-tools" -name zipalign -type f | sort -V | tail -1)"
+          test -x "$ZIPALIGN"
+          for apk in app/build/outputs/apk/release/*.apk; do
+            "$ZIPALIGN" -c -P 16 -v 4 "$apk"
+          done
+      - name: Upload release APK (arm64-v8a)
+        if: steps.assemble_debug.outcome == 'success' && steps.assemble_release.outcome == 'success'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: apk-release-arm64-v8a
+          path: app/build/outputs/apk/release/*-arm64-v8a-*.apk
+          if-no-files-found: error
+      - name: Upload release APK (armeabi-v7a)
+        if: steps.assemble_debug.outcome == 'success' && steps.assemble_release.outcome == 'success'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: apk-release-armeabi-v7a
+          path: app/build/outputs/apk/release/*-armeabi-v7a-*.apk
+          if-no-files-found: error
+      - name: Upload release APK (x86_64)
+        if: steps.assemble_debug.outcome == 'success' && steps.assemble_release.outcome == 'success'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: apk-release-x86_64
+          path: app/build/outputs/apk/release/*-x86_64-*.apk
+          if-no-files-found: error
+      - name: Upload debug APK (arm64-v8a)
+        if: steps.assemble_debug.outcome == 'success' && steps.assemble_release.outcome == 'success'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: apk-debug-arm64-v8a
+          path: app/build/outputs/apk/debug/*-arm64-v8a-*.apk
+          if-no-files-found: error
+      - name: Upload debug APK (armeabi-v7a)
+        if: steps.assemble_debug.outcome == 'success' && steps.assemble_release.outcome == 'success'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: apk-debug-armeabi-v7a
+          path: app/build/outputs/apk/debug/*-armeabi-v7a-*.apk
+          if-no-files-found: error
+      - name: Upload debug APK (x86_64)
+        if: steps.assemble_debug.outcome == 'success' && steps.assemble_release.outcome == 'success'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: apk-debug-x86_64
+          path: app/build/outputs/apk/debug/*-x86_64-*.apk
+          if-no-files-found: error
+      - name: Upload mapping
+        if: steps.assemble_debug.outcome == 'success' && steps.assemble_release.outcome == 'success'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: mapping
+          path: app/build/outputs/mapping/**/mapping.txt
+          if-no-files-found: ignore
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: reports
+          path: |
+            app/build/reports
+            */build/reports/tests
+            */build/test-results
+          if-no-files-found: ignore
+      - name: Summarize all failures
+        if: always()
+        env:
+          STEPS_JSON: ${{ toJSON(steps) }}
+        run: |
+          python3 - <<'PY'
+          import json, os
+          steps = json.loads(os.environ["STEPS_JSON"])
+          failed = [k for k, v in steps.items() if v.get("outcome") == "failure"]
+          for k in failed:
+              print("::error title=Step failed::" + k)
+          print("Failed steps (%d): %s" % (len(failed), ", ".join(failed) or "none"))
+          raise SystemExit(1 if failed else 0)
+          PY

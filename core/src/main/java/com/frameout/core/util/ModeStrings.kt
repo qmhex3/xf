@@ -1,0 +1,46 @@
+package com.frameout.core.util
+
+import com.frameout.core.R
+
+object ModeStrings {
+    private fun s(id: Int, vararg args: Any): String = StringSource.get(id, *args)
+    fun framesLabel() = s(R.string.mode_frames_label)
+    fun timeLabel() = s(R.string.mode_time_label)
+    fun countLabel() = s(R.string.mode_count_label)
+    fun helpBlurry() = s(R.string.help_blurry)
+    fun helpDuplicates() = s(R.string.help_duplicates)
+    fun modeHelp(kind: String) = when (kind) {
+        "every_n" -> s(R.string.help_every_n)
+        "every_time" -> s(R.string.help_every_time)
+        "keyframes" -> s(R.string.help_keyframes)
+        "fixed" -> s(R.string.help_fixed)
+        "scene" -> s(R.string.help_scene)
+        "slides" -> s(R.string.help_slides)
+        else -> s(R.string.help_every_frame)
+    }
+    fun seconds() = s(R.string.unit_seconds)
+    fun millis() = s(R.string.unit_millis)
+    fun about() = s(R.string.about)
+    fun aboutVersion(version: String) = s(R.string.about_version, version)
+    fun aboutTagline() = s(R.string.about_tagline)
+    fun aboutConnectTitle() = s(R.string.about_connect_title)
+    fun aboutYoutubeTitle() = s(R.string.about_youtube_title)
+    fun aboutYoutubeBody() = s(R.string.about_youtube_body)
+    fun aboutEmailTitle() = s(R.string.about_email_title)
+    fun aboutEmailBody() = s(R.string.about_email_body)
+    fun aboutEmailSubject() = s(R.string.about_email_subject)
+    fun aboutEmailCopied() = s(R.string.about_email_copied)
+    fun aboutOfflineTitle() = s(R.string.about_offline_title)
+    fun aboutOfflineBody() = s(R.string.about_offline_body)
+    fun aboutProTitle() = s(R.string.about_pro_title)
+    fun aboutProBody() = s(R.string.about_pro_body)
+    fun aboutLicensesTitle() = s(R.string.about_licenses_title)
+    fun aboutLicensesBody() = s(R.string.about_licenses_body)
+    fun aboutCodecTitle() = s(R.string.about_codec_title)
+    fun aboutCodecBody() = s(R.string.about_codec_body)
+    fun aboutCodecMissing() = s(R.string.about_codec_missing)
+    fun aboutCodecLegacy() = s(R.string.about_codec_legacy)
+    fun aboutCodecBuild(versions: String, serial: String) = s(R.string.about_codec_build, versions, serial)
+    fun aboutLicenseShow() = s(R.string.about_license_show)
+    fun aboutLicenseHide() = s(R.string.about_license_hide)
+}

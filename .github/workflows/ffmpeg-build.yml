@@ -1,0 +1,90 @@
+name: FFmpeg Codec Pack
+on:
+  schedule:
+    - cron: "0 3 * * 1"
+  workflow_dispatch:
+    inputs:
+      ffmpeg_version:
+        description: FFmpeg version
+        default: "9.0.2"
+        required: true
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      HAS_SIGNING_KEY: ${{ secrets.CODECPACK_SIGNING_KEY_PEM != '' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd # v4.0.4
+        with:
+          packages: 'build-tools;36.0.0'
+      - name: Install NDK
+        run: |
+          sdkmanager --install "ndk;30.0.16248370"
+          echo "ANDROID_NDK_HOME=$ANDROID_SDK_ROOT/ndk/30.0.16248370" >> "$GITHUB_ENV"
+      - uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
+        with:
+          gradle-version: "9.7.1"
+      - name: Install tools
+        run: sudo apt-get update && sudo apt-get install -y yasm nasm pkg-config meson ninja-build
+      - name: Verify meson and ninja
+        run: |
+          meson --version
+          ninja --version
+      - name: Verify requested FFmpeg version
+        env:
+          FFMPEG_VERSION_OVERRIDE: ${{ github.event.inputs.ffmpeg_version }}
+        run: bash scripts/verify-versions.sh
+      - name: Self-test FFmpeg component checker
+        run: bash scripts/test-check-ffmpeg-components.sh
+      - name: Self-test FFmpeg license checker
+        run: bash scripts/test-check-ffmpeg-license.sh
+      - name: Check configure flags are LGPL-only
+        run: bash scripts/check-ffmpeg-license.sh --source
+      - name: Build LGPL FFmpeg
+        env:
+          FFMPEG_VERSION: ${{ github.event.inputs.ffmpeg_version }}
+        run: bash scripts/build-ffmpeg.sh build/ffmpeg
+      - name: Verify built libraries report LGPL 2.1 or later
+        run: bash scripts/check-ffmpeg-license.sh --binaries codecpack/src/main/jniLibs
+      - name: Build codec wrapper
+        run: gradle :codecpack:assembleRelease --no-daemon
+      - name: Package codec pack
+        if: env.HAS_SIGNING_KEY == 'true'
+        env:
+          CODECPACK_SIGNING_KEY_PEM: ${{ secrets.CODECPACK_SIGNING_KEY_PEM }}
+        run: bash scripts/package-codecpack.sh
+      - name: Verify codec pack carries signed COPYING files
+        if: env.HAS_SIGNING_KEY == 'true'
+        run: bash scripts/check-ffmpeg-license.sh --pack dist/frameout-codecpack.zip
+      - name: Verify AV1 decoder is built in
+        run: |
+          for abi in arm64-v8a armeabi-v7a x86_64; do
+            grep -aq 'libdav1d' "codecpack/src/main/jniLibs/$abi/libavcodec.so" || { echo "libdav1d missing in $abi"; exit 1; }
+          done
+      - name: Verify 16KB alignment
+        run: |
+          READELF="$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-readelf"
+          mapfile -t libs < <({ find codecpack/src/main/jniLibs -type f -name '*.so'; find codecpack/build -type f -name 'libframeout_ffmpeg.so'; } | sort -u)
+          test "${#libs[@]}" -gt 0
+          for so in "${libs[@]}"; do
+            "$READELF" -lW "$so" | grep LOAD
+            if "$READELF" -lW "$so" | awk '/LOAD/ {print $NF}' | grep -v '^0x4000$' >/dev/null; then
+              echo "Invalid 16KB LOAD alignment: $so"
+              exit 1
+            fi
+          done
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: env.HAS_SIGNING_KEY == 'true'
+        with:
+          name: frameout-codecpack
+          path: dist/frameout-codecpack.zip
+      - name: Verify native versions
+        run: bash scripts/verify-native-versions.sh

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <shortcut
+        tools:targetApi="25"
+        android:shortcutId="capture_frame"
+        android:enabled="true"
+        android:icon="@drawable/ic_capture"
+        android:shortcutShortLabel="@string/shortcut_capture_short"
+        android:shortcutLongLabel="@string/shortcut_capture_long">
+        <intent
+            android:action="com.frameout.CAPTURE_FRAME"
+            android:targetPackage="com.frameout.app"
+            android:targetClass="com.frameout.app.MainActivity" />
+    </shortcut>
+</shortcuts>

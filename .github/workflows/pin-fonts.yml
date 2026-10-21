@@ -1,0 +1,28 @@
+name: Pin fonts
+on:
+  workflow_dispatch:
+    inputs:
+      plex_tag:
+        description: IBM Plex release tag
+        default: v5.2.0
+        required: true
+      fonttools_version:
+        description: fonttools version
+        default: "4.64.0"
+        required: true
+permissions:
+  contents: read
+jobs:
+  pin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Generate lock files
+        run: bash scripts/pin-fonts.sh "${{ github.event.inputs.plex_tag }}" "${{ github.event.inputs.fonttools_version }}"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: font-locks
+          path: |
+            scripts/fonts.lock
+            scripts/fonttools-requirements.txt
+          if-no-files-found: error

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <cache-path name="diagnostics" path="diag/" />
+    <cache-path name="share" path="frameout_share/" />
+    <external-path name="pictures" path="Pictures/FrameOut/" />
+    <external-path name="dcim" path="DCIM/FrameOut/" />
+    <external-path name="movies" path="Movies/FrameOut/" />
+    <external-path name="documents" path="Documents/FrameOut/" />
+</paths>

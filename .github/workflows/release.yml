@@ -1,0 +1,134 @@
+name: Release
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag name e.g. v1.0.0"
+        required: true
+        default: "v1.0.0"
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    env:
+      HAS_KEYSTORE_SECRET: ${{ secrets.KEYSTORE_BASE64 != '' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && format('refs/tags/{0}', github.event.inputs.tag) || github.ref }}
+      - name: Remove stale files
+        run: bash scripts/remove-stale-files.sh
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd # v4.0.4
+        with:
+          packages: 'build-tools;36.0.0'
+      - uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
+        with:
+          gradle-version: "9.7.1"
+      - name: Decode keystore
+        if: env.HAS_KEYSTORE_SECRET == 'true'
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: |
+          echo "$KEYSTORE_BASE64" | base64 -d > app/release.keystore
+          echo "HAS_KEYSTORE=true" >> "$GITHUB_ENV"
+      - name: Check FFmpeg is LGPL-only (no GPL or nonfree flags)
+        run: |
+          bash scripts/test-check-ffmpeg-license.sh
+          bash scripts/check-ffmpeg-license.sh --source
+      - name: Check lines and comments
+        run: |
+          bash scripts/check-lines.sh
+          bash scripts/check-comments.sh
+          bash scripts/check-binaries.sh
+          bash scripts/check-function-lines.sh
+          python3 scripts/check-contrast.py
+      - name: Merge manifests
+        run: gradle :app:processDebugMainManifest :app:processReleaseMainManifest --no-daemon
+      - name: Check merged manifest
+        run: bash scripts/check-merged-manifest.sh
+      - name: Lint
+        run: gradle :app:lintRelease --no-daemon
+      - name: Unit tests
+        run: gradle :engine:test :core:test :codecpack:test --no-daemon
+      - name: Require signing configuration
+        run: |
+          test "${HAS_KEYSTORE:-}" = "true"
+          test -n "${KEYSTORE_PASSWORD:-}"
+          test -n "${KEY_ALIAS:-}"
+          test -n "${KEY_PASSWORD:-}"
+          test -n "${CERT_SHA256:-}"
+        env:
+          CERT_SHA256: ${{ secrets.CERT_SHA256 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      - name: Check fonts
+        run: bash scripts/check-fonts.sh
+      - name: Install NDK and FFmpeg build tools
+        run: |
+          sdkmanager --install "ndk;30.0.16248370"
+          echo "ANDROID_NDK_HOME=$ANDROID_SDK_ROOT/ndk/30.0.16248370" >> "$GITHUB_ENV"
+          sudo apt-get update && sudo apt-get install -y yasm nasm pkg-config meson ninja-build
+      - name: Build LGPL FFmpeg into the app
+        run: |
+          bash scripts/build-ffmpeg.sh build/ffmpeg
+          bash scripts/check-ffmpeg-license.sh --binaries codecpack/src/main/jniLibs
+          mkdir -p codecpack/src/main/assets
+          cp build/ffmpeg/src/ffmpeg/COPYING.LGPLv2.1 codecpack/src/main/assets/COPYING.LGPLv2.1
+          cp build/ffmpeg/src/dav1d/COPYING codecpack/src/main/assets/COPYING.dav1d
+          printf 'FFmpeg %s\nlibdav1d %s (static, BSD-2-Clause)\n' "$(cat build/ffmpeg/FFMPEG_VERSION.txt)" "$(cat build/ffmpeg/DAV1D_VERSION.txt)" > codecpack/src/main/assets/BUNDLED_VERSIONS.txt
+      - name: Assemble signed release
+        env:
+          CERT_SHA256: ${{ secrets.CERT_SHA256 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: gradle :app:assembleRelease --no-daemon
+      - name: Recompress release APKs with Zopfli
+        env:
+          CERT_SHA256: ${{ secrets.CERT_SHA256 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: bash scripts/recompress-apk.sh
+      - name: Check 16KB APK alignment
+        run: |
+          for apk in app/build/outputs/apk/release/*.apk; do
+            zipalign -c -P 16 -v 4 "$apk"
+          done
+      - name: Check APK permissions
+        run: bash scripts/check-apk-permissions.sh
+      - name: Size report
+        run: bash scripts/size-report.sh
+      - name: Collect APKs
+        run: |
+          mkdir -p dist
+          find app/build/outputs/apk -name "*.apk" -type f -exec cp {} dist/ \;
+          (cd dist && sha256sum *.apk > SHA256SUMS && sha256sum -c SHA256SUMS)
+          ls -la dist/
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3.0.0
+        with:
+          subject-path: dist/*.apk
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
+        with:
+          tag_name: ${{ github.event.inputs.tag || github.ref_name }}
+          name: Frame out ${{ github.event.inputs.tag || github.ref_name }}
+          body_path: CHANGELOG.md
+          files: |
+            dist/*.apk
+            dist/SHA256SUMS
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

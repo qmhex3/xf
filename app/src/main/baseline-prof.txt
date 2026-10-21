@@ -1,0 +1,9 @@
+Lcom/frameout/app/MainActivity;
+Lcom/frameout/app/FrameOutApp;
+Lcom/frameout/app/MainContentKt;
+Lcom/frameout/app/library/LibraryScreenKt;
+Lcom/frameout/app/frames/FramesScreenKt;
+Lcom/frameout/app/viewer/ViewerScreenKt;
+Lcom/frameout/designsystem/theme/ThemeKt;
+Lcom/frameout/core/prefs/AppPrefs;
+Lcom/frameout/core/db/AppDatabase;

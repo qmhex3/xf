@@ -1,0 +1,260 @@
+name: Full suite
+on:
+  schedule:
+    - cron: "0 1 * * *"
+  workflow_dispatch:
+    inputs:
+      api_levels:
+        description: JSON array of API levels
+        default: "[24,29,34,37]"
+        required: true
+      seed:
+        description: Stress test seed
+        default: "7"
+        required: false
+env:
+  FFMPEG_VERSION: "9.0.2"
+  NDK_VERSION: "30.0.16248370"
+permissions:
+  contents: read
+jobs:
+  fixtures:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Remove stale files
+        run: bash scripts/remove-stale-files.sh
+      - name: Install ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Generate fixtures
+        run: bash scripts/prepare-fixtures.sh build/fixtures
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: fixtures
+          path: build/fixtures
+          if-no-files-found: error
+  native:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd # v4.0.4
+        with:
+          packages: 'build-tools;36.0.0'
+      - name: Install NDK
+        run: |
+          sdkmanager --install "ndk;${NDK_VERSION}"
+          echo "ANDROID_NDK_HOME=$ANDROID_SDK_ROOT/ndk/${NDK_VERSION}" >> "$GITHUB_ENV"
+      - name: Install tools
+        run: sudo apt-get update && sudo apt-get install -y yasm nasm pkg-config meson ninja-build
+      - name: Native cache
+        id: native-cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            codecpack/src/main/jniLibs
+            codecpack/src/main/cpp/ffmpeg
+          key: native-${{ env.FFMPEG_VERSION }}-${{ env.NDK_VERSION }}-${{ hashFiles('scripts/build-ffmpeg.sh') }}
+      - name: Build FFmpeg
+        if: steps.native-cache.outputs.cache-hit != 'true'
+        run: bash scripts/build-ffmpeg.sh build/ffmpeg
+      - name: Verify built libraries report LGPL 2.1 or later
+        run: bash scripts/check-ffmpeg-license.sh --binaries codecpack/src/main/jniLibs
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: native-libs
+          path: |
+            codecpack/src/main/jniLibs
+            codecpack/src/main/cpp/ffmpeg
+          if-no-files-found: error
+  emulators:
+    needs: [fixtures, native]
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        api: ${{ fromJSON(github.event.inputs.api_levels || '[24,29,34,37]') }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd # v4.0.4
+        with:
+          packages: 'build-tools;36.0.0'
+      - name: Install NDK
+        run: |
+          sdkmanager --install "ndk;${NDK_VERSION}"
+          echo "ANDROID_NDK_HOME=$ANDROID_SDK_ROOT/ndk/${NDK_VERSION}" >> "$GITHUB_ENV"
+      - uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
+        with:
+          gradle-version: "9.7.1"
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: fixtures
+          path: build/fixtures
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: native-libs
+          path: codecpack/src/main
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/.ghcup /usr/local/share/boost "$AGENT_TOOLSDIRECTORY/CodeQL"
+          df -h /
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Update Android cmdline-tools
+        run: |
+          SDK="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+          yes | "$SDK/cmdline-tools/latest/bin/sdkmanager" --install "cmdline-tools;latest" > /dev/null
+          if [ -d "$SDK/cmdline-tools/latest-2" ]; then
+            rm -rf "$SDK/cmdline-tools/latest"
+            mv "$SDK/cmdline-tools/latest-2" "$SDK/cmdline-tools/latest"
+          fi
+      - name: AVD cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-${{ matrix.api }}-x86_64-pixel6-full-v2
+      - name: Create AVD snapshot
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
+        with:
+          api-level: ${{ matrix.api == 37 && '37.0' || matrix.api }}
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          ram-size: 6144M
+          heap-size: 1024M
+          disk-size: 6144M
+          force-avd-creation: true
+          emulator-boot-timeout: 300
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "avd ready"
+      - name: Verify AVD target
+        if: matrix.api == 37
+        run: |
+          grep -H '^target=' "$HOME"/.android/avd/*.ini
+          if grep -q '^target=android-0$' "$HOME"/.android/avd/*.ini; then
+            echo "AVD was created with outdated cmdline-tools (target=android-0)"
+            exit 1
+          fi
+      - name: Full suite
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
+        with:
+          api-level: ${{ matrix.api == 37 && '37.0' || matrix.api }}
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          ram-size: 6144M
+          heap-size: 1024M
+          disk-size: 6144M
+          force-avd-creation: false
+          emulator-boot-timeout: 300
+          emulator-options: -verbose -show-kernel -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: bash scripts/run-full-suite.sh api-${{ matrix.api }} all
+        continue-on-error: true
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: suite-api-${{ matrix.api }}
+          path: build/suite-results
+  report:
+    needs: emulators
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: suite-api-*
+          path: build/suite-results
+          merge-multiple: false
+      - name: Flatten results
+        run: |
+          mkdir -p build/flat
+          for dir in build/suite-results/suite-api-*; do
+            for sub in "$dir"/*; do
+              [ -d "$sub" ] && cp -R "$sub" build/flat/
+            done
+          done
+      - name: Build matrix report
+        run: |
+          expected="${{ github.event.inputs.api_levels || '[24,29,34,37]' }}"
+          devices="$(python3 -c 'import json,sys; print(",".join(f"api-{value}" for value in json.loads(sys.argv[1])))' "$expected")"
+          EXPECTED_DEVICES="$devices" python3 scripts/build-suite-report.py build/flat build/suite-report
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: suite-report
+          path: build/suite-report
+  firebase:
+    needs: native
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      HAS_FIREBASE: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY != '' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        if: env.HAS_FIREBASE == 'true'
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        if: env.HAS_FIREBASE == 'true'
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd # v4.0.4
+        if: env.HAS_FIREBASE == 'true'
+        with:
+          packages: 'build-tools;36.0.0'
+      - uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
+        if: env.HAS_FIREBASE == 'true'
+        with:
+          gradle-version: "9.7.1"
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        if: env.HAS_FIREBASE == 'true'
+        with:
+          name: native-libs
+          path: codecpack/src/main
+      - name: Install NDK
+        if: env.HAS_FIREBASE == 'true'
+        run: sdkmanager --install "ndk;${NDK_VERSION}"
+      - name: Build apks
+        if: env.HAS_FIREBASE == 'true'
+        run: gradle :app:assembleDebug :app:assembleDebugAndroidTest --no-daemon
+      - uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
+        if: env.HAS_FIREBASE == 'true'
+        with:
+          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+      - uses: google-github-actions/setup-gcloud@aa5489c8933f4cc7a4f7d45035b3b1440c9c10db # v3.0.1
+        if: env.HAS_FIREBASE == 'true'
+      - name: Run on real devices
+        if: env.HAS_FIREBASE == 'true'
+        run: |
+          APP="$(ls app/build/outputs/apk/debug/*arm64-v8a*.apk | head -n1)"
+          TEST="$(ls app/build/outputs/apk/androidTest/debug/*.apk | head -n1)"
+          gcloud firebase test android run \
+            --type instrumentation \
+            --app "$APP" \
+            --test "$TEST" \
+            --device model=a14x,version=34 \
+            --device model=e1q,version=34 \
+            --device model=oriole,version=33 \
+            --device model=shiba,version=34 \
+            --num-flaky-test-attempts 1 \
+            --timeout 40m \
+            --record-video \
+            --environment-variables listener=com.frameout.app.full.ReportListener,seed=${{ github.event.inputs.seed || '7' }}
