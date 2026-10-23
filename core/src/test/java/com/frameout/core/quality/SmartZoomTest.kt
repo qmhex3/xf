@@ -58,8 +58,8 @@ class SmartZoomTest {
         val a = PxRect(10, 10, 100, 100)
         val b = PxRect(15, 12, 90, 95)
         val far = PxRect(400, 400, 50, 50)
-        assertEquals(listOf(a, far), SmartZoom.suppress(listOf(b, a, far)) { it })
-        assertEquals(1, SmartZoom.suppress(listOf(a, PxRect(30, 30, 30, 30))) { it }.size)
+        assertEquals(listOf(a, far), SmartZoom.suppress(listOf(b, a, far), { it }))
+        assertEquals(1, SmartZoom.suppress(listOf(a, PxRect(30, 30, 30, 30)), { it }).size)
     }
 
     @Test

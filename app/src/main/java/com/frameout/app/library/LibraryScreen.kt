@@ -88,9 +88,10 @@ fun LibraryScreen(
                 onViewer = { projectId, frameId -> onOpenSaved(projectId, frameId, savedId) },
                 onSystem = { uri ->
                     val mime = runCatching { context.contentResolver.getType(uri) }.getOrNull() ?: "image/*"
-                    val view = android.content.Intent(android.content.Intent.ACTION_VIEW).setDataAndType(uri, mime)
-                        .setClipData(android.content.ClipData.newRawUri("", uri))
-                        .addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    val view = android.content.Intent(android.content.Intent.ACTION_VIEW).setDataAndType(uri, mime).apply {
+                        clipData = android.content.ClipData.newRawUri("", uri)
+                        addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    }
                     runCatching { context.startActivity(view) }
                 }
             )
