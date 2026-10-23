@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.style.TextAlign
@@ -89,29 +90,7 @@ private fun HeroStage(scroll: ScrollState, lock: Animatable<Float, androidx.comp
             }
             .clip(FrameShapes.xxl)
             .drawBehind {
-                val k = lock.value.coerceIn(0f, 1f) * strength
-                drawRect(colors.container)
-                drawRect(
-                    Brush.radialGradient(
-                        listOf(colors.accentA.copy(alpha = 0.55f * k), Color.Transparent),
-                        center = Offset(size.width * 0.16f, size.height * 0.12f),
-                        radius = size.width * 0.78f
-                    )
-                )
-                drawRect(
-                    Brush.radialGradient(
-                        listOf(colors.accentB.copy(alpha = 0.46f * k), Color.Transparent),
-                        center = Offset(size.width * 0.92f, size.height * 0.96f),
-                        radius = size.width * 0.82f
-                    )
-                )
-                drawRect(
-                    Brush.radialGradient(
-                        listOf(colors.accentC.copy(alpha = 0.26f * k), Color.Transparent),
-                        center = Offset(size.width * 0.88f, size.height * 0.08f),
-                        radius = size.width * 0.46f
-                    )
-                )
+                drawHeroBackdrop(colors.container, colors.accentA, colors.accentB, colors.accentC, lock.value.coerceIn(0f, 1f) * strength)
             }
     ) {
         FilmEdge(reduce, Modifier.align(Alignment.TopCenter))
@@ -121,6 +100,13 @@ private fun HeroStage(scroll: ScrollState, lock: Animatable<Float, androidx.comp
             BrandMark(size = 112.dp)
         }
     }
+}
+
+private fun DrawScope.drawHeroBackdrop(base: Color, a: Color, b: Color, c: Color, k: Float) {
+    drawRect(base)
+    drawRect(Brush.radialGradient(listOf(a.copy(alpha = 0.55f * k), Color.Transparent), Offset(size.width * 0.16f, size.height * 0.12f), size.width * 0.78f))
+    drawRect(Brush.radialGradient(listOf(b.copy(alpha = 0.46f * k), Color.Transparent), Offset(size.width * 0.92f, size.height * 0.96f), size.width * 0.82f))
+    drawRect(Brush.radialGradient(listOf(c.copy(alpha = 0.26f * k), Color.Transparent), Offset(size.width * 0.88f, size.height * 0.08f), size.width * 0.46f))
 }
 
 @Composable

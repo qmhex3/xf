@@ -1,6 +1,7 @@
 package com.frameout.app.about
 
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -77,23 +78,29 @@ fun AboutScreen(onBack: () -> Unit) {
                 modifier = Modifier.padding(bottom = 4.dp)
             )
             AboutHero(scroll)
-            Column(
-                Modifier.fillMaxWidth().graphicsLayer {
-                    alpha = body.value
-                    translationY = (1f - body.value) * 24.dp.toPx()
-                },
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                AboutCard(ModeStrings.aboutOfflineTitle(), ModeStrings.aboutOfflineBody(), FrameIconsExtra.Storage, colors.accentA)
-                if (com.frameout.app.BuildConfig.PLAY_BILLING) {
-                    AboutCard(ModeStrings.aboutProTitle(), ModeStrings.aboutProBody(), FrameIconsExtra.Sparkle, colors.accentB)
-                }
-                ConnectGroup()
-                AboutCard(ModeStrings.aboutLicensesTitle(), ModeStrings.aboutLicensesBody(), FrameIcons.Info, colors.accentC)
-                Column { CodecPackLicenseSection() }
-            }
+            AboutCards(body)
             Spacer(Modifier.navigationBarsPadding().height(24.dp))
         }
+    }
+}
+
+@Composable
+private fun AboutCards(body: Animatable<Float, AnimationVector1D>) {
+    val colors = FrameTheme.colors
+    Column(
+        Modifier.fillMaxWidth().graphicsLayer {
+            alpha = body.value
+            translationY = (1f - body.value) * 24.dp.toPx()
+        },
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        AboutCard(ModeStrings.aboutOfflineTitle(), ModeStrings.aboutOfflineBody(), FrameIconsExtra.Storage, colors.accentA)
+        if (com.frameout.app.BuildConfig.PLAY_BILLING) {
+            AboutCard(ModeStrings.aboutProTitle(), ModeStrings.aboutProBody(), FrameIconsExtra.Sparkle, colors.accentB)
+        }
+        ConnectGroup()
+        AboutCard(ModeStrings.aboutLicensesTitle(), ModeStrings.aboutLicensesBody(), FrameIcons.Info, colors.accentC)
+        Column { CodecPackLicenseSection() }
     }
 }
 

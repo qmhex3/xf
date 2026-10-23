@@ -20,6 +20,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -86,69 +87,94 @@ private val FILM_BLACK = Color(0xFF0B0B0B)
 
 @Composable
 internal fun AlbumCoverCard(label: String, count: Int, tag: String, cover: suspend (String) -> AlbumCover?, columns: Int, onClick: () -> Unit) {
-    val colors = FrameTheme.colors
     val arabic = LocalConfiguration.current.locales[0].language == "ar"
     val calm = LocalSystemA11y.current.reduceMotion
     val albumCover = produceState<AlbumCover?>(null, tag) { value = cover(tag) }.value
     val lanes = albumCover?.lanes.orEmpty()
-    val sequence = remember(albumCover) {
-        CoverLanes.sequence(lanes).ifEmpty { albumCover?.let { listOf(0 to it.frame) }.orEmpty() }
-    }
+    val sequence = rememberCoverSequence(albumCover)
     val animated = !calm && sequence.size > 1
     var tick by remember(tag) { mutableIntStateOf(0) }
-    LaunchedEffect(tag, animated) {
-        if (!animated) return@LaunchedEffect
-        delay(((tag.hashCode() and 0x7fffffff) % 1200).toLong())
-        while (true) {
-            delay(BEAT_MS)
-            tick++
-        }
-    }
+    CoverClock(tag, animated) { tick++ }
     val mainIndex = if (sequence.isEmpty()) 0 else steps(tick, MAIN_PERIOD, MAIN_PERIOD) % sequence.size
-    val current = sequence.getOrNull(mainIndex)
     val showStrip = lanes.size >= 2 && columns <= MAX_COLUMNS_WITH_STRIP
-    val activeLane = if (lanes.size >= 2) current?.first ?: -1 else -1
-    val kindName = lanes.getOrNull(activeLane)?.kind?.let { TagNames.display(TagRules.LABEL + it, arabic) }
-    val nextMain = sequence.getOrNull((mainIndex + 1) % sequence.size.coerceAtLeast(1))?.second
-    val mainSize = if (columns <= 2) MAIN_SIZE else TILE_SIZE
-    Prefetch(nextMain, mainSize)
-
+    val activeLane = if (lanes.size >= 2) sequence.getOrNull(mainIndex)?.first ?: -1 else -1
     Box(
         Modifier
             .aspectRatio(1f)
             .clip(FrameShapes.xl)
-            .background(colors.container)
+            .background(FrameTheme.colors.container)
             .border(1.dp, frameHairline(), FrameShapes.xl)
             .frameClickable(onClick = onClick)
             .semantics { contentDescription = "$label, ${FrameStrings.frameCount(count)}" }
     ) {
         Column(Modifier.fillMaxSize()) {
-            Box(Modifier.fillMaxWidth().weight(if (showStrip) 0.66f else 1f)) {
-                AnimatedContent(
-                    targetState = current?.second,
-                    modifier = Modifier.fillMaxSize(),
-                    transitionSpec = {
-                        (fadeIn(tween(700)) + slideInVertically(tween(900, easing = FastOutSlowInEasing)) { it / 14 }) togetherWith fadeOut(tween(700))
-                    },
-                    contentKey = { it?.id },
-                    label = "albumMain"
-                ) { frame ->
-                    val focus = if (frame != null && frame.id == albumCover?.frame?.id) albumCover?.focus else null
-                    ReelImage(frame, focus, mainSize, animated, Modifier.fillMaxSize())
-                }
-                Box(
-                    Modifier.align(Alignment.BottomStart).fillMaxWidth().background(Brush.verticalGradient(listOf(Color.Transparent, Color.Black.copy(alpha = 0.72f))))
-                ) {
-                    Column(Modifier.fillMaxWidth().padding(start = 12.dp, end = 12.dp, top = 28.dp, bottom = 8.dp)) {
-                        FrameText(label, style = FrameTheme.typography.label, color = Color.White, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                        FrameText(FrameStrings.frameCount(count), style = FrameTheme.typography.bodySmall, color = Color.White.copy(alpha = 0.8f), maxLines = 1)
-                    }
-                }
-                KindPill(kindName, Modifier.align(Alignment.TopStart).padding(8.dp))
-            }
+            CoverMain(label, count, albumCover, sequence, mainIndex, activeLane, columns, showStrip, animated, arabic)
             if (showStrip) {
                 FilmStrip(lanes, tick, activeLane, columns <= MAX_COLUMNS_WITH_NAMES, arabic, Modifier.fillMaxWidth().weight(0.34f))
             }
+        }
+    }
+}
+
+@Composable
+private fun rememberCoverSequence(albumCover: AlbumCover?): List<Pair<Int, FrameEntity>> =
+    remember(albumCover) {
+        CoverLanes.sequence(albumCover?.lanes.orEmpty()).ifEmpty { albumCover?.let { listOf(0 to it.frame) }.orEmpty() }
+    }
+
+@Composable
+private fun CoverClock(tag: String, animated: Boolean, onBeat: () -> Unit) {
+    LaunchedEffect(tag, animated) {
+        if (!animated) return@LaunchedEffect
+        delay(((tag.hashCode() and 0x7fffffff) % 1200).toLong())
+        while (true) {
+            delay(BEAT_MS)
+            onBeat()
+        }
+    }
+}
+
+@Composable
+private fun ColumnScope.CoverMain(
+    label: String,
+    count: Int,
+    albumCover: AlbumCover?,
+    sequence: List<Pair<Int, FrameEntity>>,
+    mainIndex: Int,
+    activeLane: Int,
+    columns: Int,
+    showStrip: Boolean,
+    animated: Boolean,
+    arabic: Boolean
+) {
+    val current = sequence.getOrNull(mainIndex)
+    val kindName = albumCover?.lanes.orEmpty().getOrNull(activeLane)?.kind?.let { TagNames.display(TagRules.LABEL + it, arabic) }
+    val mainSize = if (columns <= 2) MAIN_SIZE else TILE_SIZE
+    Prefetch(sequence.getOrNull((mainIndex + 1) % sequence.size.coerceAtLeast(1))?.second, mainSize)
+    Box(Modifier.fillMaxWidth().weight(if (showStrip) 0.66f else 1f)) {
+        AnimatedContent(
+            targetState = current?.second,
+            modifier = Modifier.fillMaxSize(),
+            transitionSpec = {
+                (fadeIn(tween(700)) + slideInVertically(tween(900, easing = FastOutSlowInEasing)) { it / 14 }) togetherWith fadeOut(tween(700))
+            },
+            contentKey = { it?.id },
+            label = "albumMain"
+        ) { frame ->
+            val focus = if (frame != null && frame.id == albumCover?.frame?.id) albumCover?.focus else null
+            ReelImage(frame, focus, mainSize, animated, Modifier.fillMaxSize())
+        }
+        CoverCaption(label, count, Modifier.align(Alignment.BottomStart))
+        KindPill(kindName, Modifier.align(Alignment.TopStart).padding(8.dp))
+    }
+}
+
+@Composable
+private fun CoverCaption(label: String, count: Int, modifier: Modifier) {
+    Box(modifier.fillMaxWidth().background(Brush.verticalGradient(listOf(Color.Transparent, Color.Black.copy(alpha = 0.72f))))) {
+        Column(Modifier.fillMaxWidth().padding(start = 12.dp, end = 12.dp, top = 28.dp, bottom = 8.dp)) {
+            FrameText(label, style = FrameTheme.typography.label, color = Color.White, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            FrameText(FrameStrings.frameCount(count), style = FrameTheme.typography.bodySmall, color = Color.White.copy(alpha = 0.8f), maxLines = 1)
         }
     }
 }

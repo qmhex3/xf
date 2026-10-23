@@ -69,7 +69,7 @@ mlkit-image-labeling = { group = "com.google.mlkit", name = "image-labeling", ve
 mlkit-objectdetection = { group = "com.google.mlkit", name = "object-detection", version.ref = "mlkitObjects" }
 mlkit-text-recognition = { group = "com.google.mlkit", name = "text-recognition", version.ref = "mlkitText" }
 mlkit-barcode-scanning = { group = "com.google.mlkit", name = "barcode-scanning", version.ref = "mlkitBarcode" }
-tesseract4android = { group = "cz.adaptech.tesseract4android", name = "tesseract4android", version.ref = "tesseract" }
+tesseract4android = { group = "com.github.adaptech-cz.Tesseract4Android", name = "tesseract4android", version.ref = "tesseract" }
 mlkit-pose-detection = { group = "com.google.mlkit", name = "pose-detection", version.ref = "mlkitPose" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
