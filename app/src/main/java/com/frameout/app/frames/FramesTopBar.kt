@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.text.BasicTextField
+import com.frameout.core.util.NameSanitizer
+import com.frameout.designsystem.components.FrameMarqueeText
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
@@ -80,14 +82,14 @@ fun FramesTopBar(
         if (editing) {
             val focus = remember { FocusRequester() }
             LaunchedEffect(Unit) { focus.requestFocus() }
-            val commit = { if (text.isNotBlank()) onRename(text); editing = false }
+            val commit = { if (text.isNotBlank()) onRename(NameSanitizer.clean(text, max = NameSanitizer.MAX_NAME_CHARS)); editing = false }
             Box(
                 Modifier.weight(1f).clip(FrameShapes.md).background(colors.fieldFill).border(1.dp, colors.primary.copy(alpha = 0.5f), FrameShapes.md).padding(horizontal = 14.dp, vertical = 12.dp)
             ) {
                 if (text.isEmpty()) FrameText(QualityStrings.renameHint(), color = colors.onSurfaceVariant, maxLines = 1)
                 BasicTextField(
                     value = text,
-                    onValueChange = { text = it },
+                    onValueChange = { text = it.filter { c -> !c.isISOControl() }.take(NameSanitizer.MAX_NAME_CHARS) },
                     textStyle = FrameTheme.typography.body.copy(color = colors.onSurface),
                     cursorBrush = SolidColor(colors.primary),
                     singleLine = true,
@@ -110,11 +112,9 @@ fun FramesTopBar(
                         modifier = Modifier.liveMessage().semantics { contentDescription = ScrubStrings.selectedOfTotal(selected, count) }
                     )
                 } else {
-                    FrameText(
+                    FrameMarqueeText(
                         name,
-                        style = FrameTheme.typography.title,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
+                        style = FrameTheme.typography.title.copy(textDirection = TextDirection.Content),
                         modifier = Modifier.screenHeading().frameClickable { text = name; editing = true }
                     )
                     if (count > 0) FrameText(FrameStrings.frameCount(count), style = FrameTheme.typography.bodySmall, color = colors.onSurfaceVariant, maxLines = 1)

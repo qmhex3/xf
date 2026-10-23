@@ -182,10 +182,10 @@ internal fun ViewerState.imagePadding(): PaddingValues {
     val rail by androidx.compose.animation.core.animateDpAsState(if (framed && side) 96.dp else 0.dp, spec, label = "imageRail")
     val panel = panelPadding()
     return PaddingValues(
-        start = margin + panel.calculateStartPadding(direction),
-        top = top,
-        end = margin + rail + panel.calculateEndPadding(direction),
-        bottom = bottom + panel.calculateBottomPadding()
+        start = (margin + panel.calculateStartPadding(direction)).coerceAtLeast(0.dp),
+        top = top.coerceAtLeast(0.dp),
+        end = (margin + rail + panel.calculateEndPadding(direction)).coerceAtLeast(0.dp),
+        bottom = (bottom + panel.calculateBottomPadding()).coerceAtLeast(0.dp)
     )
 }
 

@@ -21,6 +21,7 @@ import com.frameout.core.db.FrameEntity
 import com.frameout.core.prefs.AppPrefs
 import com.frameout.core.util.ThumbCache
 import com.frameout.engine.timeline.formatTimestamp
+import kotlinx.coroutines.flow.first
 
 
 @Stable
@@ -40,6 +41,7 @@ class CollageState(frameCount: Int, prefs: AppPrefs) {
     var rounded by mutableStateOf(prefs.collageRounded.value)
     var stamps by mutableStateOf(prefs.collageStamps.value)
     var selectedCell by mutableStateOf<Int?>(null)
+    var pickerSlot by mutableStateOf<Int?>(null)
     var saving by mutableStateOf(false)
     var message by mutableStateOf<String?>(null)
     var messageIsError by mutableStateOf(false)
@@ -87,6 +89,11 @@ class CollageState(frameCount: Int, prefs: AppPrefs) {
 
     fun tapCell(i: Int) {
         val filled = i < order.size && i < template.cells.size
+        if (!filled && i < template.cells.size && !saving) {
+            selectedCell = null
+            pickerSlot = i
+            return
+        }
         val sel = selectedCell
         selectedCell = when {
             !filled -> null
@@ -97,6 +104,12 @@ class CollageState(frameCount: Int, prefs: AppPrefs) {
                 null
             }
         }
+    }
+
+    fun swapCells(a: Int, b: Int) {
+        if (saving || a == b || a !in order.indices || b !in order.indices) return
+        swap(a, b)
+        selectedCell = null
     }
 
     private fun swap(a: Int, b: Int) {
@@ -113,6 +126,20 @@ class CollageState(frameCount: Int, prefs: AppPrefs) {
         val idx = order.getOrNull(i) ?: return@map null
         val frame = frames.getOrNull(idx) ?: return@map null
         PreviewSlot(previews.getOrNull(idx), formatTimestamp(frame.ptsUs / 1000L), i + 1, cropOf(idx))
+    }
+
+    suspend fun addFrame(context: Context, app: FrameOutApp, frame: FrameEntity): Boolean {
+        if (!ready) snapshotFlow { ready }.first { it }
+        if (frames.any { it.id == frame.id } || order.size >= template.cells.size) return false
+        val path = CollageMaterializer(context, app.container.projects, app.container.frameEdits).materialize(listOf(frame)).firstOrNull() ?: return false
+        val thumb = ThumbCache.load(frame.thumbnailPath ?: frame.fullPath, 512)
+        val index = frames.size
+        frames = frames + frame
+        paths = paths + path
+        previews = previews + (loadPreview(path) ?: thumb)
+        crops = crops + CellCrop()
+        order = order + index
+        return true
     }
 
     fun cropsInOrder(): List<CellCrop> = order.map { cropOf(it) }

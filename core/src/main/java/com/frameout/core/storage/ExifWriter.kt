@@ -12,7 +12,7 @@ data class ExifStamp(val takenAt: Long, val description: String, val location: G
 class ExifWriter(private val context: Context) {
     fun supports(format: ImageFormat, stamp: ExifStamp): Boolean = when (format) {
         ImageFormat.Jpg, ImageFormat.JpgHdr -> true
-        ImageFormat.WebpLossy, ImageFormat.WebpLossless -> Build.VERSION.SDK_INT >= 31
+        ImageFormat.WebpLossy -> Build.VERSION.SDK_INT >= 31
         ImageFormat.Png, ImageFormat.PngHdr16 -> stamp.pngMetadata
         ImageFormat.Heic, ImageFormat.Avif -> false
     }

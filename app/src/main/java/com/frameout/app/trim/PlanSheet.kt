@@ -51,6 +51,7 @@ import com.frameout.designsystem.theme.FrameTheme
 import com.frameout.designsystem.theme.fieldFill
 import com.frameout.engine.extract.ExtractMode
 import com.frameout.engine.extract.ExtractModeCodec
+import com.frameout.engine.extract.decidesContent
 
 private const val MAX_FRAMES = 100000L
 private const val MAX_SECONDS = 86400L
@@ -62,7 +63,7 @@ internal fun BoxScope.PlanSheet(env: TrimEnv, visible: Boolean) {
     val stored by env.prefs.extractMode.collectAsState()
     TrimSheetHost(visible, TrimStrings.optionsTitle(), { env.onSheet(TrimSheet.None) }) {
         ExtractOptions(
-            env.prefs, env.autoSave, env.onAutoSave, estimateFrames(env.player.durationMs, env.clamped, stored),
+            env.prefs, env.autoSave, env.onAutoSave, env.frameEstimate(stored),
             summary = { PlanSummary(env, compact = true, tappable = false) },
             onDone = { env.onSheet(TrimSheet.None) }
         )
@@ -80,7 +81,7 @@ internal fun ColumnScope.ExtractOptions(
     SectionLabel(TrimStrings.optionsMode())
     ExtractModePicker(kindOf(mode), { kind -> gateMode(kind) { prefs.setExtractMode(ExtractModeCodec.encode(modeFor(kind, mode))) } })
     ModeParameter(mode, prefs)
-    SmartFilters(prefs)
+    SmartFilters(prefs, mode)
     GalleryToggle(autoSave, onAutoSave, frames)
     DoneButton(onDone)
 }
@@ -111,6 +112,10 @@ private fun DoneButton(onClick: () -> Unit) {
 @Composable
 private fun ModeParameter(mode: ExtractMode, prefs: AppPrefs) {
     val save = { next: ExtractMode -> prefs.setExtractMode(ExtractModeCodec.encode(next)) }
+    if (mode is ExtractMode.Content) {
+        SectionCard { com.frameout.app.settings.ContentTagPicker(mode.spec, { save(ExtractMode.Content(it)) }, Modifier.padding(14.dp)) }
+        return
+    }
     if (mode !is ExtractMode.EveryNFrames && mode !is ExtractMode.FixedCount && mode !is ExtractMode.EveryNMillis) return
     key(kindOf(mode)) { SectionCard {
         when (mode) {
@@ -123,18 +128,21 @@ private fun ModeParameter(mode: ExtractMode, prefs: AppPrefs) {
 }
 
 @Composable
-private fun SmartFilters(prefs: AppPrefs) {
+private fun SmartFilters(prefs: AppPrefs, mode: ExtractMode) {
     val colors = FrameTheme.colors
     val blurry by prefs.skipBlurry.collectAsState()
     val duplicates by prefs.skipDuplicates.collectAsState()
-    val people by prefs.peopleOnly.collectAsState()
+    val peopleChosen by prefs.peopleOnly.collectAsState()
+    val peopleIgnored = mode.decidesContent()
+    val people = peopleChosen && !peopleIgnored
     val body by prefs.peopleBody.collectAsState()
     SectionLabel(TrimStrings.filtersTitle())
     SectionCard {
         ToggleRow(FrameIconsExtra.Blur, FrameStrings.skipBlurryTitle(), ModeStrings.helpBlurry(), blurry) { gateSmart(it, "blurry") { prefs.setSkipBlurry(it) } }
         ToggleRow(FrameIconsExtra.Duplicate, FrameStrings.skipDuplicatesTitle(), ModeStrings.helpDuplicates(), duplicates) { gateSmart(it, "dup") { prefs.setSkipDuplicates(it) } }
-        ToggleRow(FrameIconsExtra.Person, TrimStrings.peopleOnlyTitle(), TrimStrings.peopleOnlyHelp(), people) { gateSmart(it, "people") { prefs.setPeopleOnly(it) } }
+        ToggleRow(FrameIconsExtra.Person, TrimStrings.peopleOnlyTitle(), TrimStrings.peopleOnlyHelp(), peopleChosen) { gateSmart(it, "people") { prefs.setPeopleOnly(it) } }
     }
+    if (peopleChosen && peopleIgnored) FrameText(TrimStrings.peopleIgnored(), style = FrameTheme.typography.bodySmall, color = colors.onSurfaceVariant, modifier = Modifier.padding(horizontal = 4.dp))
     if (people) {
         val options = listOf(SegmentOption(MODE_FACES, TrimStrings.peopleModeFaces()), SegmentOption(MODE_BOTH, TrimStrings.peopleModeBoth()))
         SettingsSegmented(options, if (body) MODE_BOTH else MODE_FACES) { prefs.setPeopleBody(it == MODE_BOTH) }

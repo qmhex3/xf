@@ -32,7 +32,7 @@ internal fun CodecPackLicenseSection() {
         value = withContext(Dispatchers.IO) { CodecPackLicenses.read(context) }
     }
     val current = info ?: return
-    AboutCard(ModeStrings.aboutCodecTitle(), ModeStrings.aboutCodecBody())
+    AboutCard(ModeStrings.aboutCodecTitle(), ModeStrings.aboutCodecBody(), com.frameout.designsystem.icons.FrameIconsExtra.Frames, FrameTheme.colors.accentA)
     if (!com.frameout.codecpack.CodecPack.isBundled(context)) BuildLine(current)
     current.licenses.forEach { LicenseCard(it) }
 }
@@ -58,7 +58,7 @@ private fun LicenseCard(license: CodecPackLicense) {
     var expanded by remember { mutableStateOf(false) }
     val text = license.text
     val label = if (expanded) ModeStrings.aboutLicenseHide() else ModeStrings.aboutLicenseShow()
-    GlassSurface(shape = FrameShapes.md, modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp)) {
+    GlassSurface(shape = FrameShapes.xl, modifier = Modifier.fillMaxWidth().padding(top = 12.dp)) {
         Column(Modifier.padding(16.dp)) {
             FrameText("${license.name} · ${license.spdx}", style = FrameTheme.typography.titleSmall.copy(textDirection = TextDirection.Ltr))
             license.version?.let {

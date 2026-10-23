@@ -24,6 +24,13 @@ FFmpeg is a trademark of Fabrice Bellard. See https://ffmpeg.org/legal.html
 
 The AV1 decoder dav1d, Copyright VideoLAN and dav1d authors, is linked statically into libavcodec.so under the BSD 2-Clause license. The license text ships in the codec pack as COPYING.dav1d and is shown in About. Source: https://code.videolan.org/videolan/dav1d
 
+## Content tag icons
+
+The outline icons of the "By content" tag picker (app/src/main/res/drawable/ic_ctag_*.xml) are converted from two open icon sets; a few (bear, cattle, waterfall, fireworks, dance, hat, dress, wedding) are drawn in the same style by scripts/icons.
+
+- Tabler Icons, Copyright (c) 2020-2026 Pawel Kuna, MIT License. https://github.com/tabler/tabler-icons
+- Lucide, Copyright (c) 2026 Lucide Icons and Contributors, ISC License (portions derived from Feather, Copyright (c) 2013-2023 Cole Bemis, MIT License). https://github.com/lucide-icons/lucide
+
 ## Codec pack contents
 
 Each codec-pack ZIP carries COPYING.LGPLv2.1 (FFmpeg), COPYING.dav1d (dav1d) and MANIFEST.txt with both versions. The SHA-256 of both COPYING files is part of the signed payload, and the app refuses to install a pack where either file is missing or altered.

@@ -63,7 +63,7 @@ internal val FormatsExtraHeight = 48.dp
 
 private val SlotGap = 6.dp
 private val FormatNames = listOf("MP4", "MKV", "AVI", "GIF", "Live Photo")
-internal val OnboardingModeKinds = listOf("every_frame", "every_n", "every_time", "keyframes", "fixed", "scene", "slides")
+internal val OnboardingModeKinds = listOf("every_frame", "every_n", "every_time", "keyframes", "fixed", "scene", "slides", "content")
 
 private val CaptureAt = listOf(0.30f, 0.46f, 0.62f, 0.78f)
 private const val BaseCount = 408

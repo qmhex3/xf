@@ -14,6 +14,12 @@ class ImageFormatTest {
     }
 
     @Test
+    fun savedLosslessWebpKeyMeansWebp() {
+        assertEquals(ImageFormat.WebpLossy, ImageFormat.fromKey("webp_lossless"))
+        assertEquals(listOf("jpg", "jpg_hdr", "png", "png_hdr16", "webp", "heic", "avif"), ImageFormat.keys)
+    }
+
+    @Test
     fun unknownOrMissingKeyFallsBackToJpg() {
         assertEquals(ImageFormat.Jpg, ImageFormat.fromKey("bmp"))
         assertEquals(ImageFormat.Jpg, ImageFormat.fromKey(null))
@@ -26,7 +32,6 @@ class ImageFormatTest {
         assertEquals("jpg" to "image/jpeg", ImageFormat.JpgHdr.ext to ImageFormat.JpgHdr.mime)
         assertEquals("png" to "image/png", ImageFormat.Png.ext to ImageFormat.Png.mime)
         assertEquals("webp" to "image/webp", ImageFormat.WebpLossy.ext to ImageFormat.WebpLossy.mime)
-        assertEquals("webp" to "image/webp", ImageFormat.WebpLossless.ext to ImageFormat.WebpLossless.mime)
         assertEquals("heic" to "image/heic", ImageFormat.Heic.ext to ImageFormat.Heic.mime)
         assertEquals("avif" to "image/avif", ImageFormat.Avif.ext to ImageFormat.Avif.mime)
     }
@@ -34,13 +39,12 @@ class ImageFormatTest {
     @Test
     fun keysAreUniqueAndListed() {
         assertEquals(ImageFormat.entries.size, ImageFormat.keys.toSet().size)
-        assertEquals(listOf("jpg", "jpg_hdr", "png", "png_hdr16", "webp", "webp_lossless", "heic", "avif"), ImageFormat.keys)
+        assertEquals(listOf("jpg", "jpg_hdr", "png", "png_hdr16", "webp", "heic", "avif"), ImageFormat.keys)
     }
 
     @Test
     fun losslessFormatsIgnoreQuality() {
         assertEquals(100, ImageFormat.Png.effectiveQuality(50))
-        assertEquals(100, ImageFormat.WebpLossless.effectiveQuality(10))
     }
 
     @Test
@@ -55,7 +59,7 @@ class ImageFormatTest {
     @Test
     fun chosenFormatIsNeverSilentlyReplacedByGainmap() {
         assertEquals(ImageFormat.Png, ImageFormat.resolve("png", true, 34, allowed = pro))
-        assertEquals(ImageFormat.WebpLossless, ImageFormat.resolve("webp_lossless", true, 34, allowed = pro))
+        assertEquals(ImageFormat.WebpLossy, ImageFormat.resolve("webp_lossless", true, 34, allowed = pro))
         assertEquals(ImageFormat.Jpg, ImageFormat.resolve("jpg", true, 34, allowed = pro))
     }
 
@@ -72,7 +76,7 @@ class ImageFormatTest {
         assertTrue(ImageFormat.JpgHdr.isAvailable(34))
         assertFalse(ImageFormat.Heic.isAvailable(28))
         assertFalse(ImageFormat.Avif.isAvailable(28))
-        assertEquals(listOf("jpg", "png", "webp", "webp_lossless"), ImageFormat.availableKeys(24))
+        assertEquals(listOf("jpg", "png", "webp"), ImageFormat.availableKeys(24))
     }
 
     @Test
@@ -102,7 +106,7 @@ class ImageFormatTest {
     fun freeTierKeepsOnlyFreeFormats() {
         val free: (ImageFormat) -> Boolean = { it in com.frameout.core.pro.ProCatalog.freeFormats }
         assertEquals(ImageFormat.Png, ImageFormat.resolve("png", true, 34, allowed = free))
-        assertEquals(ImageFormat.Jpg, ImageFormat.resolve("webp_lossless", true, 34, allowed = free))
+        assertEquals(ImageFormat.WebpLossy, ImageFormat.resolve("webp_lossless", true, 34, allowed = free))
         assertEquals(ImageFormat.Jpg, ImageFormat.resolve("jpg_hdr", true, 34, allowed = free))
     }
 }

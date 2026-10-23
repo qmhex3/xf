@@ -1,5 +1,6 @@
 package com.frameout.app.library
 
+import com.frameout.core.storage.insertTracked
 import android.app.Application
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -88,7 +89,7 @@ internal class SavedDocExport(
             val uri = saver.save(name, mime, container.prefs.saveFolder.value, treeUri()) { out -> ContactSheetImage.write(bitmap, png, out) } ?: return null
             job.saved++
             job.decodedTotal += job.pendingDecoded
-            container.savedImages.insert(SavedImageEntity(uri = uri.toString(), displayName = name, album = FrameStrings.appName(), width = bitmap.width, height = bitmap.height, createdAt = System.currentTimeMillis()))
+            container.savedImages.insertTracked(container.storage, SavedImageEntity(uri = uri.toString(), displayName = name, album = FrameStrings.appName(), width = bitmap.width, height = bitmap.height, createdAt = System.currentTimeMillis()))
             return uri
         } finally {
             bitmap.recycle()

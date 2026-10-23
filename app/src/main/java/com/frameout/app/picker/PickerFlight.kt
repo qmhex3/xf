@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.Stable
@@ -152,12 +153,14 @@ private fun Offset.clampTo(r: Rect?): Offset =
 internal fun PickerFlightLayer(flight: PickerFlight, selectedUris: Set<String>, modifier: Modifier = Modifier) {
     val rtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     SideEffect { flight.rtl = rtl }
-    Box(modifier.fillMaxSize().onGloballyPositioned {
-        flight.origin = it.positionInWindow()
-        flight.layerSize = it.size.toSize()
-    }) {
-        flight.flights.forEach { f ->
-            key(f) { FlyingThumb(flight, f, f.item.uri in selectedUris) }
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+        Box(modifier.fillMaxSize().onGloballyPositioned {
+            flight.origin = it.positionInWindow()
+            flight.layerSize = it.size.toSize()
+        }) {
+            flight.flights.forEach { f ->
+                key(f) { FlyingThumb(flight, f, f.item.uri in selectedUris) }
+            }
         }
     }
 }
@@ -209,7 +212,7 @@ private fun FlightBody(flight: PickerFlight, f: PickerFlight.Flight, thumb: Bitm
     val stageCorner = with(density) { 20.dp.toPx() }
     val toCorner = with(density) { 8.dp.toPx() }
     val maxShadow = with(density) { 24.dp.toPx() }
-    val maxEdge = with(density) { 300.dp.toPx() }
+    val maxEdge = with(density) { 220.dp.toPx() }
     val edgeMarginPx = slotPx * MID_SCALE / 2f
     val placeholder = FrameTheme.colors.containerHigh
     val fromW = f.from.width.roundToInt().coerceAtLeast(1)

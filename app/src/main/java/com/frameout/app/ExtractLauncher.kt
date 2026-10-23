@@ -24,9 +24,10 @@ suspend fun launchExtract(
     val mode = ExtractModeCodec.decode(modePref).takeIf { allowedMode(it) } ?: com.frameout.engine.extract.ExtractMode.EveryFrame
     val startMs = if (range.useFull) 0 else range.startMs
     val endMs = range.endMs
-    val estFrames = estimateFrames(if (range.useFull) range.endMs else range.spanMs(), mode)
+    val probe = com.frameout.app.trim.SourceProbe.load(context, uri)
+    val estFrames = com.frameout.app.trim.estimateFrames(range.endMs, range, ExtractModeCodec.encode(mode), probe)
     if (!container.storage.hasSpaceForResolution(estFrames, 0, 0, useAuto, prefs.saveFormat.value)) error(FrameStrings.lowStorage())
-    val name = uri.lastPathSegment ?: "video"
+    val name = com.frameout.core.util.NameSanitizer.clean(uri.lastPathSegment?.substringAfterLast('/'), "video")
     val now = System.currentTimeMillis()
     val projectId = container.projects.insert(
         ProjectEntity(
@@ -50,6 +51,6 @@ suspend fun launchExtract(
 
 
 private fun allowedMode(mode: com.frameout.engine.extract.ExtractMode): Boolean {
-    val smart = mode == com.frameout.engine.extract.ExtractMode.SceneChange || mode == com.frameout.engine.extract.ExtractMode.Slides
+    val smart = mode == com.frameout.engine.extract.ExtractMode.SceneChange || mode == com.frameout.engine.extract.ExtractMode.Slides || mode is com.frameout.engine.extract.ExtractMode.Content
     return !smart || com.frameout.core.pro.ProAccess.permits(com.frameout.core.pro.ProFeature.SmartExtract)
 }

@@ -131,5 +131,6 @@ class SystemExtraction(
         is ExtractMode.FixedCount -> "FixedCount:${mode.count}"
         ExtractMode.SceneChange -> "SceneChange"
         ExtractMode.Slides -> "Slides"
+        is ExtractMode.Content -> "Content:${mode.spec.encode()}"
     }
 }

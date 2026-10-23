@@ -7,6 +7,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.size
+import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -44,5 +45,24 @@ fun BrandMark(modifier: Modifier = Modifier, size: Dp = 112.dp) {
         }
     ) {
         drawBrandTile(clock.value, Offset(this.size.width / 2f, this.size.height / 2f), this.size.minDimension * 0.8f, accent, paths)
+    }
+}
+
+private const val GLYPH_X = 151f
+private const val GLYPH_Y = 192f
+private const val GLYPH_W = 671f
+private const val GLYPH_H = 586f
+private const val GLYPH_DONE_MS = 1500f
+
+@Composable
+fun BrandGlyph(height: Dp, modifier: Modifier = Modifier) {
+    val accent = FrameTheme.accent
+    val paths = remember { SplashPaths() }
+    Canvas(modifier.size(height * (GLYPH_W / GLYPH_H), height)) {
+        val s = size.height / GLYPH_H
+        withTransform({
+            translate(-GLYPH_X * s, -GLYPH_Y * s)
+            scale(s, s, Offset.Zero)
+        }) { drawIcon(GLYPH_DONE_MS, accent, paths) }
     }
 }

@@ -4,8 +4,11 @@ import com.frameout.core.util.SmoothScale
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.content.ContentUris
 import android.media.MediaMetadataRetriever
 import android.net.Uri
+import android.provider.MediaStore
+import android.provider.OpenableColumns
 import android.util.LruCache
 import com.frameout.core.util.ThumbCache
 
@@ -30,6 +33,37 @@ object MediaThumbLoader {
             markMissing(key)
         }
         return fallback
+    }
+
+    suspend fun loadForUri(context: Context, value: String, maxSize: Int = 256): Bitmap? = runCatching {
+        ThumbCache.peekKey("media#$value#$maxSize")?.let { return@runCatching it }
+        load(context, itemFor(context, value), maxSize)
+    }.getOrNull()
+
+    private fun itemFor(context: Context, value: String): MediaItem {
+        val uri = Uri.parse(value)
+        val mime = runCatching { context.contentResolver.getType(uri) }.getOrNull().orEmpty()
+        var name = uri.lastPathSegment.orEmpty()
+        var size = 0L
+        var added = 0L
+        runCatching {
+            val cols = arrayOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE, MediaStore.MediaColumns.DATE_ADDED)
+            context.contentResolver.query(uri, cols, null, null, null)?.use { c ->
+                if (c.moveToFirst()) {
+                    c.getColumnIndex(OpenableColumns.DISPLAY_NAME).takeIf { it >= 0 }?.let { name = c.getString(it) ?: name }
+                    c.getColumnIndex(OpenableColumns.SIZE).takeIf { it >= 0 }?.let { size = c.getLong(it) }
+                    c.getColumnIndex(MediaStore.MediaColumns.DATE_ADDED).takeIf { it >= 0 }?.let { added = c.getLong(it) }
+                }
+            }
+        }
+        val id = if (uri.scheme == "content" && uri.authority == MediaStore.AUTHORITY) runCatching { ContentUris.parseId(uri) }.getOrDefault(-1L) else -1L
+        val kind = when {
+            mime.startsWith("video/") -> MediaKind.Video
+            mime == "image/gif" -> MediaKind.Gif
+            mime.startsWith("image/") -> MediaKind.Image
+            else -> MediaKind.Video
+        }
+        return MediaItem(id, value, name, mime, size, 0L, 0, 0, added, "", "", kind)
     }
 
     private fun isMissing(key: String): Boolean = synchronized(misses) { misses.get(key) != null }

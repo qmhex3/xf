@@ -13,6 +13,7 @@ internal object ExtractProgressNotification {
     private const val BIG_STRIP_PX = 28
 
     private const val MIN_CUSTOM_SDK = Build.VERSION_CODES.O
+    private const val PROGRESS_STEPS = 1000
 
     class Snapshot(
         val title: String,
@@ -25,8 +26,8 @@ internal object ExtractProgressNotification {
         val total: Int
     )
 
-    fun build(context: Context, projectId: Long, text: String, done: Int, total: Int, indeterminate: Boolean, paused: Boolean, elapsed: Long, remaining: Long): Notification {
-        val snap = snapshot(context, projectId, text, done, total, indeterminate, remaining)
+    fun build(context: Context, projectId: Long, text: String, done: Int, total: Int, indeterminate: Boolean, paused: Boolean, elapsed: Long, remaining: Long, unified: Float = -1f, indexing: Boolean = false): Notification {
+        val snap = snapshot(context, projectId, text, done, total, indeterminate, remaining, unified, indexing)
         val builder = NotificationCompat.Builder(context, ExtractNotifications.CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification)
             .setColor(NotificationTheme.color(context))
@@ -54,7 +55,7 @@ internal object ExtractProgressNotification {
             .setShowWhen(false)
             .setPriority(NotificationCompat.PRIORITY_LOW)
         if (snap.known) {
-            builder.setProgress(snap.total, snap.done.coerceIn(0, snap.total), false)
+            builder.setProgress(PROGRESS_STEPS, (snap.fraction * PROGRESS_STEPS).toInt().coerceIn(0, PROGRESS_STEPS), false)
             builder.setSubText(snap.percent)
         } else {
             builder.setProgress(0, 0, true)
@@ -62,11 +63,15 @@ internal object ExtractProgressNotification {
         ExtractNotifications.thumbnailOf(context, projectId)?.let { builder.setLargeIcon(it) }
     }
 
-    private fun snapshot(context: Context, projectId: Long, text: String, done: Int, total: Int, indeterminate: Boolean, remaining: Long): Snapshot {
+    private fun snapshot(context: Context, projectId: Long, text: String, done: Int, total: Int, indeterminate: Boolean, remaining: Long, unified: Float, indexing: Boolean): Snapshot {
         val known = !indeterminate && total > 0
-        val fraction = if (known) (done.toFloat() / total).coerceIn(0f, 1f) else 0f
+        val fraction = when {
+            !known -> 0f
+            unified >= 0f -> unified.coerceIn(0f, 1f)
+            else -> (done.toFloat() / total).coerceIn(0f, 1f)
+        }
         val percent = if (known) "${(fraction * 100).toInt()}%" else text
-        val count = if (known) "%,d / %,d".format(done, total) else ""
+        val count = if (known && !indexing) "%,d / %,d".format(done, total) else ""
         val left = if (remaining > 0L) FrameStrings.remaining(ExtractNotifications.formatTime(remaining)) else ""
         val info = listOf(count, left).filter { it.isNotEmpty() }.joinToString(FrameStrings.sep()).ifEmpty { text }
         val line = listOf(if (known) percent else "", info).filter { it.isNotEmpty() }.joinToString(FrameStrings.sep())

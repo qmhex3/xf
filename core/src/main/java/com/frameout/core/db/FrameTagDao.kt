@@ -33,6 +33,12 @@ abstract class FrameTagDao {
     abstract suspend fun coverFor(projectId: Long, tag: String): FrameEntity?
     @Query("SELECT t.* FROM frame_tags t INNER JOIN frames f ON t.frameId = f.id WHERE t.projectId = :projectId AND t.tag = :tag AND t.boxes != '' AND f.isDeleted = 0 ORDER BY t.confidence DESC, f.`index` ASC LIMIT 1")
     abstract suspend fun coverTagFor(projectId: Long, tag: String): FrameTagEntity?
+    @Query("SELECT f.* FROM frames f INNER JOIN frame_tags t ON t.frameId = f.id WHERE t.projectId = :projectId AND t.tag = :tag AND f.isDeleted = 0 ORDER BY t.confidence DESC, f.`index` ASC LIMIT :limit")
+    abstract suspend fun coversFor(projectId: Long, tag: String, limit: Int): List<FrameEntity>
+    @Query("SELECT * FROM frame_tags WHERE frameId IN (:frameIds) AND tag LIKE 'l:%'")
+    abstract suspend fun labelsForFrames(frameIds: List<Long>): List<FrameTagEntity>
+    @Query("SELECT * FROM frame_tags WHERE projectId = :projectId AND (tag LIKE :labelPrefix || '%' OR tag LIKE :objectPrefix || '%') AND frameId NOT IN (SELECT frameId FROM frame_tags WHERE projectId = :projectId AND tag LIKE :familyPrefix || '%')")
+    abstract suspend fun detailRowsWithoutFamily(projectId: Long, labelPrefix: String, objectPrefix: String, familyPrefix: String): List<FrameTagEntity>
     @Query("SELECT * FROM frame_tags WHERE frameId = :frameId AND tag IN (:tags) AND boxes != ''")
     abstract suspend fun boxesFor(frameId: Long, tags: List<String>): List<FrameTagEntity>
     @Query("SELECT * FROM frame_tags WHERE frameId = :frameId AND boxes != '' ORDER BY confidence DESC")

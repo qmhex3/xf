@@ -25,7 +25,9 @@ fun Modifier.frameControl(
     val c = FrameTheme.colors
     val dark = c.isDark
     val fill: Brush = when {
+        solid && c.neutral -> Brush.linearGradient(GraphiteFab)
         solid -> Brush.linearGradient(listOf(lerp(tint, Color.White, 0.18f), tint, lerp(tint, c.accentB, 0.35f)))
+        selected && c.neutral && dark -> Brush.verticalGradient(listOf(tint.copy(alpha = 0.16f), tint.copy(alpha = 0.07f)))
         selected -> Brush.verticalGradient(listOf(tint.copy(alpha = if (dark) 0.30f else 0.20f), tint.copy(alpha = if (dark) 0.14f else 0.08f)))
         else -> frameCardBrush()
     }

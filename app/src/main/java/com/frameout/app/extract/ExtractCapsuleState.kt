@@ -41,16 +41,10 @@ data class ExtractCapsuleState(
 }
 
 object UnifiedProgress {
-    const val INDEX_SHARE = 0.2f
+    const val INDEX_SHARE = com.frameout.engine.work.UnifiedExtractProgress.INDEX_SHARE
 
-    fun raw(status: String, done: Int, total: Int, indexingPhase: Boolean): Float {
-        if (status == "Completed") return 1f
-        if (indexingPhase) {
-            val denominator = maxOf(total, done)
-            return if (denominator > 0) INDEX_SHARE * (done.toFloat() / denominator).coerceIn(0f, 1f) else 0f
-        }
-        return if (total > 0) INDEX_SHARE + (1f - INDEX_SHARE) * (done.toFloat() / total).coerceIn(0f, 1f) else INDEX_SHARE
-    }
+    fun raw(status: String, done: Int, total: Int, indexingPhase: Boolean): Float =
+        com.frameout.engine.work.UnifiedExtractProgress.raw(status, done, total, indexingPhase)
 }
 
 internal class UnifiedProgressTracker {

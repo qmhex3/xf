@@ -48,6 +48,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.coerceAtLeast
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import com.frameout.core.media.MediaItem
@@ -137,7 +138,7 @@ fun MediaGridItem(item: MediaItem, selectionIndex: Int?, selectionMode: Boolean,
             .background(colors.container)
             .border(2.dp, ring, FrameShapes.sm)
     ) {
-        GridThumb(item, thumb, fade, gridThumb.finished.value, Modifier.fillMaxSize().padding(inset))
+        GridThumb(item, thumb, fade, gridThumb.finished.value, Modifier.fillMaxSize().padding(inset.coerceAtLeast(0.dp)))
         MetaPill(item, Modifier.align(Alignment.BottomStart).padding(PickerGrid.Overlay))
         SelectionMark(selectionIndex, selectionMode, Modifier.align(Alignment.TopEnd).padding(PickerGrid.Overlay))
     }

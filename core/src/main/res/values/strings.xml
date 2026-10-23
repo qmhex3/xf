@@ -209,7 +209,6 @@
     <string name="hdr_notice_off">HDR video detected. Frames will be saved as SDR. Choose the JPG HDR format in Settings to keep HDR.</string>
     <string name="hdr_notice_unsupported">HDR video detected. This device cannot save Ultra HDR, so frames will be converted to SDR.</string>
     <string name="value_webp">WebP</string>
-    <string name="value_webp_lossless">WebP lossless</string>
     <string name="export_gif">GIF</string>
     <string name="export_pdf">PDF</string>
     <string name="export_zip">ZIP</string>
@@ -675,6 +674,7 @@
     <string name="collage_tab_frames">Frames</string>
     <string name="collage_tab_style">Style</string>
     <string name="collage_tab_canvas">Canvas</string>
+    <string name="collage_pick_frame">Add a frame</string>
     <string name="gallery_confirm_title">Add %1$d photos to the gallery?</string>
     <string name="gallery_confirm_body">They will all appear in your gallery at once, and cloud backup may upload them. The frames also stay inside Frame out, and you can undo right after saving.</string>
     <string name="gallery_confirm_action">Add to gallery</string>
@@ -687,6 +687,7 @@
     <string name="setting_people_only">People only</string>
     <string name="help_people_only">Keeps only frames that show a face or a person&#8217;s body.</string>
     <string name="trim_people_slow">Extraction is slower because every frame is scanned.</string>
+    <string name="trim_people_ignored">Not used with this mode: it already keeps only the frames that match what you chose.</string>
     <string name="trim_filters_count_hint">The final number of frames may be lower than requested.</string>
     <string name="skip_total">Skipped %1$d</string>
     <string name="skip_blurry_n">Blurry %1$d</string>
@@ -830,6 +831,9 @@
     <string name="saved_deleted">Saved image deleted</string>
     <string name="saved_restore_failed">Couldn\'t restore the image</string>
     <string name="saved_delete_failed">Couldn\'t delete the image</string>
+    <string name="saved_restored">%1$d saved images restored</string>
+    <string name="saved_pruned">%1$d saved items removed because their files are no longer on the device</string>
+    <string name="confirm_delete_saved_body_undoable">The images will also be removed from your device gallery. You can undo right after.</string>
     <string name="scrub_speed">Scrolling ×%1$d</string>
     <string name="saved_gallery_done">Saved %1$d to the gallery</string>
     <string name="saved_gallery_there">%1$d already in the gallery</string>
@@ -871,7 +875,7 @@
     <string name="pro_feature_filters">All 13 filters with adjustable strength</string>
     <string name="pro_feature_shapes">22 annotation shapes: arrows, magnifier, spotlight, numbered markers</string>
     <string name="pro_feature_edit_tools">Full text with fonts and shadow, blur, pixelate, crop all</string>
-    <string name="pro_feature_formats">HEIC, AVIF, HDR and lossless WebP export</string>
+    <string name="pro_feature_formats">HEIC, AVIF and HDR export</string>
     <string name="pro_feature_adv_export">GIF, animated WebP, Live Photo, MP4, ZIP, PDF, CSV, contact sheet, evidence pack</string>
     <string name="pro_feature_collage">Full collage: 10 layouts, aspect ratios and high resolution</string>
     <string name="pro_feature_batch">Batch queue for several videos</string>
@@ -898,7 +902,7 @@
     <string name="pro_save_size">Size −66%</string>
     <string name="pro_inc_accents">Ocean|Emerald|Sunset|Rose|Gold|Material You</string>
     <string name="pro_inc_shapes">Arrow|Callout|Spotlight|Magnifier|Marker|Highlighter|Rectangle|Ellipse</string>
-    <string name="pro_inc_formats">HEIC|AVIF|HDR JPG|Lossless WebP|16-bit HDR PNG</string>
+    <string name="pro_inc_formats">HEIC|AVIF|HDR JPG|16-bit HDR PNG</string>
     <string name="pro_inc_smart">Skip blurry|Skip duplicates|Scene change|Slides|Sharpest frame</string>
     <string name="pro_inc_adv_export">GIF|Animated WebP|PDF|ZIP|Contact sheet|CSV</string>
     <string name="pro_inc_edit_tools">Text with fonts|Blur|Pixelate|Crop all</string>
@@ -931,4 +935,30 @@
     <string name="pro_done_body">Everything is unlocked. Thanks for backing FrameOut.</string>
     <string name="pro_done_chips">Filters|Shapes|Edit tools|Formats|Smart extract|Export</string>
     <string name="pro_done_cta">Start creating</string>
+    <string name="value_content">By content</string>
+    <string name="help_content">Keeps only the frames that show what you pick, like cars, animals or faces. Each sampled frame is checked on your device.</string>
+    <string name="skip_nomatch_n">No match %1$d</string>
+    <string name="ctag_title">What to keep</string>
+    <string name="ctag_pick_hint">Pick at least one tag. With none picked, every sampled frame is kept.</string>
+    <string name="ctag_selected_n">%1$d selected</string>
+    <string name="ctag_clear">Clear</string>
+    <string name="ctag_match_label">Match</string>
+    <string name="ctag_match_any">Any tag</string>
+    <string name="ctag_match_all">All tags</string>
+    <string name="ctag_strict_label">Strictness</string>
+    <string name="ctag_strict_loose">Loose</string>
+    <string name="ctag_strict_balanced">Balanced</string>
+    <string name="ctag_strict_strict">Strict</string>
+    <string name="ctag_strict_loose_help">Also scans parts of each frame, so small objects are found. Slower.</string>
+    <string name="ctag_strict_balanced_help">A good balance between missed and wrong frames.</string>
+    <string name="ctag_strict_strict_help">Keeps only frames where the match is very clear.</string>
+    <string name="ctag_interval_label">Check every</string>
+    <string name="ctag_gap_label">Gap between kept frames</string>
+    <string name="ctag_gap_none">None</string>
+    <string name="ctag_sec_n">%1$s s</string>
+    <string name="ctag_group_all">Select all</string>
+    <string name="ctag_group_none">Clear</string>
+    <string name="ctag_slow">Every sampled frame is analysed by on-device AI, so extraction takes longer.</string>
+    <string name="trim_plan_content">Frames with %1$s</string>
+    <string name="confirm_delete_projects_body_undoable">Extraction will stop and the extracted frames will be removed. You can undo right after.</string>
 </resources>

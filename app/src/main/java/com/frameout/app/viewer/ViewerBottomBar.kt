@@ -50,17 +50,17 @@ internal fun ViewerBottomBar(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        GlassSurface(shape = FrameShapes.pill, modifier = Modifier.weight(1f)) {
+        ViewerGlassSurface(modifier = Modifier.weight(1f)) {
             Row(
                 Modifier.fillMaxWidth().height(52.dp).padding(horizontal = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                if (showPlay) BarButton(if (playing) FrameStrings.pause() else FrameStrings.play(), if (playing) FrameIcons.PauseFilled else FrameIcons.PlayFilled, colors.primary, tonal = true, onClick = onPlay)
-                BarButton(FrameStrings.save(), FrameIcons.Save, colors.onSurface, onClick = onSave)
-                BarButton(FrameStrings.share(), FrameIcons.Share, colors.onSurface, onClick = onShare)
-                BarButton(SearchStrings.actionShort(), FrameIcons.Search, colors.onSurface, onClick = onSearch)
-                BarButton(FrameStrings.delete(), FrameIcons.Trash, colors.error, onClick = onDelete)
+                if (showPlay) BarButton(if (playing) FrameStrings.pause() else FrameStrings.play(), if (playing) FrameIcons.PauseFilled else FrameIcons.PlayFilled, ViewerInk.accent, tonal = true, onClick = onPlay)
+                BarButton(FrameStrings.save(), FrameIcons.Save, ViewerInk.text, onClick = onSave)
+                BarButton(FrameStrings.share(), FrameIcons.Share, ViewerInk.text, onClick = onShare)
+                BarButton(SearchStrings.actionShort(), FrameIcons.Search, ViewerInk.text, onClick = onSearch)
+                BarButton(FrameStrings.delete(), FrameIcons.Trash, ViewerInk.danger, onClick = onDelete)
             }
         }
         FrameFab(FrameIconsExtra.Edit, EditStrings.tools(), onClick = onEdit)
@@ -80,6 +80,7 @@ private fun androidx.compose.foundation.layout.RowScope.BarButton(
             .weight(1f, fill = false)
             .widthIn(min = 44.dp, max = 52.dp)
             .height(48.dp)
+            .then(if (tonal) Modifier.viewerActiveGlow(tint) else Modifier)
             .clip(CircleShape)
             .then(if (tonal) Modifier.background(tint.copy(alpha = 0.16f)) else Modifier)
             .frameClickable(onClick = onClick),

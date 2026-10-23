@@ -11,13 +11,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.frameout.core.prefs.AppPrefs
+import com.frameout.core.quality.content.ContentSpec
 import com.frameout.core.util.FrameStrings
 import com.frameout.core.util.ModeStrings
 import com.frameout.designsystem.icons.FrameIconsExtra
 import com.frameout.engine.extract.ExtractMode
 import com.frameout.engine.extract.ExtractModeCodec
 
-internal val ModeKinds = listOf("every_frame", "every_n", "every_time", "keyframes", "fixed", "scene", "slides")
+internal val ModeKinds = listOf("every_frame", "every_n", "every_time", "keyframes", "fixed", "scene", "slides", "content")
 private const val MAX_FRAMES = 100000L
 private const val MAX_SECONDS = 86400L
 private const val MAX_MILLIS = 86400000L
@@ -30,6 +31,7 @@ internal fun kindOf(mode: ExtractMode) = when (mode) {
     is ExtractMode.FixedCount -> "fixed"
     ExtractMode.SceneChange -> "scene"
     ExtractMode.Slides -> "slides"
+    is ExtractMode.Content -> "content"
 }
 
 internal fun modeFor(kind: String, previous: ExtractMode) = when (kind) {
@@ -39,6 +41,7 @@ internal fun modeFor(kind: String, previous: ExtractMode) = when (kind) {
     "keyframes" -> ExtractMode.KeyframesOnly
     "scene" -> ExtractMode.SceneChange
     "slides" -> ExtractMode.Slides
+    "content" -> ExtractMode.Content(if (previous is ExtractMode.Content) previous.spec else ContentSpec())
     else -> ExtractMode.EveryFrame
 }
 
@@ -60,6 +63,7 @@ fun ExtractModeSettings(prefs: AppPrefs, stored: String, onOpenSheet: () -> Unit
                 SettingsNumberField(ModeStrings.countLabel(), mode.count.toLong(), MAX_FRAMES) { save(ExtractMode.FixedCount(it.toInt())) }
             }
             is ExtractMode.EveryNMillis -> TimeModeFields(mode.millis) { save(ExtractMode.EveryNMillis(it)) }
+            is ExtractMode.Content -> ContentSettings(mode.spec) { save(ExtractMode.Content(it)) }
             else -> Unit
         }
     }
@@ -80,8 +84,10 @@ private fun TimeModeFields(millis: Long, onCommit: (Long) -> Unit) {
     }
 }
 
+internal fun isSmartKind(kind: String): Boolean = kind == "scene" || kind == "slides" || kind == "content"
+
 internal fun gateMode(kind: String, action: () -> Unit) {
-    val smart = kind == "scene" || kind == "slides"
+    val smart = isSmartKind(kind)
     com.frameout.core.pro.ProAccess.source?.gate(com.frameout.core.pro.ProFeature.SmartExtract, !smart, kind, action) ?: action()
 }
 

@@ -14,8 +14,8 @@ internal class FlightEnd(val center: Offset, val slot: Float, val corner: Float)
 
 private const val RISE_END = 0.36f
 private const val HOLD_END = 0.5f
-private const val STAGE_WIDTH_FRACTION = 0.62f
-private const val STAGE_HEIGHT_FRACTION = 0.46f
+private const val STAGE_WIDTH_FRACTION = 0.5f
+private const val STAGE_HEIGHT_FRACTION = 0.3f
 
 private val RiseEasing = CubicBezierEasing(0.2f, 0.8f, 0.3f, 1.1f)
 private val TravelEasing = CubicBezierEasing(0.5f, 0f, 0.2f, 1f)

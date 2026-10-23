@@ -17,12 +17,16 @@ object SystemStepper {
             val track = VideoTrackSelector.select(extractor)
             if (track < 0) return null
             extractor.selectTrack(track)
-            val target = currentMs.coerceAtLeast(0L) * 1000L
-            if (forward) forwardStep(extractor, target, count) else backwardStep(extractor, target, count)
+            if (forward) forwardStep(extractor, ExactPts.limitUs(currentMs), count)
+            else backwardStep(extractor, currentMs.coerceAtLeast(0L) * 1000L, count)
         } finally {
             extractor.release()
         }
     }.logged("SystemStepper").getOrNull()
+
+    fun isAfterCurrent(ptsUs: Long, currentMs: Long): Boolean = ptsUs > ExactPts.limitUs(currentMs)
+
+    fun isBeforeCurrent(ptsUs: Long, currentMs: Long): Boolean = ptsUs < currentMs.coerceAtLeast(0L) * 1000L
 
     fun pickNext(after: List<Long>, count: Int): Long? =
         after.sorted().let { if (it.isEmpty()) null else it[minOf(count, it.size) - 1] / 1000L }

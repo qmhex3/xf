@@ -7,6 +7,7 @@ import com.frameout.core.edit.FrameEdit
 import com.frameout.core.quality.NormBox
 import com.frameout.core.quality.NormBoxCodec
 import com.frameout.core.quality.SceneReasoner
+import com.frameout.core.quality.TagFamilies
 import com.frameout.core.quality.TagHit
 import com.frameout.core.quality.TagRules
 import kotlin.math.roundToInt
@@ -17,10 +18,11 @@ internal object ViewerDetections {
     private const val WINDOW = 4
 
     suspend fun load(dao: FrameTagDao, frame: FrameEntity, edit: FrameEdit): List<Detection> {
-        val stored = runCatching { dao.boxedTagsForFrame(frame.id) }.getOrDefault(emptyList())
+        val stored = runCatching { dao.boxedTagsForFrame(frame.id) }.getOrDefault(emptyList()).filterNot { TagFamilies.isFamily(it.tag) }
         val hits = stored.map { TagHit(it.tag, it.confidence, NormBoxCodec.decode(it.boxes)) }
         val around = runCatching { dao.tagsAround(frame.projectId, frame.id, frame.index - WINDOW, frame.index + WINDOW) }
             .getOrDefault(emptyList())
+            .filterNot { TagFamilies.isFamily(it.tag) }
             .groupBy { it.frameId }.values
             .map { rows -> rows.map { TagHit(it.tag, it.confidence, NormBoxCodec.decode(it.boxes)) } }
         val refined = SceneReasoner.refine(hits, around).filter { it.tag !in QUIET && it.boxes.isNotEmpty() }

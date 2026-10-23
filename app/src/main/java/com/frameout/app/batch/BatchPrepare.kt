@@ -92,7 +92,7 @@ internal fun BatchPrepare(
     LaunchedEffect(items.isEmpty()) {
         if (items.isNotEmpty()) seen = true else if (seen) onBack()
     }
-    val total = items.sumOf { estimateFrames(it.durationMs, it.range ?: FULL, stored) }
+    val total = items.sumOf { estimateFrames(it.durationMs, it.range ?: FULL, stored, it.probe) }
     val roomy = remember(total, autoSave) { hasSpace(total) }
     Box(Modifier.fillMaxSize().background(FrameTheme.colors.background).frameAmbientGlow()) {
         Column(Modifier.fillMaxSize()) {
@@ -206,7 +206,7 @@ private fun Chip(text: String, accent: Boolean = false, icon: Int? = null) {
 @Composable
 private fun PrepRow(item: PrepItem, stored: String, onEdit: () -> Unit, onRemove: () -> Unit) {
     val colors = FrameTheme.colors
-    val frames = estimateFrames(item.durationMs, item.range ?: FULL, stored)
+    val frames = estimateFrames(item.durationMs, item.range ?: FULL, stored, item.probe)
     val edge: Brush = if (item.edited) SolidColor(colors.primary.copy(alpha = 0.45f)) else frameCardEdge()
     Row(
         Modifier

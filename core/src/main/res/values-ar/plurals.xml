@@ -133,4 +133,74 @@
         <item quantity="many">%1$d فيديو</item>
         <item quantity="other">%1$d فيديو</item>
     </plurals>
+    <plurals name="projects_deleted">
+        <item quantity="one">تم حذف مشروع واحد</item>
+        <item quantity="two">تم حذف مشروعين</item>
+        <item quantity="few">تم حذف %1$d مشاريع</item>
+        <item quantity="many">تم حذف %1$d مشروعًا</item>
+        <item quantity="other">تم حذف %1$d مشروع</item>
+    </plurals>
+    <plurals name="projects_restored">
+        <item quantity="one">تمت استعادة مشروع واحد</item>
+        <item quantity="two">تمت استعادة مشروعين</item>
+        <item quantity="few">تمت استعادة %1$d مشاريع</item>
+        <item quantity="many">تمت استعادة %1$d مشروعًا</item>
+        <item quantity="other">تمت استعادة %1$d مشروع</item>
+    </plurals>
+    <plurals name="saved_deleted_n">
+        <item quantity="one">تم حذف صورة واحدة</item>
+        <item quantity="two">تم حذف صورتين</item>
+        <item quantity="few">تم حذف %1$d صور</item>
+        <item quantity="many">تم حذف %1$d صورة</item>
+        <item quantity="other">تم حذف %1$d صورة</item>
+    </plurals>
+    <plurals name="saved_restored_n">
+        <item quantity="one">تمت استعادة صورة واحدة</item>
+        <item quantity="two">تمت استعادة صورتين</item>
+        <item quantity="few">تمت استعادة %1$d صور</item>
+        <item quantity="many">تمت استعادة %1$d صورة</item>
+        <item quantity="other">تمت استعادة %1$d صورة</item>
+    </plurals>
+    <plurals name="saved_pruned_n">
+        <item quantity="one">أُزيل عنصر محفوظ واحد لأن ملفه لم يعد موجودًا على الجهاز</item>
+        <item quantity="two">أُزيل عنصران محفوظان لأن ملفيهما لم يعودا موجودين على الجهاز</item>
+        <item quantity="few">أُزيلت %1$d عناصر محفوظة لأن ملفاتها لم تعد موجودة على الجهاز</item>
+        <item quantity="many">أُزيل %1$d عنصرًا محفوظًا لأن ملفاتها لم تعد موجودة على الجهاز</item>
+        <item quantity="other">أُزيل %1$d عنصر محفوظ لأن ملفاتها لم تعد موجودة على الجهاز</item>
+    </plurals>
+    <plurals name="confirm_delete_projects_n">
+        <item quantity="one">حذف هذا المشروع؟</item>
+        <item quantity="two">حذف المشروعين؟</item>
+        <item quantity="few">حذف %1$d مشاريع؟</item>
+        <item quantity="many">حذف %1$d مشروعًا؟</item>
+        <item quantity="other">حذف %1$d مشروع؟</item>
+    </plurals>
+    <plurals name="confirm_delete_saved_n">
+        <item quantity="one">حذف هذه الصورة المحفوظة؟</item>
+        <item quantity="two">حذف الصورتين المحفوظتين؟</item>
+        <item quantity="few">حذف %1$d صور محفوظة؟</item>
+        <item quantity="many">حذف %1$d صورة محفوظة؟</item>
+        <item quantity="other">حذف %1$d صورة محفوظة؟</item>
+    </plurals>
+    <plurals name="backup_saved_many_n">
+        <item quantity="one">تم تصدير مشروع واحد إلى المجلد المختار</item>
+        <item quantity="two">تم تصدير مشروعين إلى المجلد المختار</item>
+        <item quantity="few">تم تصدير %1$d مشاريع إلى المجلد المختار</item>
+        <item quantity="many">تم تصدير %1$d مشروعًا إلى المجلد المختار</item>
+        <item quantity="other">تم تصدير %1$d مشروع إلى المجلد المختار</item>
+    </plurals>
+    <plurals name="export_done_many_n">
+        <item quantity="one">تم تصدير مشروع واحد</item>
+        <item quantity="two">تم تصدير مشروعين</item>
+        <item quantity="few">تم تصدير %1$d مشاريع</item>
+        <item quantity="many">تم تصدير %1$d مشروعًا</item>
+        <item quantity="other">تم تصدير %1$d مشروع</item>
+    </plurals>
+    <plurals name="saved_export_done_n">
+        <item quantity="one">صُدّرت صورة واحدة</item>
+        <item quantity="two">صُدّرت صورتان</item>
+        <item quantity="few">صُدّرت %1$d صور</item>
+        <item quantity="many">صُدّرت %1$d صورة</item>
+        <item quantity="other">صُدّرت %1$d صورة</item>
+    </plurals>
 </resources>

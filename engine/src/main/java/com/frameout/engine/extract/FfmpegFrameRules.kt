@@ -22,5 +22,6 @@ object FfmpegFrameRules {
         ExtractMode.KeyframesOnly -> keyframe
         is ExtractMode.FixedCount -> ptsUs >= 0L
         ExtractMode.SceneChange, ExtractMode.Slides -> SceneChangeSelector.changed(mode, previous, current)
+        is ExtractMode.Content -> ptsUs >= 0L
     }
 }

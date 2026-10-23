@@ -17,7 +17,8 @@ data class FaceMark(
     val smile: Float? = null,
     val yaw: Float = 0f,
     val pitch: Float = 0f,
-    val roll: Float = 0f
+    val roll: Float = 0f,
+    val zoomed: Boolean = false
 ) {
     val width: Int get() = right - left
     val height: Int get() = bottom - top
@@ -64,7 +65,9 @@ object FaceQuality {
     private const val SQUINT_VALUE = 0.5f
     private const val UNKNOWN_SHARP = 0.5f
 
-    fun reliable(mark: FaceMark): Boolean = min(mark.width, mark.height) >= RELIABLE_PX
+    fun bigEnough(mark: FaceMark): Boolean = min(mark.width, mark.height) >= RELIABLE_PX
+
+    fun reliable(mark: FaceMark): Boolean = mark.zoomed || bigEnough(mark)
 
     fun eyeOpenness(mark: FaceMark): Float? {
         if (!reliable(mark)) return null
@@ -109,7 +112,7 @@ object FaceQuality {
         var frontal = 1f
         var size = 0f
         relevant.forEach { m ->
-            sharp = min(sharp, if (reliable(m)) faceSharpness(luma, width, height, m) else UNKNOWN_SHARP)
+            sharp = min(sharp, if (bigEnough(m)) faceSharpness(luma, width, height, m) else UNKNOWN_SHARP)
             frontal = min(frontal, frontalness(m))
             size = max(size, sizeRatio(m, width, height))
         }

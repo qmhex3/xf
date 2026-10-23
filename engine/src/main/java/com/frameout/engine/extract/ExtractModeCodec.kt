@@ -1,5 +1,7 @@
 package com.frameout.engine.extract
 
+import com.frameout.core.quality.content.ContentSpec
+
 object ExtractModeCodec {
     fun encode(mode: ExtractMode): String = when (mode) {
         ExtractMode.EveryFrame -> "EveryFrame"
@@ -9,6 +11,7 @@ object ExtractModeCodec {
         is ExtractMode.FixedCount -> "FixedCount:${mode.count.coerceAtLeast(1)}"
         ExtractMode.SceneChange -> "SceneChange"
         ExtractMode.Slides -> "Slides"
+        is ExtractMode.Content -> "Content:${mode.spec.encode()}"
     }
 
     fun decode(value: String?): ExtractMode = when {
@@ -19,6 +22,7 @@ object ExtractModeCodec {
         value.startsWith("FixedCount:") -> ExtractMode.FixedCount(value.substringAfter(':').toIntOrNull()?.coerceAtLeast(1) ?: 10)
         value == "SceneChange" || value == "scene" -> ExtractMode.SceneChange
         value == "Slides" || value == "slides" -> ExtractMode.Slides
+        value.startsWith("Content:") -> ExtractMode.Content(ContentSpec.decode(value.substringAfter(':')))
         value == "every_5" -> ExtractMode.EveryNFrames(5)
         value == "every_1000ms" -> ExtractMode.EveryNMillis(1000)
         value == "fixed_30" -> ExtractMode.FixedCount(30)

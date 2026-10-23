@@ -25,6 +25,8 @@ interface SavedImageDao {
     fun observeKindCounts(): Flow<List<SavedKindCount>>
     @Query("SELECT album AS album, COUNT(*) AS total FROM saved_images GROUP BY album ORDER BY album ASC")
     fun observeAlbums(): Flow<List<AlbumCount>>
+    @Query("SELECT * FROM saved_images WHERE id > :afterId ORDER BY id ASC LIMIT :limit")
+    suspend fun after(afterId: Long, limit: Int): List<SavedImageEntity>
     @Query("SELECT * FROM saved_images WHERE id = :id")
     suspend fun getById(id: Long): SavedImageEntity?
     @Query("SELECT * FROM saved_images WHERE id IN (:ids)")

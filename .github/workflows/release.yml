@@ -41,6 +41,8 @@ jobs:
         run: |
           echo "$KEYSTORE_BASE64" | base64 -d > app/release.keystore
           echo "HAS_KEYSTORE=true" >> "$GITHUB_ENV"
+      - name: Fetch Arabic OCR model
+        run: bash scripts/fetch-ara-model.sh
       - name: Check FFmpeg is LGPL-only (no GPL or nonfree flags)
         run: |
           bash scripts/test-check-ffmpeg-license.sh

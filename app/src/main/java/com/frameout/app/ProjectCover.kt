@@ -25,7 +25,8 @@ object ProjectCover {
     ) {
         withContext(Dispatchers.IO) {
             runCatching {
-                val file = (runCatching { grab(context, uri, startMs) }.getOrNull() ?: grabFfmpeg(context, uri, startMs))?.let { save(storage, projectId, it) } ?: return@runCatching
+                val shared = if (startMs <= 0L) com.frameout.core.media.MediaThumbLoader.loadForUri(context, uri.toString())?.copy(Bitmap.Config.ARGB_8888, false) else null
+                val file = (shared ?: runCatching { grab(context, uri, startMs) }.getOrNull() ?: grabFfmpeg(context, uri, startMs))?.let { save(storage, projectId, it) } ?: return@runCatching
                 dao.setThumbnail(projectId, file.absolutePath, System.currentTimeMillis())
             }
         }

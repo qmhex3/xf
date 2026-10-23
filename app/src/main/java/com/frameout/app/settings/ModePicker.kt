@@ -92,7 +92,7 @@ internal fun ModeSheet(visible: Boolean, prefs: AppPrefs, stored: String, onClos
 @Composable
 private fun ModeCard(kind: String, selected: Boolean, modifier: Modifier, onClick: () -> Unit) {
     val colors = FrameTheme.colors
-    val locked = rememberProGate().locked(kind != "scene" && kind != "slides")
+    val locked = rememberProGate().locked(!isSmartKind(kind))
     val edge by animateColorAsState(if (selected) colors.primary else frameHairline(), frameSpring(), label = "modeEdge")
     Column(
         modifier
@@ -144,7 +144,11 @@ internal fun ModeIllustration(kind: String, selected: Boolean, modifier: Modifie
     val sceneB = colors.success
     val sceneC = colors.error
     Canvas(modifier.fillMaxWidth().height(60.dp)) {
-        if (kind == "slides") drawSlides(pick, dim, ink) else drawStrip(kind, pick, dim, ink, pick, sceneB, sceneC)
+        when (kind) {
+            "slides" -> drawSlides(pick, dim, ink)
+            "content" -> drawContent(pick, dim, ink)
+            else -> drawStrip(kind, pick, dim, ink, pick, sceneB, sceneC)
+        }
     }
 }
 

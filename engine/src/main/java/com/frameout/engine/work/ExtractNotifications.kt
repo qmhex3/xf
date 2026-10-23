@@ -29,9 +29,9 @@ object ExtractNotifications {
 
     fun notificationId(projectId: Long): Int = NOTIFICATION_ID + ((projectId xor (projectId ushr 32)).toInt() and 0x1FFFFF)
 
-    fun build(context: Context, projectId: Long, text: String, done: Int, total: Int, indeterminate: Boolean, paused: Boolean, elapsed: Long, remaining: Long): Notification {
+    fun build(context: Context, projectId: Long, text: String, done: Int, total: Int, indeterminate: Boolean, paused: Boolean, elapsed: Long, remaining: Long, unified: Float = -1f, indexing: Boolean = false): Notification {
         channel(context)
-        return ExtractProgressNotification.build(context, projectId, text, done, total, indeterminate, paused, elapsed, remaining)
+        return ExtractProgressNotification.build(context, projectId, text, done, total, indeterminate, paused, elapsed, remaining, unified, indexing)
     }
 
     private const val COPY_BLOCKED_ID = 4105

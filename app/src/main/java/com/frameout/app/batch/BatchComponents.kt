@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.frameout.core.util.FrameStrings
 import com.frameout.designsystem.a11y.frameClickable
 import com.frameout.designsystem.components.FrameSpinner
+import com.frameout.designsystem.components.FrameMarqueeText
 import com.frameout.designsystem.components.FrameText
 import com.frameout.designsystem.glass.frameGlow
 import com.frameout.designsystem.icons.FrameIcons
@@ -67,13 +68,13 @@ internal fun BatchSummary(state: BatchState) {
             Column(Modifier.weight(1f), Arrangement.spacedBy(3.dp)) {
                 FrameText(FrameStrings.finished(state.completedCount, state.items.size), style = FrameTheme.typography.titleSmall)
                 state.active?.let {
-                    FrameText(it.name, style = FrameTheme.typography.bodySmall.copy(textDirection = TextDirection.Content), color = colors.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    FrameMarqueeText(it.name, style = FrameTheme.typography.bodySmall.copy(textDirection = TextDirection.Content), color = colors.onSurfaceVariant)
                 }
             }
             FrameText(
                 "$percent%",
                 style = FrameTheme.typography.display.copy(textDirection = TextDirection.Ltr),
-                color = if (state.done) colors.success else colors.primary
+                color = if (state.done && state.allSucceeded) colors.success else if (state.done) colors.error else colors.primary
             )
         }
         ProgressTrack(state.progress, Modifier.fillMaxWidth())
@@ -97,11 +98,11 @@ internal fun BatchRow(item: BatchItem, onOpen: () -> Unit) {
     ) {
         StatusBadge(item.status, accent)
         Column(Modifier.weight(1f), Arrangement.spacedBy(8.dp)) {
-            FrameText(item.name, style = FrameTheme.typography.titleSmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
-            if (!item.finished && item.total > 0) ProgressTrack(item.fraction, Modifier.fillMaxWidth())
+            FrameMarqueeText(item.name, style = FrameTheme.typography.titleSmall.copy(textDirection = TextDirection.Content))
+            if (!item.finished && item.hasProgress) ProgressTrack(item.fraction, Modifier.fillMaxWidth())
             FrameText(statusLine(item), style = FrameTheme.typography.bodySmall, color = accent)
         }
-        if (!item.finished && item.total > 0) {
+        if (!item.finished && item.hasProgress) {
             FrameText(
                 "${(item.fraction * 100).toInt()}%",
                 style = FrameTheme.typography.label.copy(textDirection = TextDirection.Ltr),
@@ -112,7 +113,8 @@ internal fun BatchRow(item: BatchItem, onOpen: () -> Unit) {
 }
 
 private fun statusLine(item: BatchItem): String =
-    FrameStrings.status(item.status) + " · ${item.extracted}" + if (item.total > 0) "/${item.total}" else ""
+    if (item.status == "Indexing") FrameStrings.status(item.status)
+    else FrameStrings.status(item.status) + " · ${item.extracted}" + if (item.total > 0) "/${item.total}" else ""
 
 @Composable
 private fun statusColor(status: String): Color {

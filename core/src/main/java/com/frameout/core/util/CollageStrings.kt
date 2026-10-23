@@ -30,6 +30,7 @@ object CollageStrings {
     fun frameN(n: Int) = s(R.string.collage_frame_n, n)
     fun skipped(missing: Int, total: Int) = s(R.string.collage_skipped, missing, total)
     fun noFrames() = s(R.string.collage_no_frames)
+    fun pickFrame() = s(R.string.collage_pick_frame)
     fun hintAdjust() = s(R.string.collage_hint_adjust)
     fun aspect() = s(R.string.collage_aspect)
     fun resolution() = s(R.string.collage_resolution)

@@ -99,6 +99,7 @@ internal fun pickPattern(mode: ExtractMode, cells: Int): BooleanArray {
         ExtractMode.KeyframesOnly -> listOf(0.04f, 0.2f, 0.46f, 0.61f, 0.86f).forEach { mark(it) }
         ExtractMode.SceneChange -> listOf(0.2f, 0.47f, 0.74f).forEach { mark(it) }
         ExtractMode.Slides -> for (j in 0 until 3) out[(j * cells / 3).coerceIn(0, cells - 1)] = true
+        is ExtractMode.Content -> listOf(0.12f, 0.41f, 0.58f, 0.9f).forEach { mark(it) }
     }
     return out
 }

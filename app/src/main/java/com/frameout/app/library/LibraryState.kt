@@ -16,6 +16,8 @@ class PendingGalleryDelete(val sender: android.content.IntentSender, val ids: Li
 
 data class LibraryState(
     val pendingGalleryDelete: PendingGalleryDelete? = null,
+    val undoSavedCount: Int = 0,
+    val undoProjectCount: Int = 0,
     val tab: LibraryTab = LibraryTab.Projects,
     val projects: List<ProjectEntity> = emptyList(),
     val selectedProjects: Set<Long> = emptySet(),
@@ -41,6 +43,9 @@ data class LibraryState(
     val exportSaved: com.frameout.app.trim.SavedCapture? = null,
     val exportNote: String? = null
 ) {
+    val hasUndo: Boolean
+        get() = undoSavedCount > 0 || undoProjectCount > 0
+
     val selectionMode: Boolean
         get() = selectedProjects.isNotEmpty() || selectedSaved.isNotEmpty()
 

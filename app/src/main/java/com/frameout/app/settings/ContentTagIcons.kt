@@ -1,0 +1,98 @@
+package com.frameout.app.settings
+
+import androidx.annotation.DrawableRes
+import com.frameout.app.R
+
+private val TagIcons: Map<String, Int> = mapOf(
+    "car" to R.drawable.ic_ctag_car,
+    "heavy" to R.drawable.ic_ctag_heavy,
+    "bus" to R.drawable.ic_ctag_bus,
+    "motorcycle" to R.drawable.ic_ctag_motorcycle,
+    "bicycle" to R.drawable.ic_ctag_bicycle,
+    "train" to R.drawable.ic_ctag_train,
+    "plane" to R.drawable.ic_ctag_plane,
+    "helicopter" to R.drawable.ic_ctag_helicopter,
+    "boat" to R.drawable.ic_ctag_boat,
+    "dog" to R.drawable.ic_ctag_dog,
+    "cat" to R.drawable.ic_ctag_cat,
+    "bird" to R.drawable.ic_ctag_bird,
+    "horse" to R.drawable.ic_ctag_horse,
+    "cattle" to R.drawable.ic_ctag_cattle,
+    "bear" to R.drawable.ic_ctag_bear,
+    "reptile" to R.drawable.ic_ctag_reptile,
+    "insect" to R.drawable.ic_ctag_insect,
+    "mountain" to R.drawable.ic_ctag_mountain,
+    "beach" to R.drawable.ic_ctag_beach,
+    "desert" to R.drawable.ic_ctag_desert,
+    "forest" to R.drawable.ic_ctag_forest,
+    "water" to R.drawable.ic_ctag_water,
+    "waterfall" to R.drawable.ic_ctag_waterfall,
+    "sunset" to R.drawable.ic_ctag_sunset,
+    "flower" to R.drawable.ic_ctag_flower,
+    "ice" to R.drawable.ic_ctag_ice,
+    "storm" to R.drawable.ic_ctag_storm,
+    "building" to R.drawable.ic_ctag_building,
+    "skyscraper" to R.drawable.ic_ctag_skyscraper,
+    "bridge" to R.drawable.ic_ctag_bridge,
+    "tower" to R.drawable.ic_ctag_tower,
+    "mosque" to R.drawable.ic_ctag_mosque,
+    "church" to R.drawable.ic_ctag_church,
+    "castle" to R.drawable.ic_ctag_castle,
+    "landmark" to R.drawable.ic_ctag_landmark,
+    "road" to R.drawable.ic_ctag_road,
+    "meal" to R.drawable.ic_ctag_meal,
+    "fastfood" to R.drawable.ic_ctag_fastfood,
+    "sweets" to R.drawable.ic_ctag_sweets,
+    "bread" to R.drawable.ic_ctag_bread,
+    "fruit" to R.drawable.ic_ctag_fruit,
+    "vegetable" to R.drawable.ic_ctag_vegetable,
+    "coffee" to R.drawable.ic_ctag_coffee,
+    "drink" to R.drawable.ic_ctag_drink,
+    "soccer" to R.drawable.ic_ctag_soccer,
+    "swimming" to R.drawable.ic_ctag_swimming,
+    "running" to R.drawable.ic_ctag_running,
+    "dance" to R.drawable.ic_ctag_dance,
+    "concert" to R.drawable.ic_ctag_concert,
+    "party" to R.drawable.ic_ctag_party,
+    "wedding" to R.drawable.ic_ctag_wedding,
+    "fireworks" to R.drawable.ic_ctag_fireworks,
+    "fire" to R.drawable.ic_ctag_fire,
+    "phone" to R.drawable.ic_ctag_phone,
+    "computer" to R.drawable.ic_ctag_computer,
+    "tv" to R.drawable.ic_ctag_tv,
+    "instrument" to R.drawable.ic_ctag_instrument,
+    "clock" to R.drawable.ic_ctag_clock,
+    "bag" to R.drawable.ic_ctag_bag,
+    "glasses" to R.drawable.ic_ctag_glasses,
+    "toy" to R.drawable.ic_ctag_toy,
+    "shoes" to R.drawable.ic_ctag_shoes,
+    "hat" to R.drawable.ic_ctag_hat,
+    "dress" to R.drawable.ic_ctag_dress,
+    "clothes" to R.drawable.ic_ctag_clothes,
+    "jewellery" to R.drawable.ic_ctag_jewellery,
+    "face" to R.drawable.ic_ctag_face,
+    "smile" to R.drawable.ic_ctag_smile,
+    "group" to R.drawable.ic_ctag_group,
+    "baby" to R.drawable.ic_ctag_baby,
+    "crowd" to R.drawable.ic_ctag_crowd,
+    "text" to R.drawable.ic_ctag_text,
+    "code" to R.drawable.ic_ctag_code
+)
+
+private val GroupIcons: Map<String, Int> = mapOf(
+    "vehicles" to R.drawable.ic_cgroup_vehicles,
+    "animals" to R.drawable.ic_cgroup_animals,
+    "nature" to R.drawable.ic_cgroup_nature,
+    "places" to R.drawable.ic_cgroup_places,
+    "food" to R.drawable.ic_cgroup_food,
+    "activities" to R.drawable.ic_cgroup_activities,
+    "devices" to R.drawable.ic_cgroup_devices,
+    "fashion" to R.drawable.ic_cgroup_fashion,
+    "people" to R.drawable.ic_cgroup_people
+)
+
+@DrawableRes
+internal fun contentTagIcon(id: String): Int = TagIcons[id] ?: R.drawable.ic_ctag_building
+
+@DrawableRes
+internal fun contentGroupIcon(id: String): Int = GroupIcons[id] ?: R.drawable.ic_ctag_building

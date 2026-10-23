@@ -77,8 +77,8 @@ class StorageManager(private val context: Context) {
         }
     }
     suspend fun deleteGalleryUri(uri: String): Boolean = withContext(Dispatchers.IO) {
-        val parsed = runCatching { Uri.parse(uri) }.getOrNull() ?: return@withContext false
-        if (parsed.scheme.isNullOrBlank()) return@withContext false
+        val parsed = runCatching { Uri.parse(uri) }.getOrNull()
+        if (parsed == null || parsed.scheme.isNullOrBlank()) return@withContext true
         val deleted = runCatching { context.contentResolver.delete(parsed, null, null) > 0 }.getOrElse {
             logFailure("StorageManager", it)
             false
@@ -114,9 +114,26 @@ class StorageManager(private val context: Context) {
         return null
     }
 
-    private fun galleryUriExists(uri: Uri): Boolean? = runCatching {
+    private fun galleryUriExists(uri: Uri): Boolean? = try {
         context.contentResolver.openAssetFileDescriptor(uri, "r")?.use { true } ?: false
-    }.getOrNull()
+    } catch (e: java.io.FileNotFoundException) {
+        if (uri.authority == MediaStore.AUTHORITY && !canReadMedia()) null else false
+    } catch (e: Exception) {
+        null
+    }
+
+    fun canReadMedia(): Boolean {
+        val permission = if (Build.VERSION.SDK_INT >= 33) android.Manifest.permission.READ_MEDIA_IMAGES else android.Manifest.permission.READ_EXTERNAL_STORAGE
+        return androidx.core.content.ContextCompat.checkSelfPermission(context, permission) == android.content.pm.PackageManager.PERMISSION_GRANTED
+    }
+
+    fun uriExists(uri: String): Boolean? {
+        val parsed = runCatching { Uri.parse(uri) }.getOrNull() ?: return false
+        if (parsed.scheme.isNullOrBlank()) return false
+        return galleryUriExists(parsed)
+    }
+
+    fun cleanupUndoCache() = GalleryBackup(context).cleanup()
     suspend fun saveBitmapToGallery(bitmap: Bitmap, displayName: String, format: ImageFormat = ImageFormat.Jpg, quality: Int = 92, relativePath: String = "Pictures/FrameOut", dateTaken: Long? = null, requestedTree: String? = null, subfolder: String = "", exif: ByteArray? = null): Uri? = withContext(Dispatchers.IO) {
         val treeUri = SaveFolderGuard.resolve(context, requestedTree)
         val required = bitmap.byteCount.toLong().coerceAtLeast(1L) + HEADROOM_BYTES

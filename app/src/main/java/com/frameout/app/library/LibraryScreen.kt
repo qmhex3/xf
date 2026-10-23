@@ -87,11 +87,11 @@ fun LibraryScreen(
                 savedId,
                 onViewer = { projectId, frameId -> onOpenSaved(projectId, frameId, savedId) },
                 onSystem = { uri ->
-                    runCatching {
-                        context.startActivity(
-                            android.content.Intent(android.content.Intent.ACTION_VIEW).setDataAndType(uri, "image/*").addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                        )
-                    }
+                    val mime = runCatching { context.contentResolver.getType(uri) }.getOrNull() ?: "image/*"
+                    val view = android.content.Intent(android.content.Intent.ACTION_VIEW).setDataAndType(uri, mime)
+                        .setClipData(android.content.ClipData.newRawUri("", uri))
+                        .addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    runCatching { context.startActivity(view) }
                 }
             )
         }
@@ -182,6 +182,12 @@ fun LibraryScreen(
                 kind = if (state.messageIsError) com.frameout.designsystem.components.ToastKind.Error else if (state.messageSaved != null) com.frameout.designsystem.components.ToastKind.Success else com.frameout.designsystem.components.ToastKind.Info,
                 icon = state.messageIcon,
                 saved = state.messageSaved,
+                durationMs = if (state.hasUndo) 6000L else null,
+                actions = when {
+                    state.undoProjectCount > 0 -> listOf(com.frameout.designsystem.components.ToastAction(FrameStrings.undo(), vm::undoProjectDelete))
+                    state.undoSavedCount > 0 -> listOf(com.frameout.designsystem.components.ToastAction(FrameStrings.undo(), vm::undoSavedDelete))
+                    else -> emptyList()
+                },
                 onDismiss = vm::clearMessage
             )
         }

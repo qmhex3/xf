@@ -16,4 +16,24 @@ class ExtractRequestGateTest {
 
     @Test
     fun filtersApplyToFixedCountToo() = assertNotNull(request(ExtractMode.FixedCount(10), blurry = true).newGate())
+
+    private val vehicles = ExtractMode.Content(com.frameout.core.quality.content.ContentSpec(tags = setOf("car")))
+
+    @Test
+    fun peopleOnlyIsDroppedWhenContentTagsDecideWhatToKeep() {
+        val r = request(vehicles, people = true)
+        org.junit.Assert.assertFalse(r.peopleOnlyApplied)
+        assertNotNull(r.newGate())
+    }
+
+    @Test
+    fun peopleOnlyIsDroppedForSlides() =
+        org.junit.Assert.assertFalse(request(ExtractMode.Slides, people = true).peopleOnlyApplied)
+
+    @Test
+    fun peopleOnlyStillWorksWhenNoTagIsPickedOrModeIsPlain() {
+        org.junit.Assert.assertTrue(request(ExtractMode.Content(com.frameout.core.quality.content.ContentSpec()), people = true).peopleOnlyApplied)
+        org.junit.Assert.assertTrue(request(ExtractMode.EveryFrame, people = true).peopleOnlyApplied)
+        org.junit.Assert.assertTrue(request(ExtractMode.SceneChange, people = true).peopleOnlyApplied)
+    }
 }

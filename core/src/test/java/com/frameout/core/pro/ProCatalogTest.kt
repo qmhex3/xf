@@ -14,7 +14,7 @@ class ProCatalogTest {
 
     @Test
     fun advancedFormatsNeedPro() {
-        listOf(ImageFormat.JpgHdr, ImageFormat.PngHdr16, ImageFormat.WebpLossless, ImageFormat.Heic, ImageFormat.Avif)
+        listOf(ImageFormat.JpgHdr, ImageFormat.PngHdr16, ImageFormat.Heic, ImageFormat.Avif)
             .forEach { assertFalse(it.key, ProCatalog.formatIsFree(it)) }
     }
 

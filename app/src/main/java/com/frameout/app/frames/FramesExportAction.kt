@@ -1,5 +1,6 @@
 package com.frameout.app.frames
 
+import com.frameout.core.storage.insertTracked
 import com.frameout.core.db.getByIdsChunked
 import com.frameout.core.util.logged
 import android.content.Context
@@ -44,7 +45,7 @@ class FramesExportAction(private val context: Context) {
         val name = "${FrameStrings.appName()}_${System.currentTimeMillis()}.gif"
         val uri = saver.save(name, "image/gif", app.container.prefs.saveFolder.value, treeUri(), subfolderOf(ordered)) { out -> GifSupport.write(paths, GifSupport.delayMs(ordered), out) }
         val size = withContext(Dispatchers.IO) { GifSupport.dimensions(paths) }
-        if (uri != null) app.container.savedImages.insert(SavedImageEntity(uri = uri.toString(), displayName = name, album = FrameStrings.appName(), width = size.first, height = size.second, createdAt = System.currentTimeMillis()))
+        if (uri != null) app.container.savedImages.insertTracked(app.container.storage, SavedImageEntity(uri = uri.toString(), displayName = name, album = FrameStrings.appName(), width = size.first, height = size.second, createdAt = System.currentTimeMillis()))
         return result(uri, "image/gif")
     }
 
@@ -124,7 +125,7 @@ class FramesExportAction(private val context: Context) {
             val name = ContactSheetLayout.fileName(FrameStrings.appName(), job.stamp, sheet, job.plan.sheets.size, png)
             val uri = saver.save(name, if (png) "image/png" else "image/jpeg", app.container.prefs.saveFolder.value, treeUri(), job.subfolder) { out -> ContactSheetImage.write(bitmap, png, out) } ?: return null
             job.saved++
-            app.container.savedImages.insert(SavedImageEntity(uri = uri.toString(), displayName = name, album = FrameStrings.appName(), width = bitmap.width, height = bitmap.height, createdAt = System.currentTimeMillis()))
+            app.container.savedImages.insertTracked(app.container.storage, SavedImageEntity(uri = uri.toString(), displayName = name, album = FrameStrings.appName(), width = bitmap.width, height = bitmap.height, createdAt = System.currentTimeMillis()))
             return uri
         } finally {
             bitmap.recycle()

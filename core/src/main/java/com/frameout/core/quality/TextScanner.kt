@@ -51,7 +51,7 @@ object TextScanner {
             val image = InputImage.fromBitmap(work, 0)
             val out = ArrayList<ScannedWord>()
             val failed = ArrayList<String>()
-            if (!attempt("text") { readText(image, work.width, work.height, out) }) failed += "text"
+            if (!attempt("text") { readText(image, work, work.width, work.height, out) }) failed += "text"
             if (!attempt("barcodes") { readCodes(image, work.width, work.height, out) }) failed += "barcodes"
             TextScanResult(out, failed)
         } finally {
@@ -59,7 +59,7 @@ object TextScanner {
         }
     }
 
-    private suspend fun readText(image: InputImage, w: Int, h: Int, out: MutableList<ScannedWord>) {
+    private suspend fun readText(image: InputImage, work: Bitmap, w: Int, h: Int, out: MutableList<ScannedWord>) {
         var line = 0
         recognizer.process(image).await().textBlocks.forEach { block ->
             block.lines.forEach { l ->
@@ -74,6 +74,8 @@ object TextScanner {
                 if (any) line++
             }
         }
+        val base = (out.maxOfOrNull { it.line } ?: -1) + 1
+        ArabicOcr.read(work).forEach { out += ScannedWord(it.text, it.box, base + it.line) }
     }
 
     private suspend fun readCodes(image: InputImage, w: Int, h: Int, out: MutableList<ScannedWord>) {

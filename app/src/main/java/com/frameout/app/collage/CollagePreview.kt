@@ -6,6 +6,12 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.zIndex
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -71,6 +77,7 @@ fun CollagePreview(
     selectedCell: Int?,
     onCellClick: (Int) -> Unit,
     onCropChange: (Int, CellCrop) -> Unit,
+    onSwap: (Int, Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
@@ -78,7 +85,7 @@ fun CollagePreview(
             val maxW = constraints.maxWidth.toFloat()
             val maxH = constraints.maxHeight.toFloat()
             val width = if (maxW / maxH > template.aspect) maxH * template.aspect else maxW
-            PreviewCanvas(template, slots, style, selectedCell, onCellClick, onCropChange, width, width / template.aspect)
+            PreviewCanvas(template, slots, style, selectedCell, onCellClick, onCropChange, onSwap, width, width / template.aspect)
         }
     }
 }
@@ -91,6 +98,7 @@ private fun PreviewCanvas(
     selectedCell: Int?,
     onCellClick: (Int) -> Unit,
     onCropChange: (Int, CellCrop) -> Unit,
+    onSwap: (Int, Int) -> Unit,
     width: Float,
     height: Float
 ) {
@@ -99,6 +107,11 @@ private fun PreviewCanvas(
     val bg by animateColorAsState(style.background, label = "collageBg")
     val unit = collageUnit(width)
     val frame = RoundedCornerShape(6.dp)
+    val rects = template.cells.map { it.toPx(width, height, style.gapRef * unit) }
+    var dragFrom by remember { mutableStateOf<Int?>(null) }
+    var dragPos by remember { mutableStateOf(Offset.Zero) }
+    var dragStart by remember { mutableStateOf(Offset.Zero) }
+    val target = dragFrom?.let { from -> rects.indexOfFirst { dragPos.x in it.left..it.right && dragPos.y in it.top..it.bottom }.takeIf { it >= 0 && it != from && slots.getOrNull(it) != null } }
     Box(
         Modifier
             .size(with(density) { width.toDp() }, with(density) { height.toDp() })
@@ -107,8 +120,8 @@ private fun PreviewCanvas(
             .background(bg)
             .border(1.dp, frameHairline(), frame)
     ) {
-        template.cells.forEachIndexed { i, cell ->
-            val r = cell.toPx(width, height, style.gapRef * unit)
+        template.cells.indices.forEach { i ->
+            val r = rects[i]
             CollageCell(
                 slot = slots.getOrNull(i),
                 number = i + 1,
@@ -118,11 +131,18 @@ private fun PreviewCanvas(
                 cellHeight = r.height,
                 showStamp = style.showStamps,
                 selected = selectedCell == i,
+                dragging = dragFrom == i,
+                dragOffset = if (dragFrom == i) dragPos - dragStart else Offset.Zero,
+                dropTarget = target == i,
+                onDragStart = { local -> dragFrom = i; dragStart = Offset(r.left, r.top) + local; dragPos = dragStart },
+                onDragBy = { dragPos += it },
+                onDragEnd = { val to = target; val from = dragFrom; dragFrom = null; if (from != null && to != null) onSwap(from, to) },
+                onDragCancel = { dragFrom = null },
                 modifier = Modifier
                     .absoluteOffset { IntOffset(r.left.roundToInt(), r.top.roundToInt()) }
                     .size(with(density) { r.width.toDp() }, with(density) { r.height.toDp() }),
                 onClick = { onCellClick(i) },
-                onCrop = { onCropChange(i, it) }
+                onCrop = { if (dragFrom == null) onCropChange(i, it) }
             )
         }
     }
@@ -138,16 +158,37 @@ private fun CollageCell(
     cellHeight: Float,
     showStamp: Boolean,
     selected: Boolean,
+    dragging: Boolean,
+    dragOffset: Offset,
+    dropTarget: Boolean,
+    onDragStart: (Offset) -> Unit,
+    onDragBy: (Offset) -> Unit,
+    onDragEnd: () -> Unit,
+    onDragCancel: () -> Unit,
     modifier: Modifier,
     onClick: () -> Unit,
     onCrop: (CellCrop) -> Unit
 ) {
+    val dragStartNow by rememberUpdatedState(onDragStart)
+    val dragByNow by rememberUpdatedState(onDragBy)
+    val dragEndNow by rememberUpdatedState(onDragEnd)
+    val dragCancelNow by rememberUpdatedState(onDragCancel)
+    val dragHaptics = rememberFrameHaptics()
     val colors = FrameTheme.colors
     val shape = RoundedCornerShape(with(LocalDensity.current) { radiusPx.toDp() })
     val haptics = rememberFrameHaptics()
     val desc = if (slot != null) CollageStrings.frameN(number) else CollageStrings.emptySlot()
     Box(
         modifier
+            .zIndex(if (dragging) 1f else 0f)
+            .graphicsLayer {
+                translationX = dragOffset.x
+                translationY = dragOffset.y
+                val k = if (dragging) 1.06f else 1f
+                scaleX = k
+                scaleY = k
+                alpha = if (dragging) 0.85f else 1f
+            }
             .clip(shape)
             .background(colors.container)
             .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null, role = Role.Button) {
@@ -155,9 +196,22 @@ private fun CollageCell(
                 onClick()
             }
             .cropGestures(slot?.bitmap, cellWidth, cellHeight, slot?.crop ?: CellCrop(), onCrop)
+            .then(
+                if (slot == null) Modifier else Modifier.pointerInput(Unit) {
+                    detectDragGesturesAfterLongPress(
+                        onDragStart = { dragHaptics.perform(FrameHaptic.LongPress); dragStartNow(it) },
+                        onDrag = { change, amount -> change.consume(); dragByNow(amount) },
+                        onDragEnd = { dragEndNow() },
+                        onDragCancel = { dragCancelNow() }
+                    )
+                }
+            )
             .semantics { contentDescription = desc; this.selected = selected }
     ) {
         if (slot == null) EmptySlot() else FilledSlot(slot, number, showStamp, unit, cellWidth, cellHeight)
+        if (dropTarget) {
+            Box(Modifier.fillMaxSize().background(colors.primary.copy(alpha = 0.28f)).border(3.dp, colors.primary, shape))
+        }
         if (selected) {
             Box(Modifier.fillMaxSize().background(colors.primary.copy(alpha = 0.18f)).border(2.5.dp, colors.primary, shape))
         }

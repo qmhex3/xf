@@ -69,12 +69,14 @@ data class FrameColorScheme(
     val accentB: Color,
     val accentC: Color,
     val onDarkAccent: Color,
-    val isDark: Boolean
+    val isDark: Boolean,
+    val neutral: Boolean = false
 )
 
 fun darkColorScheme(amoled: Boolean = false, accent: FrameAccent = FrameAccents.Indigo): FrameColorScheme {
     val neutral = accent.neutral
-    fun tint(base: Color) = lerp(base, accent.darkContainer, accent.surfaceTint)
+    fun grey(c: Color): Color { val g = c.red * 0.2126f + c.green * 0.7152f + c.blue * 0.0722f; return Color(g, g, g, c.alpha) }
+    fun tint(base: Color) = lerp(grey(base), accent.darkContainer, accent.surfaceTint)
     fun ramp(base: Color, soft: Color, black: Color) = when {
         !neutral -> tint(base)
         amoled -> black
@@ -103,7 +105,8 @@ fun darkColorScheme(amoled: Boolean = false, accent: FrameAccent = FrameAccents.
         accentB = accent.b,
         accentC = accent.c,
         onDarkAccent = accent.darkPrimary,
-        isDark = true
+        isDark = true,
+        neutral = neutral
     )
 }
 
@@ -128,7 +131,8 @@ fun lightColorScheme(accent: FrameAccent = FrameAccents.Indigo): FrameColorSchem
         accentB = accent.b,
         accentC = accent.c,
         onDarkAccent = accent.darkPrimary,
-        isDark = false
+        isDark = false,
+        neutral = accent.neutral
     )
 }
 
@@ -154,7 +158,8 @@ fun lerpScheme(a: FrameColorScheme, b: FrameColorScheme, t: Float): FrameColorSc
         accentB = lerp(a.accentB, b.accentB, t),
         accentC = lerp(a.accentC, b.accentC, t),
         onDarkAccent = lerp(a.onDarkAccent, b.onDarkAccent, t),
-        isDark = if (t < 0.5f) a.isDark else b.isDark
+        isDark = if (t < 0.5f) a.isDark else b.isDark,
+        neutral = if (t < 0.5f) a.neutral else b.neutral
     )
 }
 

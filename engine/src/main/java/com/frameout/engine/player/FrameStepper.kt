@@ -26,7 +26,7 @@ object FrameStepper {
         if (!CodecPack.load(context)) return null
         val projectId = findProjectId(context, uri) ?: return null
         val dao = AppDatabase.get(context).videoIndexDao()
-        var positionUs = currentMs.coerceAtLeast(0L) * 1000L
+        var positionUs = if (forward) ExactPts.limitUs(currentMs) else currentMs.coerceAtLeast(0L) * 1000L
         var moved = false
         repeat(count) {
             val row = if (forward) dao.atOrAfter(projectId, positionUs + 1L) else dao.atOrBefore(projectId, positionUs - 1L)

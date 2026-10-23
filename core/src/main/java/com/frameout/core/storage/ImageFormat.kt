@@ -12,7 +12,6 @@ enum class ImageFormat(val key: String, val ext: String, val mime: String, val l
     Png("png", "png", "image/png", true),
     PngHdr16("png_hdr16", "png", "image/png", true, hdr = true),
     WebpLossy("webp", "webp", "image/webp", false),
-    WebpLossless("webp_lossless", "webp", "image/webp", true),
     Heic("heic", "heic", "image/heic", false, modern = true),
     Avif("avif", "avif", "image/avif", false, modern = true);
 
@@ -55,7 +54,6 @@ enum class ImageFormat(val key: String, val ext: String, val mime: String, val l
         Jpg, JpgHdr -> Bitmap.CompressFormat.JPEG
         Png -> Bitmap.CompressFormat.PNG
         WebpLossy -> if (sdk >= 30) Bitmap.CompressFormat.WEBP_LOSSY else Bitmap.CompressFormat.WEBP
-        WebpLossless -> if (sdk >= 30) Bitmap.CompressFormat.WEBP_LOSSLESS else Bitmap.CompressFormat.WEBP
         PngHdr16 -> error("Encoded by Png16Writer")
         Heic, Avif -> error("Encoded by ModernEncoder")
     }
@@ -65,7 +63,10 @@ enum class ImageFormat(val key: String, val ext: String, val mime: String, val l
 
         fun availableKeys(sdk: Int = Build.VERSION.SDK_INT): List<String> = entries.filter { it.isAvailable(sdk) }.map { it.key }
 
-        fun fromKey(key: String?): ImageFormat = entries.firstOrNull { it.key == key } ?: Jpg
+        private const val LEGACY_WEBP_LOSSLESS = "webp_lossless"
+
+        fun fromKey(key: String?): ImageFormat =
+            if (key == LEGACY_WEBP_LOSSLESS) WebpLossy else entries.firstOrNull { it.key == key } ?: Jpg
 
         fun resolve(
             key: String?,

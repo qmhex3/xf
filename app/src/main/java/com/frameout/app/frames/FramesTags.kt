@@ -3,7 +3,9 @@ package com.frameout.app.frames
 import com.frameout.core.db.AlbumCover
 import com.frameout.core.quality.FocusRegion
 import com.frameout.core.quality.FrameTagScanner
+import com.frameout.core.quality.CoverLanes
 import com.frameout.core.quality.FrameTagger
+import com.frameout.core.quality.TagFamilies
 import com.frameout.core.quality.PrefsTagVersion
 import com.frameout.core.quality.ScanTiming
 import com.frameout.core.quality.TagVersion
@@ -46,14 +48,14 @@ internal class FramesTags(
 
     fun showAlbums() {
         state.update { it.copy(filter = FrameFilter.Albums, tagFilter = emptySet(), refineCounts = emptyList(), tagsOpen = false, selected = emptySet(), loading = true) }
-        scope.launch { refresh(projectId()); refreshCounts() }
+        scope.launch { backfill(); refresh(projectId()); refreshCounts() }
         startScan()
     }
 
     fun ensureScan() {
         val id = projectId()
         if (id < 0) return
-        scope.launch { refreshCounts() }
+        scope.launch { backfill(); refreshCounts() }
         if (!watch(id)) startScan()
     }
 
@@ -142,10 +144,14 @@ internal class FramesTags(
         }
     }
 
+    private suspend fun backfill() {
+        runCatching { TagFamilies.backfill(container.frameTags, projectId()) }
+    }
+
     private suspend fun refreshRefine() {
         val tags = state.value.tagFilter.toList()
         if (state.value.filter != FrameFilter.Tagged || tags.isEmpty()) return
-        val counts = runCatching { container.frameTags.coTagCounts(projectId(), tags, tags.size) }.getOrDefault(emptyList())
+        val counts = runCatching { container.frameTags.coTagCounts(projectId(), tags, tags.size) }.getOrDefault(emptyList()).filter { TagFamilies.visible(it.tag) }
         state.update { it.copy(refineCounts = counts) }
     }
 
@@ -153,11 +159,11 @@ internal class FramesTags(
         val id = projectId()
         val row = container.frameTags.coverTagFor(id, tag)
         val boxed = row?.let { r -> container.frames.getActiveById(r.frameId)?.let { it to r } }
-        if (boxed != null) {
-            AlbumCover(boxed.first, FocusRegion.largest(NormBoxCodec.decode(boxed.second.boxes)))
-        } else {
-            container.frameTags.coverFor(id, tag)?.let { AlbumCover(it, null) }
-        }
+        val top = boxed?.first ?: container.frameTags.coverFor(id, tag) ?: return@runCatching null
+        val focus = boxed?.let { FocusRegion.largest(NormBoxCodec.decode(it.second.boxes)) }
+        val pool = container.frameTags.coversFor(id, tag, CoverLanes.POOL)
+        val lanes = CoverLanes.build(tag, pool, container.frameTags.labelsForFrames(pool.map { it.id }))
+        AlbumCover(top, focus, emptyList(), lanes)
     }.getOrNull()
 
     suspend fun focus(frameId: Long, tags: Set<String>): NormBox? {
@@ -169,7 +175,7 @@ internal class FramesTags(
     }
 
     private suspend fun refreshCounts() {
-        val counts = runCatching { container.frameTags.tagCounts(projectId()) }.getOrDefault(emptyList())
+        val counts = runCatching { container.frameTags.tagCounts(projectId()) }.getOrDefault(emptyList()).filter { TagFamilies.visible(it.tag) }
         state.update { it.copy(tagCounts = counts) }
     }
 }

@@ -63,6 +63,6 @@ internal fun IncomingBusyOverlay() {
             .pointerInput(Unit) { detectTapGestures { } },
         Alignment.Center
     ) {
-        FrameSpinner()
+        PreferredFrameTheme { FrameSpinner() }
     }
 }

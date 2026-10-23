@@ -1,5 +1,6 @@
 package com.frameout.app.collage
 
+import com.frameout.core.storage.insertTracked
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.compose.ui.graphics.toArgb
@@ -76,6 +77,6 @@ private suspend fun CollageState.store(app: FrameOutApp, bitmap: Bitmap): SavedC
         uri = uri.toString(), displayName = name, album = FrameStrings.appName(),
         width = bitmap.width, height = bitmap.height, createdAt = System.currentTimeMillis()
     )
-    app.container.savedImages.insert(entity)
+    app.container.savedImages.insertTracked(app.container.storage, entity)
     return SavedCapture(uri, format.mime)
 }

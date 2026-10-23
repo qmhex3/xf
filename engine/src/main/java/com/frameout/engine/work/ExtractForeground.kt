@@ -6,8 +6,8 @@ import android.os.Build
 import androidx.work.ForegroundInfo
 
 internal object ExtractForeground {
-    fun build(context: Context, projectId: Long, text: String, done: Int, total: Int, indeterminate: Boolean, paused: Boolean, elapsed: Long, remaining: Long): ForegroundInfo {
-        val notification = ExtractNotifications.build(context, projectId, text, done, total, indeterminate, paused, elapsed, remaining)
+    fun build(context: Context, projectId: Long, text: String, done: Int, total: Int, indeterminate: Boolean, paused: Boolean, elapsed: Long, remaining: Long, unified: Float = -1f, indexing: Boolean = false): ForegroundInfo {
+        val notification = ExtractNotifications.build(context, projectId, text, done, total, indeterminate, paused, elapsed, remaining, unified, indexing)
         val id = ExtractNotifications.notificationId(projectId)
         return when {
             Build.VERSION.SDK_INT >= 35 -> ForegroundInfo(id, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PROCESSING)

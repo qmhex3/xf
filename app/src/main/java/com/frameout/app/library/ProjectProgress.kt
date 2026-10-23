@@ -21,6 +21,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.unit.dp
 import com.frameout.core.db.ProjectEntity
 import com.frameout.core.db.progressTotal
+import com.frameout.engine.work.UnifiedExtractProgress
 import com.frameout.designsystem.a11y.LocalSystemA11y
 import com.frameout.designsystem.theme.FrameGradients
 import com.frameout.designsystem.theme.FrameShapes
@@ -32,14 +33,16 @@ internal sealed interface CardProgress {
     data class Value(val fraction: Float, val percent: Int) : CardProgress
 }
 
-internal fun cardProgress(p: ProjectEntity): CardProgress {
-    val live = p.status == "Extracting" || p.status == "Indexing"
+internal fun percentOf(fraction: Float): Int = Math.round(fraction * 100f).coerceIn(0, 99)
+
+internal fun cardProgress(p: ProjectEntity, live: Float? = null): CardProgress {
+    val running = p.status == "Extracting" || p.status == "Indexing"
+    val fraction = UnifiedExtractProgress.stored(p.status, p.extractedCount, p.progressTotal, live)
     return when {
-        p.progressTotal > 0 && (live || p.status == "Paused") -> {
-            val pct = ((p.extractedCount * 100L) / p.progressTotal).toInt().coerceIn(0, 100)
-            CardProgress.Value((p.extractedCount.toFloat() / p.progressTotal).coerceIn(0f, 1f), pct)
-        }
-        live -> CardProgress.Indeterminate
+        p.status == "Completed" -> CardProgress.None
+        fraction != null && (running || p.status == "Paused") ->
+            CardProgress.Value(fraction, percentOf(fraction))
+        running -> CardProgress.Indeterminate
         else -> CardProgress.None
     }
 }

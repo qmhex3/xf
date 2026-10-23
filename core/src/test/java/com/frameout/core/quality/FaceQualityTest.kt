@@ -45,6 +45,16 @@ class FaceQualityTest {
     }
 
     @Test
+    fun smallFaceCountsOnlyAfterTheCloseUp() {
+        val small = FaceMark(40, 40, 70, 70, 0.9f, 0.9f, 0.9f)
+        assertTrue(!FaceQuality.reliable(small))
+        assertEquals(0f, FaceQuality.assess(textured(), size, size, listOf(small)).smile, 0f)
+        val zoomed = small.copy(zoomed = true)
+        assertTrue(FaceQuality.reliable(zoomed))
+        assertTrue(FaceQuality.assess(textured(), size, size, listOf(zoomed)).smiling)
+    }
+
+    @Test
     fun oneClosedEyeLowersOpenness() {
         val mark = FaceMark(30, 20, 90, 80, 0.9f, 0.1f)
         assertEquals(0.1f, mark.eyesOpen, 0.0001f)

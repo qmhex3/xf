@@ -30,6 +30,7 @@ object TrimStrings {
     fun planKeyframes() = s(R.string.trim_plan_keyframes)
     fun planScene() = s(R.string.trim_plan_scene)
     fun planSlides() = s(R.string.trim_plan_slides)
+    fun planContent(value: String) = s(R.string.trim_plan_content, value)
     fun planAll() = s(R.string.trim_plan_all)
     fun optionsTitle() = s(R.string.trim_options_title)
     fun optionsMode() = s(R.string.trim_options_mode)
@@ -40,12 +41,14 @@ object TrimStrings {
     fun peopleOnlyTitle() = s(R.string.setting_people_only)
     fun peopleOnlyHelp() = s(R.string.help_people_only)
     fun peopleSlow() = s(R.string.trim_people_slow)
+    fun peopleIgnored() = s(R.string.trim_people_ignored)
     fun filtersCountHint() = s(R.string.trim_filters_count_hint)
     fun skipTotal(n: Int) = s(R.string.skip_total, n)
-    fun skipBreakdown(blurry: Int, duplicate: Int, noPeople: Int): String = listOfNotNull(
+    fun skipBreakdown(blurry: Int, duplicate: Int, noPeople: Int, noMatch: Int = 0): String = listOfNotNull(
         blurry.takeIf { it > 0 }?.let { s(R.string.skip_blurry_n, it) },
         duplicate.takeIf { it > 0 }?.let { s(R.string.skip_dup_n, it) },
-        noPeople.takeIf { it > 0 }?.let { s(R.string.skip_nopeople_n, it) }
+        noPeople.takeIf { it > 0 }?.let { s(R.string.skip_nopeople_n, it) },
+        noMatch.takeIf { it > 0 }?.let { s(R.string.skip_nomatch_n, it) }
     ).joinToString(FrameStrings.sep())
     fun peopleModeFaces() = s(R.string.people_mode_faces)
     fun peopleModeBoth() = s(R.string.people_mode_both)

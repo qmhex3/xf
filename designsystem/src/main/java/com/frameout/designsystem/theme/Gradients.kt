@@ -12,12 +12,16 @@ import androidx.compose.ui.graphics.lerp
 
 private const val BrandDeepen = 0.34f
 
+internal val GraphiteBrand = listOf(Color(0xFF5A5A5A), Color(0xFF3A3A3A))
+internal val GraphiteFab = listOf(Color(0xFF7A7A7A), Color(0xFF555555), Color(0xFF3C3C3C))
+
 object FrameGradients {
     val Brand: Brush
         @Composable get() {
             val c = FrameTheme.colors
-            return remember(c.accentA, c.accentB) {
-                Brush.horizontalGradient(listOf(lerp(c.accentA, Color.Black, BrandDeepen), lerp(c.accentB, Color.Black, BrandDeepen)))
+            return remember(c.accentA, c.accentB, c.neutral) {
+                if (c.neutral) Brush.horizontalGradient(GraphiteBrand)
+                else Brush.horizontalGradient(listOf(lerp(c.accentA, Color.Black, BrandDeepen), lerp(c.accentB, Color.Black, BrandDeepen)))
             }
         }
 
@@ -30,8 +34,8 @@ object FrameGradients {
     val Fab: Brush
         @Composable get() {
             val c = FrameTheme.colors
-            return remember(c.accentA, c.accentB, c.accentC) {
-                Brush.linearGradient(listOf(c.accentC, c.accentA, c.accentB))
+            return remember(c.accentA, c.accentB, c.accentC, c.neutral) {
+                if (c.neutral) Brush.linearGradient(GraphiteFab) else Brush.linearGradient(listOf(c.accentC, c.accentA, c.accentB))
             }
         }
 }

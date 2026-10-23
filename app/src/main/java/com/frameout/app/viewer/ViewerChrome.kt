@@ -85,10 +85,10 @@ internal fun ViewerChrome(
             ) {
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                     ChromePill {
-                        FrameText(if (state.total > 0) "${state.position} / ${state.total}" else "#${frame.index + 1}", style = FrameTheme.typography.mono, color = FrameTheme.colors.primary)
+                        FrameText(if (state.total > 0) "${state.position} / ${state.total}" else "#${frame.index + 1}", style = FrameTheme.typography.mono.copy(shadow = androidx.compose.ui.graphics.Shadow(ViewerInk.accent.copy(alpha = 0.65f), androidx.compose.ui.geometry.Offset.Zero, 10f)), color = ViewerInk.accent)
                         if (!state.savedMode) {
-                            Box(Modifier.size(width = 1.dp, height = 14.dp).background(FrameTheme.colors.onSurfaceVariant.copy(alpha = 0.35f)))
-                            FrameText(formatPts(frame.ptsUs), style = FrameTheme.typography.mono, color = FrameTheme.colors.onSurface)
+                            Box(Modifier.size(width = 1.dp, height = 14.dp).background(ViewerInk.text.copy(alpha = 0.28f)))
+                            FrameText(formatPts(frame.ptsUs), style = FrameTheme.typography.mono, color = ViewerInk.text)
                         }
                     }
                 }
@@ -97,7 +97,7 @@ internal fun ViewerChrome(
                 if (!state.editing && !liveActive) {
                     ChromeStrip {
                         if (!state.savedMode) StripSegment(onClick = onSpeed, description = FrameStrings.playbackFps(state.playFps)) {
-                            FrameText("${state.playFps} fps", style = FrameTheme.typography.label.copy(fontSize = 12.sp), color = FrameTheme.colors.onSurface)
+                            FrameText("${state.playFps} fps", style = FrameTheme.typography.label.copy(fontSize = 12.sp), color = ViewerInk.text)
                         }
                         if (showDetections) {
                             if (!state.savedMode) StripDivider()
@@ -107,12 +107,12 @@ internal fun ViewerChrome(
                                     painter = painterResource(FrameIconsExtra.Detect),
                                     contentDescription = label,
                                     modifier = Modifier.size(18.dp),
-                                    colorFilter = ColorFilter.tint(if (state.showDetections) FrameTheme.colors.primary else FrameTheme.colors.onSurface)
+                                    colorFilter = ColorFilter.tint(if (state.showDetections) ViewerInk.accent else ViewerInk.text)
                                 )
                                 FrameText(
                                     "${state.detections.size}",
                                     style = FrameTheme.typography.label.copy(fontSize = 12.sp),
-                                    color = if (state.showDetections) FrameTheme.colors.primary else FrameTheme.colors.onSurface,
+                                    color = if (state.showDetections) ViewerInk.accent else ViewerInk.text,
                                     modifier = Modifier.padding(start = 6.dp)
                                 )
                             }
@@ -124,7 +124,7 @@ internal fun ViewerChrome(
                                     painter = painterResource(FrameIconsExtra.Text),
                                     contentDescription = null,
                                     modifier = Modifier.size(18.dp),
-                                    colorFilter = ColorFilter.tint(FrameTheme.colors.onSurface)
+                                    colorFilter = ColorFilter.tint(ViewerInk.text)
                                 )
                             }
                         }
@@ -189,7 +189,7 @@ internal fun CropOverlayBox(state: ViewerState, vm: ViewerViewModel) {
 
 @Composable
 internal fun ChromePill(modifier: Modifier = Modifier, content: @Composable RowScope.() -> Unit) {
-    GlassSurface(shape = FrameShapes.pill, modifier = modifier) {
+    ViewerGlassSurface(modifier = modifier) {
         Row(
             Modifier.defaultMinSize(minHeight = 44.dp).padding(horizontal = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -201,7 +201,7 @@ internal fun ChromePill(modifier: Modifier = Modifier, content: @Composable RowS
 
 @Composable
 internal fun ChromeStrip(modifier: Modifier = Modifier, content: @Composable RowScope.() -> Unit) {
-    GlassSurface(shape = FrameShapes.pill, modifier = modifier) {
+    ViewerGlassSurface(modifier = modifier) {
         Row(
             Modifier.height(44.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -219,11 +219,13 @@ internal fun StripSegment(
     description: String? = null,
     content: @Composable RowScope.() -> Unit
 ) {
-    val tint = if (selected) FrameTheme.colors.primary.copy(alpha = 0.16f) else Color.Transparent
+    val accent = ViewerInk.accent
+    val tint = if (selected) accent.copy(alpha = 0.16f) else Color.Transparent
     Row(
         modifier
             .fillMaxHeight()
             .padding(2.dp)
+            .then(if (selected) Modifier.viewerActiveGlow(accent) else Modifier)
             .clip(FrameShapes.pill)
             .background(tint)
             .frameClickable(onClickLabel = description, onClick = onClick)
@@ -236,12 +238,12 @@ internal fun StripSegment(
 
 @Composable
 internal fun StripDivider() {
-    Box(Modifier.size(width = 1.dp, height = 14.dp).background(FrameTheme.colors.onSurfaceVariant.copy(alpha = 0.3f)))
+    Box(Modifier.size(width = 1.dp, height = 14.dp).background(ViewerInk.text.copy(alpha = 0.28f)))
 }
 
 @Composable
 private fun SideArrow(label: String, enabled: Boolean, awake: Boolean, flip: Boolean, boost: Int, onSpeed: (Int) -> Unit, onStep: (Int) -> Unit) {
-    GlassSurface(shape = CircleShape, modifier = Modifier.size(44.dp).alpha(if (enabled) 1f else 0.3f)) {
+    ViewerGlassSurface(shape = CircleShape, modifier = Modifier.size(44.dp).alpha(if (enabled) 1f else 0.3f)) {
         Box(
             Modifier.fillMaxSize().clip(CircleShape).then(if (enabled && awake) Modifier.frameHoldScrub(boost, onSpeed, onStep) else Modifier),
             contentAlignment = Alignment.Center
@@ -250,7 +252,7 @@ private fun SideArrow(label: String, enabled: Boolean, awake: Boolean, flip: Boo
                 painter = painterResource(FrameIconsExtra.Chevron),
                 contentDescription = label,
                 modifier = Modifier.size(22.dp).graphicsLayer { if (flip) rotationZ = 180f },
-                colorFilter = ColorFilter.tint(FrameTheme.colors.primary)
+                colorFilter = ColorFilter.tint(ViewerInk.accent)
             )
         }
     }

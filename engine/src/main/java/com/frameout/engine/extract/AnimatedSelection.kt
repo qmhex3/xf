@@ -24,6 +24,7 @@ object AnimatedSelection {
             is ExtractMode.EveryNFrames -> (first until last step mode.n.coerceAtLeast(1)).asSequence().filter(::after)
             is ExtractMode.EveryNMillis -> timed(decoder, first, last, mode.millis.coerceAtLeast(1) * 1000L).filter(::after)
             ExtractMode.KeyframesOnly -> timed(decoder, first, last, KEYFRAME_SPAN_US).filter(::after)
+            is ExtractMode.Content -> timed(decoder, first, last, mode.spec.millis.coerceAtLeast(1) * 1000L).filter(::after)
             is ExtractMode.FixedCount -> fixedFromStart(decoder, total, startUs, endUs, mode.count, checkpointIndex).filter(::after)
         }
     }

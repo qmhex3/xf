@@ -15,7 +15,17 @@ import androidx.compose.animation.togetherWith
 private val EaseOutQuint = CubicBezierEasing(0.22f, 1f, 0.36f, 1f)
 private val EaseInOut = CubicBezierEasing(0.4f, 0f, 0.2f, 1f)
 
+internal fun isTabSwitch(from: AppRoute?, to: AppRoute?): Boolean =
+    (from is AppRoute.Library && to is AppRoute.Settings) || (from is AppRoute.Settings && to is AppRoute.Library)
+
+private fun tabTransition(): ContentTransform {
+    val enter = fadeIn(tween(260, easing = EaseInOut))
+    val exit = fadeOut(tween(1, delayMillis = 260))
+    return ContentTransform(enter, exit, 1f, SizeTransform(clip = false))
+}
+
 internal fun zoomKind(from: AppRoute, to: AppRoute): Int = when {
+    isTabSwitch(from, to) -> 3
     from is AppRoute.Library && (to is AppRoute.Frames || to is AppRoute.Extracting) -> 1
     (from is AppRoute.Frames || from is AppRoute.Extracting) && to is AppRoute.Library -> 2
     else -> 0
@@ -28,6 +38,7 @@ private fun zoomTransition(opening: Boolean): ContentTransform {
 }
 
 internal fun routeTransition(direction: Int, rtl: Boolean, reduceMotion: Boolean, zoom: Int = 0): ContentTransform {
+    if (zoom == 3) return tabTransition()
     if (zoom != 0 && !reduceMotion) return zoomTransition(zoom == 1)
     if (reduceMotion) return ContentTransform(fadeIn(tween(120)), fadeOut(tween(90)), 0f, SizeTransform(clip = false))
     val sign = if (rtl) -1 else 1

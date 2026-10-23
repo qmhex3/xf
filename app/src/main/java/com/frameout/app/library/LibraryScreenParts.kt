@@ -18,9 +18,17 @@ import com.frameout.designsystem.theme.FrameTheme
 @Composable
 internal fun LibraryEffects(state: LibraryState, vm: LibraryViewModel) {
     val haptics = rememberFrameHaptics()
-    LaunchedEffect(state.message) {
+    val owner = androidx.activity.compose.LocalActivity.current as? androidx.lifecycle.LifecycleOwner
+    androidx.compose.runtime.DisposableEffect(owner, vm) {
+        val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+            if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) vm.reconcileSaved()
+        }
+        owner?.lifecycle?.addObserver(observer)
+        onDispose { owner?.lifecycle?.removeObserver(observer) }
+    }
+    LaunchedEffect(state.message, state.undoProjectCount) {
         if (state.message != null) {
-            kotlinx.coroutines.delay(com.frameout.designsystem.components.toastDurationMs(state.message.orEmpty()))
+            kotlinx.coroutines.delay(if (state.hasUndo) 6000L else com.frameout.designsystem.components.toastDurationMs(state.message.orEmpty()))
             vm.clearMessage()
         }
     }

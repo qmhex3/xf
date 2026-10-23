@@ -76,4 +76,44 @@
         <item quantity="one">%1$d video</item>
         <item quantity="other">%1$d videos</item>
     </plurals>
+    <plurals name="projects_deleted">
+        <item quantity="one">Project deleted</item>
+        <item quantity="other">%1$d projects deleted</item>
+    </plurals>
+    <plurals name="projects_restored">
+        <item quantity="one">Project restored</item>
+        <item quantity="other">%1$d projects restored</item>
+    </plurals>
+    <plurals name="saved_deleted_n">
+        <item quantity="one">Image deleted</item>
+        <item quantity="other">%1$d images deleted</item>
+    </plurals>
+    <plurals name="saved_restored_n">
+        <item quantity="one">Image restored</item>
+        <item quantity="other">%1$d images restored</item>
+    </plurals>
+    <plurals name="saved_pruned_n">
+        <item quantity="one">1 saved item removed because its file is no longer on the device</item>
+        <item quantity="other">%1$d saved items removed because their files are no longer on the device</item>
+    </plurals>
+    <plurals name="confirm_delete_projects_n">
+        <item quantity="one">Delete this project?</item>
+        <item quantity="other">Delete %1$d projects?</item>
+    </plurals>
+    <plurals name="confirm_delete_saved_n">
+        <item quantity="one">Delete this saved image?</item>
+        <item quantity="other">Delete %1$d saved images?</item>
+    </plurals>
+    <plurals name="backup_saved_many_n">
+        <item quantity="one">Project exported to the chosen folder</item>
+        <item quantity="other">%1$d projects exported to the chosen folder</item>
+    </plurals>
+    <plurals name="export_done_many_n">
+        <item quantity="one">Project exported</item>
+        <item quantity="other">%1$d projects exported</item>
+    </plurals>
+    <plurals name="saved_export_done_n">
+        <item quantity="one">Exported 1 image</item>
+        <item quantity="other">Exported %1$d images</item>
+    </plurals>
 </resources>

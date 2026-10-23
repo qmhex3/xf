@@ -9,7 +9,7 @@ object FrameImportanceAnalyzer {
     suspend fun bestIds(frames: FrameDao, tags: FrameTagDao, projectId: Long): List<Long> {
         val scored = FrameSharpnessAnalyzer.scoreProject(frames, projectId)
         if (scored.isEmpty()) return emptyList()
-        val byFrame = tags.allTags(projectId).groupBy({ it.frameId }) { TagHit(it.tag, it.confidence, NormBoxCodec.decode(it.boxes)) }
+        val byFrame = tags.allTags(projectId).filterNot { TagFamilies.isFamily(it.tag) }.groupBy({ it.frameId }) { TagHit(it.tag, it.confidence, NormBoxCodec.decode(it.boxes)) }
         return withContext(Dispatchers.Default) { FrameImportance.pick(scored, byFrame) }
     }
 }

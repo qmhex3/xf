@@ -51,11 +51,11 @@ import java.util.Locale
 internal fun isLive(status: String) = status == "Extracting" || status == "Indexing"
 
 @Composable
-internal fun ProjectThumb(thumb: android.graphics.Bitmap?, project: ProjectEntity) {
+internal fun ProjectThumb(thumb: android.graphics.Bitmap?, project: ProjectEntity, size: androidx.compose.ui.unit.Dp = 84.dp) {
     val colors = FrameTheme.colors
-    val shape = RoundedCornerShape(16.dp)
-    Box(Modifier.size(84.dp).clip(shape).background(colors.containerHigh).border(1.dp, frameHairline(), shape), Alignment.Center) {
-        thumb?.let { Image(it.asImageBitmap(), null, Modifier.size(84.dp), contentScale = ContentScale.Crop) } ?: ThumbPlaceholder(iconSize = 28.dp)
+    val shape = RoundedCornerShape(14.dp)
+    Box(Modifier.size(size).clip(shape).background(colors.containerHigh).border(1.dp, frameHairline(), shape), Alignment.Center) {
+        thumb?.let { Image(it.asImageBitmap(), null, Modifier.size(size), contentScale = ContentScale.Crop) } ?: ThumbPlaceholder(iconSize = 28.dp)
         if (isLive(project.status)) PulseDot(Modifier.align(Alignment.TopStart).padding(6.dp))
         if (project.durationMs > 0) {
             Box(
@@ -166,7 +166,8 @@ internal fun statusColor(status: String, colors: FrameColorScheme): Color = when
     "Completed" -> colors.success
     "Paused" -> colors.warning
     "Extracting", "Indexing" -> colors.primary
-    "Failed", "Cancelled" -> colors.error
+    "Failed" -> colors.error
+    "Cancelled" -> colors.onSurfaceVariant
     else -> colors.onSurfaceVariant
 }
 
@@ -182,4 +183,36 @@ internal fun formatDuration(ms: Long): String {
     val m = (total % 3600) / 60
     val s = total % 60
     return if (h > 0) String.format(Locale.US, "%d:%02d:%02d", h, m, s) else String.format(Locale.US, "%02d:%02d", m, s)
+}
+
+
+@Composable
+internal fun StatusPill(status: String) {
+    val color = statusColor(status, FrameTheme.colors)
+    val shape = RoundedCornerShape(50)
+    Row(
+        Modifier.clip(shape).background(color.copy(alpha = 0.13f)).padding(start = 9.dp, end = 11.dp, top = 5.dp, bottom = 5.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        if (status == "Completed") Image(painterResource(FrameIcons.Check), null, Modifier.size(12.dp), colorFilter = ColorFilter.tint(color))
+        else Box(Modifier.size(6.dp).background(color, CircleShape))
+        FrameText(statusText(status), style = FrameTheme.typography.label, color = color, maxLines = 1)
+    }
+}
+
+@Composable
+internal fun FrameCountInline(count: String, percent: Int?, description: String) {
+    val colors = FrameTheme.colors
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+        Row(
+            Modifier.semantics(mergeDescendants = true) { contentDescription = description },
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(5.dp)
+        ) {
+            Image(painterResource(FrameIconsExtra.Keyframe), null, Modifier.size(14.dp), colorFilter = ColorFilter.tint(colors.onSurfaceVariant))
+            FrameText(count, style = FrameTheme.typography.monoSmall, color = colors.onSurface, maxLines = 1)
+            percent?.let { FrameText("$it%", style = FrameTheme.typography.monoSmall, color = colors.primary, maxLines = 1) }
+        }
+    }
 }

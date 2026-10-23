@@ -82,8 +82,9 @@ fun CollagePanel(state: CollageState, onSave: () -> Unit, modifier: Modifier = M
 private fun PanelHeader(tab: CollageTab, state: CollageState, onSave: () -> Unit) {
     val canSave = state.ready && state.frames.isNotEmpty() && !state.saving
     Row(
-        Modifier.fillMaxWidth().padding(start = 16.dp, end = 8.dp, top = 4.dp, bottom = 4.dp),
-        verticalAlignment = Alignment.CenterVertically
+        Modifier.fillMaxWidth().padding(start = 16.dp, end = 12.dp, top = 6.dp, bottom = 6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(20.dp)
     ) {
         FrameText(tab.label(), style = FrameTheme.typography.label, color = FrameTheme.colors.onSurface, maxLines = 1, modifier = Modifier.weight(1f))
         PanelIconButton(FrameIconsExtra.Undo, EditStrings.reset(), enabled = tab.isModified(state) && !state.saving) { tab.reset(state) }

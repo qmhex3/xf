@@ -47,7 +47,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.frameout.app.R
 import com.frameout.core.util.FrameStrings
 import com.frameout.designsystem.a11y.frameClickable
 import com.frameout.designsystem.components.FrameText
@@ -133,7 +132,7 @@ internal fun OnboardingBrand(modifier: Modifier = Modifier, showBadge: Boolean =
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(painterResource(R.drawable.ic_brand_mark), null, Modifier.height(24.dp))
+            com.frameout.app.splash.BrandGlyph(24.dp)
             Row {
                 FrameText("Frame", style = style)
                 FrameText(" out", style = style, color = colors.primary)

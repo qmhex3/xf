@@ -1,16 +1,19 @@
 package com.frameout.app.about
 
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -50,9 +53,22 @@ private val YoutubeRed = Color(0xFFFF3B30)
 @Composable
 fun AboutScreen(onBack: () -> Unit) {
     PreferredFrameTheme {
+        val colors = FrameTheme.colors
+        val scroll = rememberScrollState()
+        val reduce = LocalSystemA11y.current.reduceMotion
+        val body = remember { Animatable(if (reduce) 1f else 0f) }
+        LaunchedEffect(Unit) {
+            if (reduce) return@LaunchedEffect
+            delay(480)
+            body.animateTo(1f, tween(520, easing = FastOutSlowInEasing))
+        }
         Column(
-            Modifier.fillMaxSize().background(FrameTheme.colors.background).statusBarsPadding()
-                .verticalScroll(rememberScrollState()).padding(16.dp)
+            Modifier
+                .fillMaxSize()
+                .background(colors.background)
+                .statusBarsPadding()
+                .verticalScroll(scroll)
+                .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
             FrameTopBar(
                 title = ModeStrings.about(),
@@ -60,99 +76,93 @@ fun AboutScreen(onBack: () -> Unit) {
                 backContentDescription = FrameStrings.back(),
                 modifier = Modifier.padding(bottom = 4.dp)
             )
-            AboutHero()
-            Reveal(1) { ConnectSection() }
-            Reveal(2) { AboutCard(ModeStrings.aboutOfflineTitle(), ModeStrings.aboutOfflineBody()) }
-            if (com.frameout.app.BuildConfig.PLAY_BILLING) {
-                Reveal(3) { AboutCard(ModeStrings.aboutProTitle(), ModeStrings.aboutProBody()) }
+            AboutHero(scroll)
+            Column(
+                Modifier.fillMaxWidth().graphicsLayer {
+                    alpha = body.value
+                    translationY = (1f - body.value) * 24.dp.toPx()
+                },
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                AboutCard(ModeStrings.aboutOfflineTitle(), ModeStrings.aboutOfflineBody(), FrameIconsExtra.Storage, colors.accentA)
+                if (com.frameout.app.BuildConfig.PLAY_BILLING) {
+                    AboutCard(ModeStrings.aboutProTitle(), ModeStrings.aboutProBody(), FrameIconsExtra.Sparkle, colors.accentB)
+                }
+                ConnectGroup()
+                AboutCard(ModeStrings.aboutLicensesTitle(), ModeStrings.aboutLicensesBody(), FrameIcons.Info, colors.accentC)
+                Column { CodecPackLicenseSection() }
             }
-            Reveal(4) { AboutCard(ModeStrings.aboutLicensesTitle(), ModeStrings.aboutLicensesBody()) }
-            Reveal(5) { Column { CodecPackLicenseSection() } }
+            Spacer(Modifier.navigationBarsPadding().height(24.dp))
         }
     }
 }
 
+private class ConnectRow(val icon: Int, val tint: Color, val title: String, val body: String, val trailing: Int, val onClick: () -> Unit)
+
 @Composable
-private fun ConnectSection() {
+private fun ConnectGroup() {
     val colors = FrameTheme.colors
     val context = LocalContext.current
-    Column {
-        FrameSectionTitle(ModeStrings.aboutConnectTitle(), Modifier.padding(horizontal = 4.dp))
+    val rows = buildList {
         if (AboutConfig.hasYoutube) {
-            LinkCard(
-                icon = FrameIconsExtra.Youtube,
-                tint = YoutubeRed,
-                title = ModeStrings.aboutYoutubeTitle(),
-                body = ModeStrings.aboutYoutubeBody(),
-                trailing = FrameIconsExtra.Link
-            ) { AboutLinks.openYoutube(context) }
+            add(ConnectRow(FrameIconsExtra.Youtube, YoutubeRed, ModeStrings.aboutYoutubeTitle(), ModeStrings.aboutYoutubeBody(), FrameIconsExtra.Link) { AboutLinks.openYoutube(context) })
         }
         if (AboutConfig.hasEmail) {
-            LinkCard(
-                icon = FrameIconsExtra.Mail,
-                tint = colors.primary,
-                title = ModeStrings.aboutEmailTitle(),
-                body = ModeStrings.aboutEmailBody(),
-                trailing = FrameIconsExtra.Chevron
-            ) { AboutLinks.writeEmail(context) }
+            add(ConnectRow(FrameIconsExtra.Mail, colors.primary, ModeStrings.aboutEmailTitle(), ModeStrings.aboutEmailBody(), FrameIconsExtra.Chevron) { AboutLinks.writeEmail(context) })
         }
-        LinkCard(
-            icon = FrameIcons.StarFilled,
-            tint = colors.warning,
-            title = RatingStrings.rowTitle(),
-            body = RatingStrings.rowBody(),
-            trailing = FrameIconsExtra.Chevron
-        ) { StoreLauncher.openStore(context) }
+        add(ConnectRow(FrameIcons.StarFilled, colors.warning, RatingStrings.rowTitle(), RatingStrings.rowBody(), FrameIconsExtra.Chevron) { StoreLauncher.openStore(context) })
+    }
+    Column {
+        FrameSectionTitle(ModeStrings.aboutConnectTitle(), Modifier.padding(start = 4.dp, end = 4.dp, bottom = 8.dp))
+        GlassSurface(shape = FrameShapes.xl, modifier = Modifier.fillMaxWidth()) {
+            Column(Modifier.fillMaxWidth()) {
+                rows.forEachIndexed { i, row ->
+                    if (i > 0) {
+                        Box(Modifier.fillMaxWidth().padding(start = 74.dp).height(1.dp).background(colors.outline.copy(alpha = 0.5f)))
+                    }
+                    ConnectRowView(row)
+                }
+            }
+        }
     }
 }
 
 @Composable
-private fun Reveal(index: Int, content: @Composable () -> Unit) {
-    val reduce = LocalSystemA11y.current.reduceMotion
-    val progress = remember { Animatable(if (reduce) 1f else 0f) }
-    LaunchedEffect(Unit) {
-        if (reduce) return@LaunchedEffect
-        delay(220L + index * 90L)
-        progress.animateTo(1f, spring(dampingRatio = 0.82f, stiffness = Spring.StiffnessLow))
-    }
-    Box(
-        Modifier.fillMaxWidth().graphicsLayer {
-            alpha = progress.value.coerceIn(0f, 1f)
-            translationY = (1f - progress.value) * 32.dp.toPx()
-        }
-    ) { content() }
-}
-
-@Composable
-private fun LinkCard(icon: Int, tint: Color, title: String, body: String, trailing: Int, onClick: () -> Unit) {
+private fun ConnectRowView(row: ConnectRow) {
     val colors = FrameTheme.colors
-    GlassSurface(shape = FrameShapes.md, modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp)) {
-        Row(
-            Modifier.fillMaxWidth().frameClickable(onClick = onClick).padding(14.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(14.dp)
-        ) {
-            Box(
-                Modifier.size(48.dp).clip(FrameShapes.sm).background(tint.copy(alpha = 0.16f)),
-                contentAlignment = Alignment.Center
-            ) {
-                Image(painterResource(icon), null, Modifier.size(26.dp), colorFilter = ColorFilter.tint(tint))
-            }
-            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                FrameText(title, style = FrameTheme.typography.titleSmall)
-                FrameText(body, style = FrameTheme.typography.bodySmall, color = colors.onSurfaceVariant)
-            }
-            Image(painterResource(trailing), null, Modifier.size(18.dp), colorFilter = ColorFilter.tint(colors.onSurfaceVariant))
+    Row(
+        Modifier.fillMaxWidth().frameClickable(onClick = row.onClick).padding(horizontal = 14.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(14.dp)
+    ) {
+        IconBadge(row.icon, row.tint)
+        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            FrameText(row.title, style = FrameTheme.typography.titleSmall)
+            FrameText(row.body, style = FrameTheme.typography.bodySmall, color = colors.onSurfaceVariant)
         }
+        Image(painterResource(row.trailing), null, Modifier.size(18.dp), colorFilter = ColorFilter.tint(colors.onSurfaceVariant))
     }
 }
 
 @Composable
-internal fun AboutCard(title: String, body: String) {
-    GlassSurface(shape = FrameShapes.md, modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp)) {
-        Column(Modifier.fillMaxWidth().padding(16.dp)) {
-            FrameText(title, style = FrameTheme.typography.titleSmall)
-            FrameText(body, style = FrameTheme.typography.bodySmall, color = FrameTheme.colors.onSurfaceVariant, modifier = Modifier.padding(top = 6.dp))
+internal fun IconBadge(icon: Int, tint: Color) {
+    Box(
+        Modifier.size(48.dp).clip(FrameShapes.sm).background(tint.copy(alpha = 0.16f)),
+        contentAlignment = Alignment.Center
+    ) {
+        Image(painterResource(icon), null, Modifier.size(26.dp), colorFilter = ColorFilter.tint(tint))
+    }
+}
+
+@Composable
+internal fun AboutCard(title: String, body: String, icon: Int? = null, tint: Color = Color.Unspecified) {
+    GlassSurface(shape = FrameShapes.xl, modifier = Modifier.fillMaxWidth()) {
+        Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
+                if (icon != null) IconBadge(icon, if (tint == Color.Unspecified) FrameTheme.colors.primary else tint)
+                FrameText(title, style = FrameTheme.typography.titleSmall, modifier = Modifier.weight(1f))
+            }
+            FrameText(body, style = FrameTheme.typography.bodySmall, color = FrameTheme.colors.onSurfaceVariant)
         }
     }
 }

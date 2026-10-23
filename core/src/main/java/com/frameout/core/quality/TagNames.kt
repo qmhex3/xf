@@ -22,6 +22,7 @@ object TagNames {
     fun display(tag: String, arabic: Boolean): String {
         val fixed = FIXED[tag]
         if (fixed != null) return if (arabic) fixed.second else fixed.first
+        TagFamilies.title(tag, arabic)?.let { return it }
         val name = tag.substringAfter(':')
         if (!arabic) return name
         return TagLabelsAr.MAP[name] ?: LOWER_AR[name.lowercase()] ?: LABELS_AR[name] ?: name

@@ -27,7 +27,6 @@ import androidx.paging.LoadState
 import com.frameout.core.util.FrameStrings
 import com.frameout.designsystem.components.FrameText
 import com.frameout.designsystem.icons.FrameIcons
-import com.frameout.designsystem.motion.fxScrollTilt
 import com.frameout.designsystem.icons.FrameIconsExtra
 import com.frameout.designsystem.theme.FrameTheme
 
@@ -111,7 +110,7 @@ private fun SavedGrid(
                     FrameText(row.title, style = FrameTheme.typography.titleSmall, color = FrameTheme.colors.onSurface)
                     if (showCounts) counts[row.title]?.let { FrameText(it.toString(), style = FrameTheme.typography.bodySmall, color = FrameTheme.colors.onSurfaceVariant) }
                 }
-                is SavedListItem.Image -> Box(Modifier.fxScrollTilt(22f) { gridState.itemPosition("i${row.item.id}") }) {
+                is SavedListItem.Image -> Box {
                     SavedImageCard(
                         item = row.item,
                         selected = row.item.id in state.selectedSaved,

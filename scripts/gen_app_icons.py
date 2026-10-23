@@ -91,15 +91,33 @@ def th(t): return '%02x%02x%02x' % tuple(max(0, min(255, round(v))) for v in t)
 def mix(a, b, t): A, B = hx(a), hx(b); return th(tuple(A[i]*(1-t) + B[i]*t for i in range(3)))
 def shade(a, k): return th(tuple(v*k for v in hx(a)))
 
-ACCENTS = {  # lo (bottom-left)  mid  hi (top-right)   dark tile   light tile
-    'indigo':  ('7a4cf6', '6a8bff', '52f0ff', '030F36', 'E3E7FA'),
-    'ocean':   ('3b6df6', '2fa6f5', '5af0ff', '031A38', 'DCEEFA'),
-    'emerald': ('0e9f8c', '25d89f', 'b4f25e', '03221E', 'DAF2E8'),
-    'sunset':  ('e8457f', 'f4623a', 'ffb13d', '2A0E10', 'FBE3D8'),
-    'rose':    ('a259f5', 'ee4c9a', 'ff86a8', '280A1E', 'FBDFE9'),
-    'gold':    ('f2700f', 'f7a911', 'ffe45c', '291B05', 'F9EDCB'),
-    'black':   ('8c8c8c', 'c4c4c4', 'f5f5f5', '141414', 'E6E6E6'),
-}
+# Single source of truth: the in-app accent palette (designsystem/.../Accent.kt).
+# The in-app brand mark (splash, About, onboarding) paints its gradient b -> a -> c, so the launcher art does the same.
+INK = '05060F'                      # BrandTile.kt INK
+HALO_DARK = ('010720', 0x80 / 255)  # SplashPaths plate (DrawIcon PLATE = 0x80010720)
+HALO_LIGHT = ('000000', 0x24 / 255)
+
+def _app_accents():
+    src = open(os.path.join(ROOT, 'designsystem/src/main/java/com/frameout/designsystem/theme/Accent.kt'), encoding='utf-8').read()
+    out = {}
+    for m in re.finditer(r'palette\(\s*key = "(\w+)",\s*stops = longArrayOf\(0xFF(\w{6}),\s*0xFF(\w{6}),\s*0xFF(\w{6})\)', src):
+        out[m.group(1)] = tuple(c.lower() for c in m.group(2, 3, 4))   # a, b, c
+    return out
+
+APP = _app_accents()
+assert set(APP) == {'indigo', 'ocean', 'emerald', 'sunset', 'rose', 'gold', 'black'}, APP
+LIGHT_TILE = {'indigo': 'E3E7FA', 'ocean': 'DCEEFA', 'emerald': 'DAF2E8', 'sunset': 'FBE3D8', 'rose': 'FBDFE9', 'gold': 'F9EDCB', 'black': 'E6E6E6'}
+
+def tile_stops(accent):
+    """Same two colours BrandTile.drawTileBody blends (INK towards b at 20%, towards a at 8%)."""
+    a, b, c = APP[accent]
+    return mix(INK, b, .20), mix(INK, a, .08)
+
+ACCENTS = {}
+for _k, (_a, _b, _c) in APP.items():
+    _t0, _t1 = tile_stops(_k)
+    # (lo, mid, hi, dark tile (flat fallback = midpoint), light tile)
+    ACCENTS[_k] = (_b, _a, _c, mix(_t0, _t1, .5).upper(), LIGHT_TILE[_k])
 # neutral accent: the light tile needs charcoal art (shading light greys gives too little contrast)
 LIGHT_ART = {'black': ('222222', '444444', '767676')}
 MODES = ('dark', 'light', 'amoled')
@@ -116,20 +134,21 @@ def palette(accent, variant):
         glow = '#FFFFFF'
         m0, m1, s0, s1 = SYS+'accent1_200', SYS+'accent2_200', SYS+'accent2_100', SYS+'accent3_100'
     else:
-        lo0, mid0, hi0 = ACCENTS[accent][:3]
+        lo0, mid0, hi0 = ACCENTS[accent][:3]          # b, a, c
+        a0, b0, c0 = APP[accent]
         k = 1.0 if variant == 'dark' else 0.8
         if variant == 'light' and accent in LIGHT_ART:
             lo, mid, hi = ['#'+c for c in LIGHT_ART[accent]]
-            hi3 = '#'+shade(LIGHT_ART[accent][2], .92)
+            hi3 = '#'+LIGHT_ART[accent][2]
         else:
             lo, mid, hi = ['#'+shade(c, k) for c in (lo0, mid0, hi0)]
-            hi3 = '#'+shade(hi0, k*0.92)
-        base = '0A0A0A' if accent == 'black' else '040A26'   # screen tint base (neutral for black)
-        scr0, scr1 = '#'+mix(base, mid0, .16), '#'+mix(base, mid0, .27)
-        glow = '#'+hi0
-        m0, m1 = '#'+mix(lo0, 'ffffff', .28), '#'+mix(mid0, 'ffffff', .32)
-        s0, s1 = '#'+mix(mid0, 'ffffff', .30), '#'+mix(hi0, 'ffffff', .20)
-    ga = .5 if accent != 'dynamic' else .3
+            hi3 = hi
+        # BrandIconDraw.drawScreen / drawMountain / drawSun, verbatim
+        scr0, scr1 = '#'+mix('040713', b0, .22), '#'+mix('060B26', a0, .30)
+        glow = '#'+c0
+        m0, m1 = '#'+mix(a0, 'ffffff', .15), '#'+mix(b0, 'ffffff', .50)
+        s0, s1 = '#'+mix(a0, 'ffffff', .25), '#'+mix(c0, 'ffffff', .45)
+    ga = .55 if accent != 'dynamic' else .3
     return {
         'gF':    ('lin', (166, 640, 690, 205), [(0, lo, 1), (.42, mid, 1), (1, hi, 1)]),
         'g2':    ('lin', (228, 706, 750, 270), [(0, lo, 1), (.5, mid, 1), (1, hi, 1)]),
@@ -175,7 +194,8 @@ def foreground_xml(accent, variant):
     for name, fill, eo in SHAPES:
         ft = ' android:fillType="evenOdd"' if eo else ''
         if fill == 'HALO':
-            x += f'        <path android:fillColor="{"#59000000" if variant == "dark" else "#24000000"}" android:pathData="{D[name]}" />\n'
+            hc, ho = HALO_DARK if variant == 'dark' else HALO_LIGHT
+            x += f'        <path android:fillColor="{argb("#" + hc, ho)}" android:pathData="{D[name]}" />\n'
         else:
             x += f'        <path{ft} android:pathData="{D[name]}">\n{grad(G[fill])}        </path>\n'
     return x + '    </group>\n</vector>\n'
@@ -185,6 +205,21 @@ def write(path, text):
     open(full, 'w', encoding='utf-8').write(text)
 
 def bg_name(accent, mode): return 'ic_launcher_bg_amoled' if mode == 'amoled' else f'ic_launcher_bg_{accent}_{mode}'
+def bg_ref(accent, mode):
+    """Adaptive-icon background: the dark tile is the same diagonal gradient the in-app BrandTile draws."""
+    if mode == 'dark' and accent in APP: return f'@drawable/ic_launcher_tile_{accent}'
+    return '@color/' + bg_name(accent, mode)
+
+def tile_xml(accent):
+    t0, t1 = tile_stops(accent)
+    return ('<?xml version="1.0" encoding="utf-8"?>\n<vector xmlns:android="http://schemas.android.com/apk/res/android"\n'
+            '    xmlns:aapt="http://schemas.android.com/aapt"\n    android:width="108dp"\n    android:height="108dp"\n'
+            '    android:viewportWidth="108"\n    android:viewportHeight="108">\n'
+            '    <path android:pathData="M0 0H108V108H0Z">\n        <aapt:attr name="android:fillColor">\n'
+            '            <gradient android:type="linear" android:startX="0" android:startY="0" android:endX="108" android:endY="108">\n'
+            f'                <item android:offset="0" android:color="#FF{t0.upper()}" />\n'
+            f'                <item android:offset="1" android:color="#FF{t1.upper()}" />\n'
+            '            </gradient>\n        </aapt:attr>\n    </path>\n</vector>\n')
 def fg_name(accent, mode): return f'ic_launcher_fg_{accent}_' + ('light' if mode == 'light' else 'dark')
 
 def main():
@@ -198,6 +233,8 @@ def main():
                       f'    <item android:drawable="@drawable/ic_launcher_fg_indigo_{v}" />\n</layer-list>\n')
             # fixed-colour accents are high-resolution WebP made by scripts/render_app_icons.py
             # (drawable-nodpi/ic_launcher_fg_<accent>_<dark|light>.webp); only the dynamic art stays vector
+    # ---- gradient tiles (dark mode) shared with the in-app brand tile
+    for a in APP: write(f'drawable/ic_launcher_tile_{a}.xml', tile_xml(a))
     # ---- tile colours
     cols = ['<?xml version="1.0" encoding="utf-8"?>\n<resources>\n    <color name="ic_launcher_bg_amoled">#000000</color>']
     for a, v in ACCENTS.items():
@@ -217,7 +254,7 @@ def main():
             key = f'{a}_{m}'
             write(f'mipmap-anydpi-v26/ic_launcher_{key}.xml',
                   '<?xml version="1.0" encoding="utf-8"?>\n<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">\n'
-                  f'    <background android:drawable="@color/{bg_name(a, m)}" />\n'
+                  f'    <background android:drawable="{bg_ref(a, m)}" />\n'
                   f'    <foreground android:drawable="@drawable/{fg_name(a, m)}" />\n'
                   '    <monochrome android:drawable="@drawable/ic_launcher_monochrome" />\n</adaptive-icon>\n')
             write(f'mipmap-anydpi-v24/ic_launcher_{key}.xml',
@@ -231,7 +268,7 @@ def main():
     # default icon (application icon) = indigo / dark
     write('mipmap-anydpi-v26/ic_launcher.xml',
           '<?xml version="1.0" encoding="utf-8"?>\n<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">\n'
-          '    <background android:drawable="@color/ic_launcher_bg_indigo_dark" />\n'
+          '    <background android:drawable="@drawable/ic_launcher_tile_indigo" />\n'
           '    <foreground android:drawable="@drawable/ic_launcher_fg_indigo_dark" />\n'
           '    <monochrome android:drawable="@drawable/ic_launcher_monochrome" />\n</adaptive-icon>\n')
     write('mipmap-anydpi-v24/ic_launcher.xml', open(os.path.join(RES, 'mipmap-anydpi-v24/ic_launcher_indigo_dark.xml')).read())

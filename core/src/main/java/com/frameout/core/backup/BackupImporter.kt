@@ -124,7 +124,7 @@ class BackupImporter(private val context: Context, private val container: AppCon
         )
     }
 
-    private fun cleanText(value: String): String = value.filter { !it.isISOControl() }.trim().take(BackupFormat.MAX_TEXT_CHARS)
+    private fun cleanText(value: String): String = com.frameout.core.util.NameSanitizer.clean(value, max = minOf(BackupFormat.MAX_TEXT_CHARS, com.frameout.core.util.NameSanitizer.MAX_NAME_CHARS))
 
     private fun safeSourceUri(value: String): String {
         if (value.length > MAX_URI_CHARS) return ""
@@ -162,7 +162,7 @@ class BackupImporter(private val context: Context, private val container: AppCon
         const val STAGE_PREFIX = ".import_"
         const val RESERVE_BYTES = 64L * 1024 * 1024
         const val MAX_URI_CHARS = 2048
-        val MODE_PATTERN = Regex("EveryFrame|KeyframesOnly|SceneChange|Slides|(EveryNFrames|EveryNMillis|FixedCount):\\d{1,9}")
+        val MODE_PATTERN = Regex("EveryFrame|KeyframesOnly|SceneChange|Slides|(EveryNFrames|EveryNMillis|FixedCount):\\d{1,9}|Content:\\d{1,9}:[0-2]:\\d{1,9}:[01]:[a-z_,]{0,1200}")
         val UNSAFE_FOLDER = Regex("[\\\\/:*?\"<>|\\p{Cntrl}]")
     }
 }

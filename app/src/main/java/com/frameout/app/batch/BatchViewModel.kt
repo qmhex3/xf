@@ -60,7 +60,10 @@ class BatchViewModel(app: Application) : AndroidViewModel(app) {
         seed.forEach { item ->
             viewModelScope.launch {
                 val meta = withContext(Dispatchers.IO) { metaGate.withPermit { loadMeta(item.uri) } }
-                _prep.update { list -> list.map { if (it.uri == item.uri) it.copy(durationMs = meta.first, thumb = meta.second, loaded = true) else it } }
+                val cover = withContext(Dispatchers.IO) { com.frameout.core.media.MediaThumbLoader.loadForUri(getApplication(), item.uri) }
+                _prep.update { list -> list.map { if (it.uri == item.uri) it.copy(durationMs = meta.first, thumb = cover ?: meta.second, loaded = true) else it } }
+                val probe = com.frameout.app.trim.SourceProbe.load(getApplication(), Uri.parse(item.uri))
+                if (probe != null) _prep.update { list -> list.map { if (it.uri == item.uri) it.copy(probe = probe) else it } }
             }
         }
     }
@@ -202,6 +205,7 @@ class BatchViewModel(app: Application) : AndroidViewModel(app) {
         pollJob?.cancel()
         pollJob = viewModelScope.launch {
             while (isActive) {
+                val liveValues = com.frameout.engine.work.LiveExtractProgress.all.value
                 val updated = ids.map { id ->
                     val p = container.projects.getById(id)
                     BatchItem(
@@ -210,7 +214,8 @@ class BatchViewModel(app: Application) : AndroidViewModel(app) {
                         uri = p?.sourceUri ?: "",
                         status = p?.status ?: "Unknown",
                         extracted = p?.extractedCount ?: 0,
-                        total = p?.progressTotal ?: 0
+                        total = p?.progressTotal ?: 0,
+                        live = liveValues[id]
                     )
                 }
                 val done = updated.none { it.status == "Queued" || it.status == "Extracting" || it.status == "Indexing" }

@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="ic_launcher_bg_amoled">#000000</color>
-    <color name="ic_launcher_bg_indigo_dark">#030F36</color>
+    <color name="ic_launcher_bg_indigo_dark">#16122F</color>
     <color name="ic_launcher_bg_indigo_light">#E3E7FA</color>
-    <color name="ic_launcher_bg_ocean_dark">#031A38</color>
+    <color name="ic_launcher_bg_ocean_dark">#0B192E</color>
     <color name="ic_launcher_bg_ocean_light">#DCEEFA</color>
-    <color name="ic_launcher_bg_emerald_dark">#03221E</color>
+    <color name="ic_launcher_bg_emerald_dark">#071F22</color>
     <color name="ic_launcher_bg_emerald_light">#DAF2E8</color>
-    <color name="ic_launcher_bg_sunset_dark">#2A0E10</color>
+    <color name="ic_launcher_bg_sunset_dark">#261015</color>
     <color name="ic_launcher_bg_sunset_light">#FBE3D8</color>
-    <color name="ic_launcher_bg_rose_dark">#280A1E</color>
+    <color name="ic_launcher_bg_rose_dark">#260E1C</color>
     <color name="ic_launcher_bg_rose_light">#FBDFE9</color>
-    <color name="ic_launcher_bg_gold_dark">#291B05</color>
+    <color name="ic_launcher_bg_gold_dark">#271710</color>
     <color name="ic_launcher_bg_gold_light">#F9EDCB</color>
-    <color name="ic_launcher_bg_black_dark">#141414</color>
+    <color name="ic_launcher_bg_black_dark">#21222A</color>
     <color name="ic_launcher_bg_black_light">#E6E6E6</color>
     <color name="ic_launcher_bg_dynamic_dark">#030F36</color>
     <color name="ic_launcher_bg_dynamic_light">#E3E7FA</color>

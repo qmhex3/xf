@@ -6,15 +6,16 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 
-enum class SkipReason { Blurry, Duplicate, NoPeople }
+enum class SkipReason { Blurry, Duplicate, NoPeople, NoMatch }
 
-data class SkipCounts(val blurry: Int = 0, val duplicate: Int = 0, val noPeople: Int = 0) {
-    val total: Int get() = blurry + duplicate + noPeople
+data class SkipCounts(val blurry: Int = 0, val duplicate: Int = 0, val noPeople: Int = 0, val noMatch: Int = 0) {
+    val total: Int get() = blurry + duplicate + noPeople + noMatch
 
     operator fun plus(reason: SkipReason): SkipCounts = when (reason) {
         SkipReason.Blurry -> copy(blurry = blurry + 1)
         SkipReason.Duplicate -> copy(duplicate = duplicate + 1)
         SkipReason.NoPeople -> copy(noPeople = noPeople + 1)
+        SkipReason.NoMatch -> copy(noMatch = noMatch + 1)
     }
 }
 

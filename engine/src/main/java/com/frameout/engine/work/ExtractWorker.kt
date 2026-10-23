@@ -74,6 +74,7 @@ class ExtractWorker(appContext: Context, params: WorkerParameters) : CoroutineWo
         } finally {
             if (isStopped) handleStopped()
             if (begun) ExtractControl.end(projectId, owner)
+            if (begun) LiveExtractProgress.clear(projectId)
             if (begun && !isStopped) announceFinish(projectId)
         }
     }
@@ -263,6 +264,7 @@ class ExtractWorker(appContext: Context, params: WorkerParameters) : CoroutineWo
         val estimator = RemainingEstimator()
         val sync = ControlSync(AppDatabase.get(applicationContext).projectDao(), projectId, CONTROL_SYNC_MS)
         val gate = ProgressGate(PUSH_MIN_MS)
+        val meter = UnifiedProgressMeter()
         engine.progress.sample(PROGRESS_SAMPLE_MS).collect { p ->
             if (p.projectId != 0L && p.projectId != projectId) return@collect
             val control = sync.state()
@@ -277,9 +279,12 @@ class ExtractWorker(appContext: Context, params: WorkerParameters) : CoroutineWo
             val elapsed = (now - startedAt).coerceAtLeast(0L)
             val remaining = estimator.update(p.status == ExtractProgress.Status.Extracting, paused, p.done, p.total, now)
             val title = extractStatusTitle(p.status)
-            val text = progressText(p)
+            val indexing = p.status == ExtractProgress.Status.Indexing
+            val text = if (indexing) "" else progressText(p)
+            val unified = meter.update(p)
+            LiveExtractProgress.publish(projectId, unified)
             val info = ExtractForeground.build(
-                applicationContext, projectId, "$title · $text", p.done, p.total, p.total <= 0, paused, elapsed, remaining
+                applicationContext, projectId, if (text.isBlank()) title else "$title · $text", p.done, p.total, p.total <= 0, paused, elapsed, remaining, unified, indexing
             )
             promote(info)
             setProgress(progressData(p, elapsed, remaining))

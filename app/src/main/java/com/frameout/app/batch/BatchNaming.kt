@@ -14,7 +14,7 @@ object BatchNaming {
             }
         }.getOrNull()
         val raw = queried ?: parsed.lastPathSegment?.substringAfterLast('/') ?: ""
-        return raw.substringBeforeLast('.', raw).ifBlank { "video" }
+        return com.frameout.core.util.NameSanitizer.clean(raw.substringBeforeLast('.', raw), "video")
     }
 
     fun uniqueFolder(name: String, taken: MutableSet<String>): String {

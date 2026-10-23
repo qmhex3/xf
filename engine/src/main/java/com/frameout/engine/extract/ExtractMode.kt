@@ -8,7 +8,11 @@ sealed class ExtractMode {
     data class FixedCount(val count: Int) : ExtractMode()
     data object SceneChange : ExtractMode()
     data object Slides : ExtractMode()
+    data class Content(val spec: com.frameout.core.quality.content.ContentSpec) : ExtractMode()
 }
+
+fun ExtractMode.decidesContent(): Boolean =
+    this is ExtractMode.Slides || (this is ExtractMode.Content && spec.tags.isNotEmpty())
 
 data class ExtractRequest(
     val projectId: Long,
@@ -24,8 +28,13 @@ data class ExtractRequest(
     val peopleOnly: Boolean = false,
     val peopleBody: Boolean = true
 ) {
+    val peopleOnlyApplied: Boolean get() = peopleOnly && !mode.decidesContent()
+
     fun newGate(): com.frameout.core.quality.ExtractQualityGate? =
-        if (skipBlurry || skipDuplicates || peopleOnly) com.frameout.core.quality.ExtractQualityGate(skipBlurry, skipDuplicates, peopleOnly, peopleBody) { com.frameout.core.quality.SkipStats.record(projectId, it) } else null
+        if (skipBlurry || skipDuplicates || peopleOnlyApplied || mode is ExtractMode.Content) com.frameout.core.quality.ExtractQualityGate(skipBlurry, skipDuplicates, peopleOnlyApplied, peopleBody, contentGate()) { com.frameout.core.quality.SkipStats.record(projectId, it) } else null
+
+    private fun contentGate(): com.frameout.core.quality.content.ContentGate? =
+        (mode as? ExtractMode.Content)?.let { com.frameout.core.quality.content.ContentGate(it.spec) }
 }
 
 data class ExtractProgress(

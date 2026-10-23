@@ -17,15 +17,15 @@ internal fun ConfirmDeleteDialog(request: DeleteRequest, onConfirm: () -> Unit, 
     when (request) {
         is DeleteRequest.Project -> {
             title = FrameStrings.confirmDeleteProject()
-            body = FrameStrings.confirmDeleteProjectsBody()
+            body = FrameStrings.confirmDeleteProjectsBodyUndoable()
         }
         is DeleteRequest.Projects -> {
             title = FrameStrings.confirmDeleteProjects(request.count)
-            body = FrameStrings.confirmDeleteProjectsBody()
+            body = FrameStrings.confirmDeleteProjectsBodyUndoable()
         }
         is DeleteRequest.Saved -> {
             title = FrameStrings.confirmDeleteSaved(request.count)
-            body = FrameStrings.confirmDeleteSavedBody()
+            body = if (request.count <= com.frameout.core.storage.SavedTrash.MAX_ITEMS) FrameStrings.confirmDeleteSavedBodyUndoable() else FrameStrings.confirmDeleteSavedBody()
         }
     }
     FrameConfirmDialog(title, body, FrameStrings.delete(), FrameStrings.cancel(), onConfirm, onDismiss, destructive = true)

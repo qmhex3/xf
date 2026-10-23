@@ -15,10 +15,12 @@ class GalleryBackup(private val context: Context) {
 
     private val dir: File get() = File(context.cacheDir, DIR).also { it.mkdirs() }
 
-    suspend fun capture(uri: String, displayName: String, createdAt: Long): Snapshot? = withContext(Dispatchers.IO) {
+    suspend fun capture(uri: String, displayName: String, createdAt: Long, maxBytes: Long = Long.MAX_VALUE): Snapshot? = withContext(Dispatchers.IO) {
         sweep()
         val parsed = runCatching { Uri.parse(uri) }.getOrNull() ?: return@withContext null
         val resolver = context.contentResolver
+        val size = runCatching { resolver.openAssetFileDescriptor(parsed, "r")?.use { it.length } }.getOrNull() ?: -1L
+        if (size > maxBytes) return@withContext null
         val mime = runCatching { resolver.getType(parsed) }.getOrNull() ?: "image/jpeg"
         val file = File(dir, "undo_${System.nanoTime()}.bin")
         val copied = runCatching {
@@ -34,20 +36,27 @@ class GalleryBackup(private val context: Context) {
     suspend fun restore(snapshot: Snapshot): Uri? = withContext(Dispatchers.IO) {
         if (!snapshot.file.exists()) return@withContext null
         val resolver = context.contentResolver
+        val video = snapshot.mime.startsWith("video/")
+        val path = if (video && snapshot.relativePath.startsWith("Pictures/")) VIDEO_PATH else snapshot.relativePath
         val values = ContentValues().apply {
-            put(MediaStore.Images.Media.DISPLAY_NAME, snapshot.displayName)
-            put(MediaStore.Images.Media.MIME_TYPE, snapshot.mime)
+            put(MediaStore.MediaColumns.DISPLAY_NAME, snapshot.displayName)
+            put(MediaStore.MediaColumns.MIME_TYPE, snapshot.mime)
             put(MediaStore.Images.Media.DATE_TAKEN, snapshot.dateTaken)
             if (Build.VERSION.SDK_INT >= 29) {
-                put(MediaStore.Images.Media.RELATIVE_PATH, snapshot.relativePath)
-                put(MediaStore.Images.Media.IS_PENDING, 1)
+                put(MediaStore.MediaColumns.RELATIVE_PATH, path)
+                put(MediaStore.MediaColumns.IS_PENDING, 1)
             }
         }
-        val collection = if (Build.VERSION.SDK_INT >= 29) MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY) else MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        val collection = when {
+            video && Build.VERSION.SDK_INT >= 29 -> MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+            video -> MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+            Build.VERSION.SDK_INT >= 29 -> MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+            else -> MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        }
         val uri = resolver.insert(collection, values) ?: return@withContext null
         try {
             resolver.openOutputStream(uri)?.use { out -> snapshot.file.inputStream().use { it.copyTo(out) } } ?: error("Output unavailable")
-            if (Build.VERSION.SDK_INT >= 29) resolver.update(uri, ContentValues().apply { put(MediaStore.Images.Media.IS_PENDING, 0) }, null, null)
+            if (Build.VERSION.SDK_INT >= 29) resolver.update(uri, ContentValues().apply { put(MediaStore.MediaColumns.IS_PENDING, 0) }, null, null)
             uri
         } catch (e: Exception) {
             logFailure("GalleryBackup", e)
@@ -69,6 +78,8 @@ class GalleryBackup(private val context: Context) {
         return found?.takeIf { it.isNotBlank() } ?: DEFAULT_PATH
     }
 
+    fun cleanup() = sweep()
+
     private fun sweep() {
         val cutoff = System.currentTimeMillis() - MAX_AGE_MS
         dir.listFiles()?.filter { it.lastModified() < cutoff }?.forEach { it.delete() }
@@ -77,6 +88,7 @@ class GalleryBackup(private val context: Context) {
     private companion object {
         const val DIR = "frameout_undo"
         const val DEFAULT_PATH = "Pictures/FrameOut/"
+        const val VIDEO_PATH = "Movies/FrameOut/"
         const val MAX_AGE_MS = 60L * 60L * 1000L
     }
 }

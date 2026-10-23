@@ -30,7 +30,14 @@ class ExtractFabLogicTest {
         val list = listOf(p(1, "Extracting", 25, 100))
         val model = fabModel(list, pickFocus(list, null), false)
         assertEquals(FabPhase.Pause, model.phase)
-        assertEquals(0.25f, model.progress!!, 0.001f)
+        assertEquals(0.4f, model.progress!!, 0.001f)
+    }
+
+    @Test
+    fun indexingShowsLiveUnifiedProgressWhenAvailable() {
+        val list = listOf(p(1, "Indexing", 0, 155_082))
+        assertNull(fabModel(list, 1, false).progress)
+        assertEquals(0.1f, fabModel(list, 1, false, mapOf(1L to 0.1f)).progress!!, 0.001f)
     }
 
     @Test
@@ -45,7 +52,7 @@ class ExtractFabLogicTest {
         assertEquals(1L, pickFocus(list, 1))
         val model = fabModel(list, 1, false)
         assertEquals(FabPhase.Resume, model.phase)
-        assertEquals(0.5f, model.progress!!, 0.001f)
+        assertEquals(0.6f, model.progress!!, 0.001f)
     }
 
     @Test

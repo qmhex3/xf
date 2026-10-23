@@ -20,6 +20,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.ui.draw.clip
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import com.frameout.engine.work.LiveExtractProgress
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -80,20 +84,20 @@ fun ProjectCard(
     Box(
         Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 7.dp)
+            .padding(horizontal = 16.dp, vertical = 5.dp)
             .frameCombinedClickable(onOpen, onLongClick, FrameA11y.select())
             .semantics { this.selected = selected }
             .then(if (live) Modifier.frameGlow(colors.primary, { pulse?.value ?: 0.16f }, 12.dp, { 0.12f }) else Modifier)
             .background(fill, shape)
             .then(border)
     ) {
-        Column(Modifier.clip(shape)) {
-            Row(Modifier.padding(start = 14.dp, end = 6.dp, top = 14.dp), verticalAlignment = Alignment.Top) {
-                ProjectThumb(thumb, project)
-                ProjectInfo(project, specs, Modifier.weight(1f).padding(start = 12.dp, end = 4.dp))
-                if (!selected) DeleteAction(onDelete, Modifier.offset(y = (-4).dp)) else Spacer(Modifier.size(48.dp))
+        Column(Modifier.clip(shape).padding(12.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                ProjectThumb(thumb, project, 76.dp)
+                ProjectInfo(project, specs, Modifier.weight(1f))
+                if (!selected) DeleteAction(onDelete) else Spacer(Modifier.size(48.dp))
             }
-            failure?.let { FrameText(FailureStrings.of(it), style = FrameTheme.typography.bodySmall, color = colors.error, modifier = Modifier.padding(start = 14.dp, end = 14.dp, top = 10.dp)) }
+            failure?.let { FrameText(FailureStrings.of(it), style = FrameTheme.typography.bodySmall, color = colors.error) }
             CardFooter(project, selected, onResume, onPause)
         }
     }
@@ -115,7 +119,7 @@ private fun livePulse(live: Boolean): State<Float>? {
 @Composable
 private fun ProjectInfo(project: ProjectEntity, specs: VideoSpecs?, modifier: Modifier) {
     val colors = FrameTheme.colors
-    Column(modifier, verticalArrangement = Arrangement.spacedBy(5.dp)) {
+    Column(modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
         FrameText(project.name, style = FrameTheme.typography.titleSmall, maxLines = 2, overflow = TextOverflow.Ellipsis)
         specsText(specs)?.let { FrameText(it, style = FrameTheme.typography.monoSmall.copy(fontSize = 10.sp), color = colors.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis) }
         FrameText(formatDate(project.updatedAt), style = FrameTheme.typography.monoSmall, color = colors.onSurfaceVariant, maxLines = 1)
@@ -124,20 +128,29 @@ private fun ProjectInfo(project: ProjectEntity, specs: VideoSpecs?, modifier: Mo
 
 @Composable
 private fun CardFooter(project: ProjectEntity, selected: Boolean, onResume: () -> Unit, onPause: () -> Unit) {
-    val colors = FrameTheme.colors
-    val progress = cardProgress(project)
-    Column(Modifier.padding(top = 12.dp)) {
-        if (progress != CardProgress.None) ProjectProgressBar(progress, Modifier.padding(horizontal = 14.dp))
+    val live by remember(project.id) { LiveExtractProgress.observe(project.id) }.collectAsState(initial = LiveExtractProgress.all.value[project.id])
+    val peak = remember(project.id) { floatArrayOf(0f) }
+    val progress = cardProgress(project, live).let { shown ->
+        if (shown is CardProgress.Value) {
+            peak[0] = maxOf(shown.fraction, peak[0])
+            CardProgress.Value(peak[0], percentOf(peak[0]))
+        } else {
+            peak[0] = 0f
+            shown
+        }
+    }
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        if (progress != CardProgress.None) ProjectProgressBar(progress, Modifier)
         Row(
-            Modifier.fillMaxWidth().padding(start = 14.dp, end = 10.dp, bottom = 12.dp, top = if (progress != CardProgress.None) 10.dp else 0.dp),
+            Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            StatusCorner(project.status)
+            StatusPill(project.status)
+            FrameCountInline(counters(project), (progress as? CardProgress.Value)?.percent, com.frameout.core.util.FrameStrings.frameCount(project.extractedCount))
             Box(Modifier.weight(1f))
-            FrameCountChip(counters(project), (progress as? CardProgress.Value)?.percent, com.frameout.core.util.FrameStrings.frameCount(project.extractedCount))
             if (hasStateAction(project)) {
-                Box(Modifier.size(44.dp), Alignment.Center) { if (!selected) StateAction(project, onResume, onPause) }
+                Box(Modifier.size(40.dp), Alignment.Center) { if (!selected) StateAction(project, onResume, onPause) }
             }
         }
     }
@@ -150,6 +163,6 @@ private fun specsText(specs: VideoSpecs?): String? {
 }
 
 private fun counters(project: ProjectEntity): String =
-    if (project.progressTotal > 0 && project.status != "Completed") "${project.extractedCount}/${project.progressTotal}" else "${project.extractedCount}"
+    if (project.progressTotal > 0 && project.status != "Completed" && project.status != "Indexing") "${project.extractedCount}/${project.progressTotal}" else "${project.extractedCount}"
 
 private fun formatDate(ms: Long) = SimpleDateFormat("dd MMM", Locale.getDefault()).format(Date(ms))

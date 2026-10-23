@@ -5,6 +5,7 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -22,6 +23,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -44,6 +46,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -58,12 +61,14 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.frameout.designsystem.a11y.LocalSystemA11y
 import com.frameout.designsystem.a11y.frameHoldRepeat
 import com.frameout.designsystem.components.FrameText
 import com.frameout.designsystem.haptics.FrameHaptic
 import com.frameout.designsystem.haptics.rememberFrameHaptics
 import com.frameout.designsystem.theme.FrameGradients
 import com.frameout.designsystem.theme.FrameTheme
+import kotlinx.coroutines.launch
 import kotlin.math.max
 import kotlin.math.min
 
@@ -111,8 +116,30 @@ internal fun FrameIsland(
 
     val singleSelected = visual.count { it.selected } == 1
     val haloIndex = visual.indexOfFirst { it.selected }.coerceAtLeast(0)
-    val haloX by animateDpAsState(slotX(haloIndex), islandSpring(), label = "islandHaloX")
-    val haloAlpha by animateFloatAsState(if (singleSelected) 1f else 0f, label = "islandHaloAlpha")
+    val pillWTarget = minOf(56.dp, slotTarget - 4.dp)
+    val spotLeftTarget = (slotX(haloIndex) + (slotTarget - pillWTarget) / 2).value
+    val spotRightTarget = spotLeftTarget + pillWTarget.value
+    val spotId = remember { DockSpotMemory.newId() }
+    val seed = remember { DockSpotMemory.seed() }
+    val spotLeft = remember { Animatable(seed?.first ?: spotLeftTarget) }
+    val spotRight = remember { Animatable(seed?.second ?: spotRightTarget) }
+    val reduceMotion = LocalSystemA11y.current.reduceMotion
+    LaunchedEffect(spotLeftTarget, spotRightTarget, reduceMotion) {
+        if (reduceMotion) {
+            spotLeft.snapTo(spotLeftTarget)
+            spotRight.snapTo(spotRightTarget)
+            return@LaunchedEffect
+        }
+        val forward = spotLeftTarget >= spotLeft.value
+        val lead = spring<Float>(dampingRatio = 0.8f, stiffness = 560f)
+        val trail = spring<Float>(dampingRatio = 1f, stiffness = 150f)
+        launch { spotLeft.animateTo(spotLeftTarget, if (forward) trail else lead) }
+        launch { spotRight.animateTo(spotRightTarget, if (forward) lead else trail) }
+    }
+    SideEffect { if (singleSelected) DockSpotMemory.claim(spotId) { spotLeft.value to spotRight.value } }
+    DisposableEffect(spotId) { onDispose { DockSpotMemory.leave(spotId) } }
+    val superseded = DockSpotMemory.owner > spotId
+    val haloAlpha by animateFloatAsState(if (singleSelected && !superseded) 1f else 0f, tween(140), label = "islandHaloAlpha")
 
     val notchDepth by animateDpAsState(if (hasFab) NotchDepth else 0.dp, islandSpring(), label = "islandNotchDepth")
     val shape = NotchedPillShape(cx.value, notchDepth.value)
@@ -134,18 +161,30 @@ internal fun FrameIsland(
                 .border(1.dp, rim, shape)
         )
         if (haloAlpha > 0.01f) {
-            val pill = RoundedCornerShape(16.dp)
-            val pillW = minOf(56.dp, slot - 4.dp)
+            val spotTop = ItemTop - 3.dp
             Box(
                 Modifier
-                    .offset { IntOffset((haloX + (slot - pillW) / 2).roundToPx(), (ItemTop - 3.dp).roundToPx()) }
-                    .size(pillW, 28.dp)
-                    .alpha(haloAlpha)
-                    .background(
-                        Brush.verticalGradient(listOf(colors.primary.copy(alpha = 0.18f), colors.primary.copy(alpha = 0.10f))),
-                        pill
-                    )
-                    .border(1.dp, colors.primary.copy(alpha = 0.22f), pill)
+                    .matchParentSize()
+                    .graphicsLayer { alpha = haloAlpha }
+                    .drawBehind {
+                        val l = spotLeft.value.dp.toPx()
+                        val r = spotRight.value.dp.toPx()
+                        val w = (r - l).coerceAtLeast(1f)
+                        val baseW = pillWTarget.toPx()
+                        val stretch = ((w - baseW) / slotTarget.toPx()).coerceIn(0f, 1f)
+                        val full = 28.dp.toPx()
+                        val h = full * (1f - 0.14f * stretch)
+                        val top = spotTop.toPx() + (full - h) / 2f
+                        val radius = CornerRadius(minOf(16.dp.toPx(), h / 2f))
+                        drawRoundRect(
+                            Brush.verticalGradient(
+                                listOf(colors.primary.copy(alpha = 0.20f), colors.primary.copy(alpha = 0.11f)),
+                                top, top + h
+                            ),
+                            Offset(l, top), Size(w, h), radius
+                        )
+                        drawRoundRect(colors.primary.copy(alpha = 0.24f), Offset(l, top), Size(w, h), radius, style = Stroke(1.dp.toPx()))
+                    }
             )
         }
         val initialIds = remember { visual.map { it.id }.toSet() }

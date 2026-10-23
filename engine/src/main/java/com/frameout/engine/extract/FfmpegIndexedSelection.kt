@@ -16,7 +16,7 @@ object FfmpegIndexedSelection {
     }
 
     private suspend fun checkpointPts(dao: VideoIndexDao, projectId: Long, mode: ExtractMode, checkpointIndex: Int): Long {
-        if (mode !is ExtractMode.EveryNMillis || checkpointIndex < 0) return -1L
+        if ((mode !is ExtractMode.EveryNMillis && mode !is ExtractMode.Content) || checkpointIndex < 0) return -1L
         return dao.bySampleIndex(projectId, checkpointIndex)?.ptsUs ?: -1L
     }
 

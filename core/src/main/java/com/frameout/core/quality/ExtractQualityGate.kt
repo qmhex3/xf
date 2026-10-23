@@ -3,7 +3,7 @@ package com.frameout.core.quality
 import com.frameout.core.util.SmoothScale
 import android.graphics.Bitmap
 
-class ExtractQualityGate(private val skipBlurry: Boolean, private val skipDuplicates: Boolean, private val peopleOnly: Boolean = false, private val includeBody: Boolean = true, private val onReject: (SkipReason) -> Unit = {}) {
+class ExtractQualityGate(private val skipBlurry: Boolean, private val skipDuplicates: Boolean, private val peopleOnly: Boolean = false, private val includeBody: Boolean = true, private val content: com.frameout.core.quality.content.ContentGate? = null, private val onReject: (SkipReason) -> Unit = {}) {
     private val recent = ArrayDeque<Double>()
     private var lastSig: ByteArray? = null
     private var lastNoise = 0f
@@ -34,7 +34,10 @@ class ExtractQualityGate(private val skipBlurry: Boolean, private val skipDuplic
         }
     }
 
-    suspend fun acceptAsync(bitmap: Bitmap): Boolean = accept(bitmap) && (!peopleOnly || PeopleFilter.containsPerson(bitmap, includeBody).also { if (!it) onReject(SkipReason.NoPeople) })
+    suspend fun acceptAsync(bitmap: Bitmap): Boolean = accept(bitmap) && acceptPeople(bitmap) && (content?.accept(bitmap, onReject) ?: true)
+
+    private suspend fun acceptPeople(bitmap: Bitmap): Boolean =
+        !peopleOnly || PeopleFilter.containsPerson(bitmap, includeBody).also { if (!it) onReject(SkipReason.NoPeople) }
 
     fun accept(luma: IntArray, width: Int, height: Int): Boolean {
         val detail = FocusScore.detail(luma, width, height)

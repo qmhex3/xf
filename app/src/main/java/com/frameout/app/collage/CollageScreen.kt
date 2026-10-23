@@ -56,7 +56,12 @@ fun CollageScreen(projectId: Long, frameIds: List<Long>, onBack: () -> Unit, onS
         Box(Modifier.fillMaxSize().background(FrameTheme.colors.background).frameAmbientGlow()) {
             CollageBody(state, leave, onSave)
             ToastHost(state.message, state.messageIsError, Modifier.align(Alignment.TopCenter))
-            state.result?.let { SaveSuccessOverlay(it, onSaved) }
+            FramePickerSheet(state, projectId, app)
+            val status = when {
+                state.saving -> com.frameout.app.trim.CaptureStatusState(FrameStrings.saving(), busy = true)
+                else -> state.result?.let { com.frameout.app.trim.CaptureStatusState(FrameStrings.savedOk(), it) }
+            }
+            com.frameout.app.trim.CaptureStatus(status, Modifier.align(Alignment.TopCenter)) { state.result = null }
         }
     }
 }
@@ -101,7 +106,7 @@ private fun PreviewArea(state: CollageState, modifier: Modifier) {
         if (state.ready && state.frames.isEmpty()) {
             FrameText(CollageStrings.noFrames(), color = FrameTheme.colors.onSurfaceVariant, modifier = Modifier.align(Alignment.Center))
         } else {
-            CollagePreview(state.canvasTemplate, state.slots(), state.style, state.selectedCell, state::tapCell, state::setCrop, Modifier.fillMaxSize())
+            CollagePreview(state.canvasTemplate, state.slots(), state.style, state.selectedCell, state::tapCell, state::setCrop, state::swapCells, Modifier.fillMaxSize())
         }
     }
 }

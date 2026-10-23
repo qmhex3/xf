@@ -13,7 +13,6 @@ import androidx.compose.ui.unit.dp
 import com.frameout.core.db.ProjectEntity
 import com.frameout.core.util.FrameStrings
 import com.frameout.designsystem.icons.FrameIconsExtra
-import com.frameout.designsystem.motion.fxScrollTilt
 
 class ProjectActions(
     val onOpen: (Long) -> Unit,
@@ -44,7 +43,7 @@ fun ProjectsPane(
     }
     LazyColumn(state = listState, contentPadding = PaddingValues(top = 4.dp, bottom = bottomPadding), modifier = Modifier.fillMaxSize()) {
         items(projects, key = { it.id }, contentType = { "project" }) { project ->
-            Box(Modifier.fxScrollTilt { listState.itemPosition(project.id) }) {
+            Box {
                 ProjectCard(
                     project = project,
                     selected = project.id in selectedIds,

@@ -80,10 +80,10 @@ private fun MainContentBody(activity: ComponentActivity, app: FrameOutApp, incom
     val fab = remember { FabRevealState() }
     val viewerReveal = remember { ViewerRevealState() }
     fun navigate(route: AppRoute) {
-        if (stack.lastOrNull() != route) { viewerReveal.onNavigate(stack.lastOrNull(), route); fab.onNavigate(route); direction = 1; stack.add(route) }
+        if (stack.lastOrNull() != route) { viewerReveal.onNavigate(stack.lastOrNull(), route); if (isTabSwitch(stack.lastOrNull(), route)) fab.reset() else fab.onNavigate(route); direction = 1; stack.add(route) }
     }
     fun back() {
-        if (stack.size > 1) { viewerReveal.onBack(stack.last()); fab.onBack(stack.last()); direction = -1; stack.removeAt(stack.lastIndex) }
+        if (stack.size > 1) { viewerReveal.onBack(stack.last()); if (isTabSwitch(stack.last(), stack[stack.lastIndex - 1])) fab.reset() else fab.onBack(stack.last()); direction = -1; stack.removeAt(stack.lastIndex) }
     }
     fun finishExtraction(projectId: Long) {
         val target = AppRoute.Frames(projectId)
@@ -95,7 +95,7 @@ private fun MainContentBody(activity: ComponentActivity, app: FrameOutApp, incom
         stack.add(AppRoute.Frames(projectId))
     }
     fun replaceTop(route: AppRoute) {
-        fab.onReplace(route)
+        if (isTabSwitch(stack.lastOrNull(), route)) fab.reset() else fab.onReplace(route)
         viewerReveal.reset()
         direction = if (route is AppRoute.Library || route is AppRoute.Settings) 0 else 1
         if (route is AppRoute.Library || route is AppRoute.Settings) {
@@ -180,7 +180,7 @@ private fun MainContentBody(activity: ComponentActivity, app: FrameOutApp, incom
         AnimatedContent(
             targetState = stack.last(),
             contentKey = ::contentKeyOf,
-            transitionSpec = { if (fab.active && !reduceMotion) fabTransition(fab.opening) else if (viewerReveal.active && !reduceMotion) fabTransition(viewerReveal.opening) else routeTransition(direction, rtl, reduceMotion, zoomKind(initialState, targetState)) },
+            transitionSpec = { if (zoomKind(initialState, targetState) == 3) routeTransition(0, rtl, reduceMotion, 3) else if (fab.active && !reduceMotion) fabTransition(fab.opening) else if (viewerReveal.active && !reduceMotion) fabTransition(viewerReveal.opening) else routeTransition(direction, rtl, reduceMotion, zoomKind(initialState, targetState)) },
             label = "route"
         ) { route ->
             FabRevealHost(route, fab) { ViewerRevealHost(route, viewerReveal) { RouteContent(route, ::navigate, ::finishExtraction, ::back, ::replaceTop, activity, app, scope) } }
@@ -285,7 +285,7 @@ private fun RouteContent(
                             .pointerInput(Unit) { detectTapGestures { } },
                         androidx.compose.ui.Alignment.Center
                     ) {
-                        com.frameout.designsystem.components.FrameSpinner()
+                        PreferredFrameTheme { com.frameout.designsystem.components.FrameSpinner() }
                     }
                 }
             }

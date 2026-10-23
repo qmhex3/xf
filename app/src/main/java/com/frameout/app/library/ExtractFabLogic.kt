@@ -2,6 +2,7 @@ package com.frameout.app.library
 
 import com.frameout.core.db.ProjectEntity
 import com.frameout.core.db.progressTotal
+import com.frameout.engine.work.UnifiedExtractProgress
 
 enum class FabPhase { Add, Pause, Resume, Success }
 
@@ -11,7 +12,7 @@ data class FabModel(val phase: FabPhase, val progress: Float? = null)
 
 private val LIVE = setOf("Indexing", "Extracting")
 private val RUNNING = LIVE + "Queued"
-private val WITH_PROGRESS = setOf("Extracting", "Paused")
+private val WITH_PROGRESS = setOf("Indexing", "Extracting", "Paused")
 
 fun ProjectEntity.toFab() = FabProject(id, status, extractedCount, progressTotal)
 
@@ -26,10 +27,10 @@ fun pickFocus(projects: List<FabProject>, previous: Long?): Long? {
 fun justCompleted(projects: List<FabProject>, focus: Long?): Boolean =
     focus != null && projects.any { it.id == focus && it.status == "Completed" }
 
-fun fabModel(projects: List<FabProject>, focus: Long?, flash: Boolean): FabModel {
+fun fabModel(projects: List<FabProject>, focus: Long?, flash: Boolean, live: Map<Long, Float> = emptyMap()): FabModel {
     if (flash) return FabModel(FabPhase.Success)
     val project = projects.firstOrNull { it.id == focus } ?: return FabModel(FabPhase.Add)
     val phase = if (project.status == "Paused") FabPhase.Resume else FabPhase.Pause
-    val known = project.total > 0 && project.status in WITH_PROGRESS
-    return FabModel(phase, if (known) (project.extracted.toFloat() / project.total).coerceIn(0f, 1f) else null)
+    val shown = if (project.status in WITH_PROGRESS) UnifiedExtractProgress.stored(project.status, project.extracted, project.total, live[project.id]) else null
+    return FabModel(phase, shown)
 }

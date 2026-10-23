@@ -5,7 +5,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -38,6 +42,9 @@ import com.frameout.designsystem.theme.FrameAccents
 import com.frameout.designsystem.theme.FrameTheme
 import com.frameout.designsystem.theme.resolveFrameAccent
 
+private const val SWATCH_DP = 44
+private const val GAP_DP = 12
+
 @Composable
 internal fun AccentPicker(value: String, onChange: (String) -> Unit) {
     val context = LocalContext.current
@@ -51,7 +58,16 @@ internal fun AccentPicker(value: String, onChange: (String) -> Unit) {
     val guarded: (String, () -> Unit) -> Unit = { key, applied ->
         gate.gated(ProFeature.Accents, key == FrameAccents.DYNAMIC || ProCatalog.accentIsFree(key), key) { applied(); onChange(key) }
     }
-    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+    val scroll = rememberScrollState()
+    val stepPx = with(LocalDensity.current) { (SWATCH_DP + GAP_DP).dp.toPx() }
+    LaunchedEffect(value) {
+        val index = options.indexOfFirst { it.key == value }.coerceAtLeast(0)
+        scroll.animateScrollTo((index * stepPx - stepPx).toInt().coerceAtLeast(0))
+    }
+    Row(
+        Modifier.fillMaxWidth().horizontalScroll(scroll).padding(vertical = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(GAP_DP.dp)
+    ) {
         options.forEach { accent -> AccentSwatch(accent, accent.key == value, guarded, gate.locked(accent.key == FrameAccents.DYNAMIC || ProCatalog.accentIsFree(accent.key))) }
     }
 }
@@ -65,7 +81,7 @@ private fun AccentSwatch(accent: FrameAccent, selected: Boolean, onChange: (Stri
     val checkTint = if (accent.b.luminance() > 0.5f) Color.Black else Color.White
     Box(
         Modifier
-            .size(44.dp)
+            .size(SWATCH_DP.dp)
             .then(wave.modifier)
             .clip(CircleShape)
             .semantics { contentDescription = name }

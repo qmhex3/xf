@@ -23,11 +23,13 @@ import androidx.compose.ui.unit.dp
 import com.frameout.core.util.TrimStrings
 import com.frameout.designsystem.a11y.frameClickable
 import com.frameout.designsystem.components.FrameText
+import com.frameout.designsystem.glass.frameGlow
 import com.frameout.designsystem.icons.FrameIcons
 import com.frameout.designsystem.icons.FrameIconsExtra
 import com.frameout.designsystem.theme.FrameGradients
 import com.frameout.designsystem.theme.FrameShapes
 import com.frameout.designsystem.theme.FrameTheme
+import com.frameout.designsystem.theme.frameCardEdge
 import com.frameout.designsystem.theme.frameHairline
 
 @Composable
@@ -71,9 +73,10 @@ internal fun TrimButton(label: String, icon: Int, modifier: Modifier, primary: B
     val fill: Brush = if (primary) FrameGradients.Brand else Brush.linearGradient(listOf(colors.container, colors.container))
     val tint = if (primary) Color.White else colors.onSurface
     val click = if (enabled) Modifier.frameClickable(onClick = onClick) else Modifier
-    val outline = if (primary) Modifier else Modifier.border(1.dp, frameHairline(), FrameShapes.lg)
+    val outline = if (primary) Modifier.border(1.dp, frameCardEdge(colors.accentA, 0.5f), FrameShapes.lg) else Modifier.border(1.dp, frameHairline(), FrameShapes.lg)
+    val glow = if (primary) Modifier.frameGlow(colors.accentA, { if (colors.isDark) 0.45f else 0.2f }, 8.dp, { 0.43f }) else Modifier
     Row(
-        modifier.then(click).height(56.dp).alpha(if (enabled) 1f else 0.5f).clip(FrameShapes.lg).background(fill).then(outline).padding(horizontal = 12.dp),
+        modifier.then(click).height(56.dp).alpha(if (enabled) 1f else 0.5f).then(glow).clip(FrameShapes.lg).background(fill).then(outline).padding(horizontal = 12.dp),
         Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
         Alignment.CenterVertically
     ) {

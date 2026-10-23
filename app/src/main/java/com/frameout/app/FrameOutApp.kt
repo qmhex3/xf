@@ -25,6 +25,7 @@ class FrameOutApp : Application() {
         super.onCreate()
         StringSource.init(this)
         com.frameout.core.util.DiagLog.init(this)
+        com.frameout.core.quality.ArabicOcr.init(this)
         val firstInstallTime = runCatching {
             packageManager.getPackageInfo(packageName, 0).firstInstallTime
         }.getOrDefault(Long.MAX_VALUE)
@@ -45,7 +46,7 @@ class FrameOutApp : Application() {
         com.frameout.core.media.MediaPrewarm.start(this)
         val storage = StorageManager(this)
         maintenance.launch { runCatching { ExtractReconciler.reconcile(this@FrameOutApp) } }
-        maintenance.launch { storage.cleanupTemporaryFiles(); storage.cleanupShareCache(); storage.cleanupMotionCache(); storage.cleanupArchiveStages()
+        maintenance.launch { storage.cleanupTemporaryFiles(); storage.cleanupShareCache(); storage.cleanupMotionCache(); storage.cleanupArchiveStages(); storage.cleanupUndoCache()
             runCatching { IncomingMedia.cleanup(this@FrameOutApp, container.projects.allSourceUris(), container.prefs.lastVideoUri()) }
             runCatching { IncomingMedia.releaseStaleGrants(this@FrameOutApp, container.projects.allSourceUris(), container.prefs.lastVideoUri()) }
         }

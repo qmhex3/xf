@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.frameout.app.extract.formatExtractTime
 import com.frameout.core.util.ModeStrings
+import com.frameout.core.util.FrameStrings
 import com.frameout.core.util.TrimStrings
 import com.frameout.designsystem.a11y.frameClickable
 import com.frameout.designsystem.components.FrameText
@@ -51,7 +52,12 @@ internal fun planText(mode: ExtractMode): String = when (mode) {
     ExtractMode.KeyframesOnly -> TrimStrings.planKeyframes()
     ExtractMode.SceneChange -> TrimStrings.planScene()
     ExtractMode.Slides -> TrimStrings.planSlides()
+    is ExtractMode.Content -> contentPlanText(mode)
 }
+
+private fun contentPlanText(mode: ExtractMode.Content): String =
+    if (mode.spec.tags.isEmpty()) TrimStrings.planEveryTime(timeText(mode.spec.millis))
+    else TrimStrings.planContent(com.frameout.core.quality.content.ContentCatalog.summary(mode.spec.tags, FrameStrings.isAr()))
 
 private fun timeText(millis: Long): String =
     if (millis % 1000L == 0L) formatExtractTime(millis) else "$millis ${ModeStrings.millis()}"
@@ -61,8 +67,8 @@ internal fun PlanButton(env: TrimEnv, modifier: Modifier) {
     val stored by env.prefs.extractMode.collectAsState()
     val colors = FrameTheme.colors
     val mode = ExtractModeCodec.decode(stored)
-    val frames = estimateFrames(env.player.durationMs, env.clamped, stored)
-    val megabytes = estimateMb(env.player.durationMs, env.clamped, stored, env.player)
+    val frames = env.frameEstimate(stored)
+    val megabytes = estimateMbFromFrames(frames)
     val shape = FrameShapes.lg
     Box(
         modifier
@@ -110,7 +116,7 @@ private fun PlanButtonRow(mode: ExtractMode, frames: Int, megabytes: Float) {
 internal fun PlanWarning(env: TrimEnv) {
     if (!env.autoSave) return
     val stored by env.prefs.extractMode.collectAsState()
-    val frames = estimateFrames(env.player.durationMs, env.clamped, stored)
+    val frames = env.frameEstimate(stored)
     FrameText(TrimStrings.galleryWarn(frames), style = FrameTheme.typography.bodySmall, color = FrameTheme.colors.error, modifier = Modifier.padding(horizontal = 4.dp))
 }
 
@@ -119,8 +125,8 @@ internal fun PlanSummary(env: TrimEnv, compact: Boolean, tappable: Boolean) {
     val stored by env.prefs.extractMode.collectAsState()
     val colors = FrameTheme.colors
     val mode = ExtractModeCodec.decode(stored)
-    val frames = estimateFrames(env.player.durationMs, env.clamped, stored)
-    val megabytes = estimateMb(env.player.durationMs, env.clamped, stored, env.player)
+    val frames = env.frameEstimate(stored)
+    val megabytes = estimateMbFromFrames(frames)
     val click = if (tappable) Modifier.frameClickable { env.onSheet(TrimSheet.Plan) } else Modifier
     val shape = FrameShapes.xl
     Column(

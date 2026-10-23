@@ -16,6 +16,7 @@ object ModeStrings {
         "fixed" -> s(R.string.help_fixed)
         "scene" -> s(R.string.help_scene)
         "slides" -> s(R.string.help_slides)
+        "content" -> s(R.string.help_content)
         else -> s(R.string.help_every_frame)
     }
     fun seconds() = s(R.string.unit_seconds)

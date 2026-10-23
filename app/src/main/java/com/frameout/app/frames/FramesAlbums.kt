@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -32,6 +33,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
@@ -44,6 +46,8 @@ import com.frameout.app.thumb.FocusedImage
 import com.frameout.app.thumb.ThumbPlaceholder
 import com.frameout.app.thumb.rememberThumb
 import com.frameout.core.db.AlbumCover
+import com.frameout.core.db.FrameEntity
+import com.frameout.core.quality.NormBox
 import com.frameout.core.quality.TagNames
 import com.frameout.core.util.FrameStrings
 import com.frameout.core.util.QualityStrings
@@ -55,8 +59,6 @@ import com.frameout.designsystem.icons.FrameIconsExtra
 import com.frameout.designsystem.theme.FrameShapes
 import com.frameout.designsystem.theme.FrameTheme
 import com.frameout.designsystem.theme.frameHairline
-
-private const val FOCUS_THUMB = 512
 
 @Composable
 internal fun FramesAlbums(
@@ -88,7 +90,7 @@ internal fun FramesAlbums(
             if (albums.isNotEmpty()) {
                 item(key = "h:$group", span = { GridItemSpan(maxLineSpan) }) { GroupTitle(TagNames.groupTitle(group, arabic)) }
                 items(albums, key = { it.tag }, contentType = { "album" }) { t ->
-                    AlbumCard(TagNames.display(t.tag, arabic), t.frames, t.tag, cover) { onOpen(t.tag) }
+                    AlbumCoverCard(TagNames.display(t.tag, arabic), t.frames, t.tag, cover, adaptive.columns(columns)) { onOpen(t.tag) }
                 }
             }
         }
@@ -130,43 +132,6 @@ private fun AlbumsEmpty(state: FramesState, onRescan: () -> Unit) {
                 style = FrameTheme.typography.title
             )
             if (!state.scanning) RescanLink(onRescan)
-        }
-    }
-}
-
-@Composable
-private fun AlbumCard(label: String, count: Int, tag: String, cover: suspend (String) -> AlbumCover?, onClick: () -> Unit) {
-    val colors = FrameTheme.colors
-    val albumCover = produceState<AlbumCover?>(null, tag) { value = cover(tag) }.value
-    val frame = albumCover?.frame
-    val focus = albumCover?.focus
-    val path = frame?.let { it.thumbnailPath ?: it.fullPath }
-    val size = if (focus != null) FOCUS_THUMB else ThumbCache.DEFAULT_SIZE
-    val bitmap = if (path == null) null else rememberThumb("$path#$size", { ThumbCache.peek(path, size) }, { ThumbCache.load(path, size) }).value
-    Box(
-        Modifier
-            .aspectRatio(1f)
-            .clip(FrameShapes.md)
-            .background(colors.container)
-            .border(1.dp, frameHairline(), FrameShapes.md)
-            .frameClickable(onClick = onClick)
-            .semantics { contentDescription = "$label, ${FrameStrings.frameCount(count)}" }
-    ) {
-        if (bitmap != null && !bitmap.isRecycled) {
-            if (focus != null) FocusedImage(bitmap, focus, Modifier.fillMaxSize())
-            else Image(bitmap.asImageBitmap(), null, Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
-        } else {
-            Box(Modifier.fillMaxSize(), Alignment.Center) { ThumbPlaceholder() }
-        }
-        Column(
-            Modifier
-                .align(Alignment.BottomStart)
-                .fillMaxWidth()
-                .background(Brush.verticalGradient(listOf(Color.Transparent, Color.Black.copy(alpha = 0.72f))))
-                .padding(start = 12.dp, end = 12.dp, top = 28.dp, bottom = 10.dp)
-        ) {
-            FrameText(label, style = FrameTheme.typography.label, color = Color.White, maxLines = 1, overflow = TextOverflow.Ellipsis)
-            FrameText(FrameStrings.frameCount(count), style = FrameTheme.typography.bodySmall, color = Color.White.copy(alpha = 0.8f), maxLines = 1)
         }
     }
 }

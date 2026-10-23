@@ -3,6 +3,8 @@ package com.frameout.app.library
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -46,8 +48,9 @@ internal fun LibraryDock(
     onSuggestion: () -> Unit = {},
     onSuggestionDismiss: () -> Unit = {}
 ) {
-    val model = remember(state.projects, state.focusId, state.flashSuccess) {
-        fabModel(state.projects.map { it.toFab() }, state.focusId, state.flashSuccess)
+    val live by com.frameout.engine.work.LiveExtractProgress.all.collectAsState()
+    val model = remember(state.projects, state.focusId, state.flashSuccess, live) {
+        fabModel(state.projects.map { it.toFab() }, state.focusId, state.flashSuccess, live)
     }
     val items = if (selection != null) {
         listOf(

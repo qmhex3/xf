@@ -66,6 +66,7 @@ class MainActivity : ComponentActivity() {
         val app = application as FrameOutApp
         applyStartupTheme(app)
         super.onCreate(savedInstanceState)
+        if (savedInstanceState == null) com.frameout.app.icon.AppIconSwitcher.healDuplicates(this, app.container.prefs)
         if (Build.VERSION.SDK_INT >= 26) window.colorMode = android.content.pm.ActivityInfo.COLOR_MODE_DEFAULT
         enableEdgeToEdge()
         notifRationale = shouldAskNotifications(app)

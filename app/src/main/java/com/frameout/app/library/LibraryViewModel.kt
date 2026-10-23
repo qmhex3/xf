@@ -34,6 +34,12 @@ import com.frameout.core.util.FrameStrings
 import com.frameout.engine.work.ExtractScheduler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.Job
+import com.frameout.core.storage.GalleryBackup
+import com.frameout.core.storage.SavedReconciler
+import com.frameout.core.storage.SavedTrash
+import com.frameout.core.util.SavedStrings
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -62,7 +68,7 @@ class LibraryViewModel(app: Application) : AndroidViewModel(app) {
                 _state.update { it.copy(savedKindCounts = counts, savedKind = it.savedKind?.takeIf { kind -> (counts[kind] ?: 0) > 0 }) }
             }
         }
-        viewModelScope.launch { container.projects.observeAll().collect { list -> covers.run(list); _state.update { it.withProjects(list) }; hintBackup(list) } }
+        viewModelScope.launch { container.projects.observeAll().collect { list -> rawProjects = list; covers.run(list); publishProjects(); hintBackup(list) } }
     }
     private fun hintBackup(list: List<com.frameout.core.db.ProjectEntity>) {
         val prefs = container.prefs
@@ -87,18 +93,7 @@ class LibraryViewModel(app: Application) : AndroidViewModel(app) {
     fun toggleProject(id: Long) = _state.update { it.toggleProjectSelection(id) }
     fun toggleSaved(id: Long) = _state.update { it.toggleSavedSelection(id) }
     fun clearSelection() = _state.update { it.copy(selectedProjects = emptySet(), selectedSaved = emptySet()) }
-    fun delete(projectId: Long) = viewModelScope.launch {
-        if (exportRunning()) { notifyExportBusy(); return@launch }
-        if (container.projects.getById(projectId) == null) return@launch
-        val idle = attempt { ExtractScheduler.cancelAndAwait(getApplication(), projectId, DELETE_STOP_MS) }
-        val ok = idle && attempt { deleteProjectRecordAfterStorage(projectId) }
-        val message = when {
-            !idle -> TrimStrings.deleteBusy()
-            ok -> FrameStrings.deleted()
-            else -> FrameStrings.deleteFailed()
-        }
-        _state.update { it.withMessage(message, !ok, FrameIcons.Trash) }
-    }
+    fun delete(projectId: Long) { queueProjectDelete(listOf(projectId)) }
     fun importBackup(uri: android.net.Uri) = viewModelScope.launch {
         val result = BackupImporter(getApplication(), container).import(uri)
         _state.update { it.withMessage(result.message(), result != BackupResult.Imported && result != BackupResult.Duplicate, FrameIconsExtra.Import) }
@@ -248,30 +243,93 @@ class LibraryViewModel(app: Application) : AndroidViewModel(app) {
             runCatching { getApplication<Application>().contentResolver.openFileDescriptor(uri, "r")?.use { true } ?: false }.getOrDefault(false)
         }
         if (exists) {
-            _state.update { it.withMessage(FrameStrings.savedOpenSystem(), false, FrameIconsExtra.Album) }
+            if (saved.sourceFrameId != null) _state.update { it.withMessage(FrameStrings.savedOpenSystem(), false, FrameIconsExtra.Album) }
             onSystem(uri)
         } else {
             _state.update { it.withMessage(FrameStrings.savedMissing(), true) }
+            reconcileSaved(force = true)
         }
     }
 
-    fun deleteSelectedProjects() = viewModelScope.launch {
-        if (exportRunning()) { notifyExportBusy(); return@launch }
+    fun deleteSelectedProjects() {
         val ids = _state.value.selectedProjects.toList()
-        if (ids.isEmpty()) return@launch
+        if (ids.isEmpty()) return
+        clearSelection()
+        queueProjectDelete(ids)
+    }
+
+    private var rawProjects: List<com.frameout.core.db.ProjectEntity> = emptyList()
+    private val pendingProjectDeletes = LinkedHashSet<Long>()
+    private val committingProjects = HashSet<Long>()
+    private var projectUndoJob: Job? = null
+
+    private fun publishProjects() {
+        val shown = rawProjects.filter { it.id !in pendingProjectDeletes }
+        _state.update { it.withProjects(shown) }
+    }
+
+    private fun undoableProjects(): List<Long> = pendingProjectDeletes.filter { it !in committingProjects }
+
+    private fun queueProjectDelete(ids: Collection<Long>) {
+        if (exportRunning()) { notifyExportBusy(); return }
+        val known = rawProjects.mapTo(HashSet()) { it.id }
+        val added = ids.filter { it in known && pendingProjectDeletes.add(it) }
+        if (added.isEmpty()) return
+        publishProjects()
+        val count = undoableProjects().size
+        _state.update { it.withMessage(FrameStrings.projectsDeleted(count), false, FrameIcons.Trash).copy(undoProjectCount = count) }
+        projectUndoJob?.cancel()
+        projectUndoJob = viewModelScope.launch {
+            delay(UNDO_WINDOW_MS)
+            commitProjectDeletes()
+        }
+    }
+
+    private suspend fun commitProjectDeletes() {
+        val ids = undoableProjects()
+        if (ids.isEmpty()) return
+        committingProjects.addAll(ids)
+        val deleted = withContext(kotlinx.coroutines.NonCancellable) { removeProjects(ids) }
+        pendingProjectDeletes.removeAll(ids.toSet())
+        committingProjects.removeAll(ids.toSet())
+        publishProjects()
+        val failed = ids.size - deleted
+        val remaining = undoableProjects().size
+        _state.update {
+            val base = it.copy(undoProjectCount = if (failed == 0) remaining else 0)
+            if (failed > 0) base.withMessage(deletionMessage(deleted, failed), true, FrameIcons.Trash) else base
+        }
+    }
+
+    private suspend fun removeProjects(ids: List<Long>): Int {
         val stopped = kotlinx.coroutines.coroutineScope {
             ids.map { id -> async { id to ExtractScheduler.cancelAndAwait(getApplication(), id, DELETE_STOP_MS) } }.awaitAll().filter { it.second }.map { it.first }
         }
-        val deleted = stopped.count { id -> attempt { deleteProjectRecordAfterStorage(id) } }
-        clearSelection()
-        _state.update { it.withMessage(deletionMessage(deleted, ids.size - deleted), deleted < ids.size, FrameIcons.Trash) }
+        return stopped.count { id -> attempt { deleteProjectRecordAfterStorage(id) } }
     }
+
+    fun undoProjectDelete() {
+        val restore = undoableProjects()
+        if (restore.isEmpty()) return
+        projectUndoJob?.cancel()
+        pendingProjectDeletes.removeAll(restore.toSet())
+        publishProjects()
+        _state.update { it.withMessage(FrameStrings.projectsRestored(restore.size), false, FrameIcons.Trash).copy(undoProjectCount = 0) }
+    }
+
+    private val trash by lazy { SavedTrash(container.savedImages, GalleryBackup(getApplication())) }
+    private var undoJob: Job? = null
+
     fun deleteSelectedSaved() = viewModelScope.launch {
         val ids = _state.value.selectedSaved.toList()
         if (ids.isEmpty()) return@launch
+        undoJob?.cancel()
+        _state.update { it.copy(undoSavedCount = 0) }
         val saved = container.savedImages.getByIdsChunked(ids)
+        trash.begin(saved)
         val removable = saved.filter { container.storage.deleteGalleryUri(it.uri) }
         if (removable.isNotEmpty()) container.savedImages.deleteManyChunked(removable.map { it.id })
+        trash.markGone(removable)
         val removedIds = removable.map { it.id }.toSet()
         val failed = saved.filter { it.id !in removedIds }
         clearSelection()
@@ -279,8 +337,68 @@ class LibraryViewModel(app: Application) : AndroidViewModel(app) {
         if (sender != null) {
             _state.update { it.copy(pendingGalleryDelete = PendingGalleryDelete(sender, failed.map { f -> f.id }, removable.size)) }
         } else {
-            _state.update { it.withMessage(deletionMessage(removable.size, ids.size - removable.size), removable.size < ids.size, FrameIcons.Trash) }
+            finishSavedDelete(removable.size, ids.size - removable.size)
         }
+    }
+
+    private fun finishSavedDelete(removed: Int, failed: Int) {
+        trash.release()
+        val undo = trash.undoable
+        _state.update { it.withMessage(deletionMessage(removed, failed, saved = true), failed > 0, FrameIcons.Trash).copy(undoSavedCount = undo) }
+        if (undo > 0) {
+            undoJob?.cancel()
+            undoJob = viewModelScope.launch {
+                delay(UNDO_WINDOW_MS)
+                trash.commit()
+                _state.update { it.copy(undoSavedCount = 0) }
+            }
+        }
+    }
+
+    fun undoSavedDelete() {
+        if (_state.value.undoSavedCount == 0) return
+        undoJob?.cancel()
+        viewModelScope.launch {
+            _state.update { it.copy(undoSavedCount = 0, message = null, errorMessage = null, messageIcon = null, messageSaved = null) }
+            val restored = trash.restoreAll()
+            _state.update {
+                if (restored > 0) it.withMessage(SavedStrings.restored(restored), false, FrameIcons.Trash)
+                else it.withMessage(SavedStrings.restoreFailed(), true)
+            }
+        }
+    }
+
+    private var lastReconcile = 0L
+    private var reconcileJob: Job? = null
+    private val reconciler by lazy { SavedReconciler(container.storage, container.savedImages, container.frames) }
+
+    fun reconcileSaved(force: Boolean = false) {
+        val now = android.os.SystemClock.elapsedRealtime()
+        val s = _state.value
+        if (reconcileJob?.isActive == true || s.exportProgress != null || s.pendingGalleryDelete != null || s.undoSavedCount > 0) return
+        if (!force && lastReconcile != 0L && now - lastReconcile < RECONCILE_MIN_MS) return
+        lastReconcile = now
+        reconcileJob = viewModelScope.launch {
+            val removed = try {
+                reconciler.prune()
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                com.frameout.core.util.DiagLog.append("library", "reconcile failed: ${e.javaClass.simpleName}: ${e.message}")
+                0
+            }
+            if (removed > 0 && _state.value.undoSavedCount == 0) _state.update { it.withMessage(SavedStrings.pruned(removed), false, FrameIcons.Trash) }
+        }
+    }
+
+    override fun onCleared() {
+        val rest = undoableProjects()
+        if (rest.isNotEmpty()) {
+            committingProjects.addAll(rest)
+            getApplication<FrameOutApp>().appScope.launch { removeProjects(rest) }
+        }
+        trash.commit()
+        super.onCleared()
     }
     fun shareSelectedSaved(onReady: (android.content.Intent) -> Unit) = viewModelScope.launch {
         val ids = _state.value.selectedSaved.toList()
@@ -323,6 +441,7 @@ class LibraryViewModel(app: Application) : AndroidViewModel(app) {
         val all = container.savedImages.getByIdsChunked(pending.ids)
         val gone = withContext(Dispatchers.IO) { all.filter { container.storage.deleteGalleryUri(it.uri) } }
         if (gone.isNotEmpty()) container.savedImages.deleteManyChunked(gone.map { it.id })
+        trash.markGone(gone)
         val goneIds = gone.map { it.id }.toSet()
         val remaining = all.filter { it.id !in goneIds }
         val removed = pending.alreadyRemoved + gone.size
@@ -334,7 +453,7 @@ class LibraryViewModel(app: Application) : AndroidViewModel(app) {
             }
         }
         val total = pending.alreadyRemoved + pending.ids.size
-        _state.update { it.withMessage(deletionMessage(removed, total - removed), removed < total, FrameIcons.Trash) }
+        finishSavedDelete(removed, total - removed)
     }
     fun resume(projectId: Long) = viewModelScope.launch {
         if (container.projects.getById(projectId) != null) ExtractScheduler.resume(getApplication(), projectId).join()
@@ -398,4 +517,6 @@ private fun LibraryState.toggleProjectSelection(id: Long): LibraryState = copy(s
 private fun LibraryState.toggleSavedSelection(id: Long): LibraryState = copy(selectedSaved = selectedSaved.toMutableSet().also { if (!it.add(id)) it.remove(id) })
 
 private const val DELETE_STOP_MS = 15_000L
+private const val UNDO_WINDOW_MS = 6_000L
+private const val RECONCILE_MIN_MS = 60_000L
 private val LIVE_STATUSES = setOf("Extracting", "Indexing", "Queued")

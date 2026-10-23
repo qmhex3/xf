@@ -20,7 +20,6 @@ object SettingStrings {
         "png" -> "PNG"
         "png_hdr16" -> "PNG HDR 16-bit"
         "webp" -> s(R.string.value_webp)
-        "webp_lossless" -> s(R.string.value_webp_lossless)
         "heic" -> "HEIC"
         "avif" -> "AVIF"
         "frame" -> s(R.string.value_frame)
@@ -32,6 +31,7 @@ object SettingStrings {
         "fixed" -> s(R.string.value_fixed)
         "scene" -> s(R.string.value_scene)
         "slides" -> s(R.string.value_slides)
+        "content" -> s(R.string.value_content)
         "Pictures/FrameOut" -> "Pictures/FrameOut"
         "Pictures" -> "Pictures"
         "DCIM/FrameOut" -> "DCIM/FrameOut"

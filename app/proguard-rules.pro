@@ -50,3 +50,5 @@
 -keep class * implements com.google.firebase.components.ComponentRegistrar { *; }
 -keep class com.google.firebase.components.** { *; }
 -dontwarn com.google.mlkit.**
+-keep class com.googlecode.tesseract.android.** { *; }
+-dontwarn com.googlecode.tesseract.android.**

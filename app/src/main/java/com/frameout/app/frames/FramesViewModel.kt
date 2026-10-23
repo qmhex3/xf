@@ -154,9 +154,9 @@ class FramesViewModel(app: Application) : AndroidViewModel(app) {
         _state.update { it.analysisDone(ids, text, icon) }
     }
     fun rename(name: String) {
-        if (projectId < 0 || name.isBlank()) return
+        val value = com.frameout.core.util.NameSanitizer.clean(name)
+        if (projectId < 0 || value.isBlank()) return
         viewModelScope.launch {
-            val value = name.trim()
             container.projects.rename(projectId, value, System.currentTimeMillis())
             com.frameout.engine.work.ExtractNotifications.invalidateTitle(projectId)
             _state.update { s -> s.copy(project = s.project?.copy(name = value)) }
