@@ -21,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import com.frameout.engine.work.LiveExtractProgress
@@ -128,7 +129,8 @@ private fun ProjectInfo(project: ProjectEntity, specs: VideoSpecs?, modifier: Mo
 
 @Composable
 private fun CardFooter(project: ProjectEntity, selected: Boolean, onResume: () -> Unit, onPause: () -> Unit) {
-    val live by remember(project.id) { LiveExtractProgress.observe(project.id) }.collectAsState(initial = LiveExtractProgress.all.value[project.id])
+    val allLive by LiveExtractProgress.all.collectAsState()
+    val live by remember(project.id) { derivedStateOf { allLive[project.id] } }
     val peak = remember(project.id) { floatArrayOf(0f) }
     val progress = cardProgress(project, live).let { shown ->
         if (shown is CardProgress.Value) {

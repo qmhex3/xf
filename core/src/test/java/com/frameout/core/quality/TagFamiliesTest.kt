@@ -34,7 +34,7 @@ class TagFamiliesTest {
     @Test
     fun unknownLabelFallsIntoOther() {
         assertEquals(TagFamilies.OTHER, TagFamilies.familyOfLabel("Zorblax"))
-        assertEquals(TagFamilies.OTHER, TagFamilies.familyOfLabel("Fun"))
+        assertEquals(TagFamilies.OTHER, TagFamilies.familyOfLabel("Rectangle"))
         val out = TagFamilies.withFamilies(listOf(TagHit("l:Zorblax", 0.8f)))
         assertTrue(out.any { it.tag == TagFamilies.key(TagFamilies.OTHER) })
     }
