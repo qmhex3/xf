@@ -11,9 +11,7 @@ data class RatingState(
 )
 
 object RatingPolicy {
-    const val MIN_SESSIONS = 3
     const val MIN_SUCCESSES = 3
-    const val MIN_INSTALL_DAYS = 2
     const val MAX_ASKS = 3
     const val DAY_MS = 24L * 60L * 60L * 1000L
 
@@ -27,9 +25,7 @@ object RatingPolicy {
         if (state.finished) return false
         if (failedThisSession) return false
         if (state.asks >= MAX_ASKS) return false
-        if (state.sessions < MIN_SESSIONS) return false
         if (state.successesSinceAsk < MIN_SUCCESSES) return false
-        if (state.firstSeenAt <= 0L || now - state.firstSeenAt < MIN_INSTALL_DAYS * DAY_MS) return false
         if (state.asks > 0 && now - state.lastAskAt < cooldownDays(state.asks) * DAY_MS) return false
         return true
     }

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="estimate">
+        <item quantity="one">≈ %1$d فریم · ~%2$s مگابایت</item>
+        <item quantity="other">≈ %1$d فریم · ~%2$s مگابایت</item>
+    </plurals>
+    <plurals name="plan_frames">
+        <item quantity="one">%1$d فریم</item>
+        <item quantity="other">%1$d فریم</item>
+    </plurals>
+    <plurals name="reduced_quality">
+        <item quantity="one">یک فریم با وضوح کمتر ذخیره شد، چون رمزگشای دستگاه نتوانست آن را در اندازهٔ کامل برگرداند.</item>
+        <item quantity="other">%1$d فریم با وضوح کمتر ذخیره شدند، چون رمزگشای دستگاه نتوانست آن‌ها را در اندازهٔ کامل برگرداند.</item>
+    </plurals>
+    <plurals name="reduced_quality_to">
+        <item quantity="one">یک فریم برای سازگاری با حافظهٔ دستگاه با اندازهٔ %4$d×%5$d به‌جای اندازهٔ اصلی %2$d×%3$d ذخیره شد.</item>
+        <item quantity="other">%1$d فریم برای سازگاری با حافظهٔ دستگاه با اندازهٔ %4$d×%5$d به‌جای اندازهٔ اصلی %2$d×%3$d ذخیره شدند.</item>
+    </plurals>
+    <plurals name="frame_count">
+        <item quantity="one">%1$d فریم</item>
+        <item quantity="other">%1$d فریم</item>
+    </plurals>
+    <plurals name="content_frames">
+        <item quantity="one">%1$d فریم</item>
+        <item quantity="other">%1$d فریم</item>
+    </plurals>
+    <plurals name="important_picked">
+        <item quantity="one">لحظهٔ کلیدی انتخاب شد</item>
+        <item quantity="other">%1$d لحظهٔ کلیدی انتخاب شد</item>
+    </plurals>
+    <plurals name="sharpest_picked">
+        <item quantity="one">واضح‌ترین فریم انتخاب شد</item>
+        <item quantity="other">%1$d فریم از واضح‌ترین‌ها انتخاب شد</item>
+    </plurals>
+    <plurals name="duplicates_picked">
+        <item quantity="one">%1$d فریم تکراری انتخاب شد</item>
+        <item quantity="other">%1$d فریم تکراری انتخاب شد</item>
+    </plurals>
+    <plurals name="integrity_dup">
+        <item quantity="one">%1$d فریم زمان‌مهر یکسان دارد.</item>
+        <item quantity="other">%1$d فریم زمان‌مهر یکسان دارند.</item>
+    </plurals>
+    <plurals name="crop_all_hint">
+        <item quantity="one">همان ناحیه برای %1$d فریم</item>
+        <item quantity="other">همان ناحیه برای %1$d فریم</item>
+    </plurals>
+    <plurals name="crop_all_applied">
+        <item quantity="one">برش روی %1$d فریم اعمال شد</item>
+        <item quantity="other">برش روی %1$d فریم اعمال شد</item>
+    </plurals>
+    <plurals name="jump_back">
+        <item quantity="one">%1$d فریم به عقب</item>
+        <item quantity="other">%1$d فریم به عقب</item>
+    </plurals>
+    <plurals name="jump_forward">
+        <item quantity="one">%1$d فریم به جلو</item>
+        <item quantity="other">%1$d فریم به جلو</item>
+    </plurals>
+    <plurals name="jump_size">
+        <item quantity="one">اندازهٔ جهش: %1$d فریم (برای تغییر لمس کنید)</item>
+        <item quantity="other">اندازهٔ جهش: %1$d فریم (برای تغییر لمس کنید)</item>
+    </plurals>
+    <plurals name="queue_unsaved">
+        <item quantity="one">%1$d فریم در صف ذخیره نشده است. برای خروج بدون ذخیره، دوباره «بازگشت» را بزنید.</item>
+        <item quantity="other">%1$d فریم در صف ذخیره نشده‌اند. برای خروج بدون ذخیره، دوباره «بازگشت» را بزنید.</item>
+    </plurals>
+    <plurals name="share_limited">
+        <item quantity="one">فقط %1$d فریم اول به اشتراک گذاشته می‌شود</item>
+        <item quantity="other">فقط %1$d فریم اول به اشتراک گذاشته می‌شود</item>
+    </plurals>
+    <plurals name="frames_deleted">
+        <item quantity="one">%1$d فریم به «حذف‌شده‌ها» منتقل شد</item>
+        <item quantity="other">%1$d فریم به «حذف‌شده‌ها» منتقل شد</item>
+    </plurals>
+    <plurals name="batch_videos">
+        <item quantity="one">%1$d ویدیو</item>
+        <item quantity="other">%1$d ویدیو</item>
+    </plurals>
+    <plurals name="projects_deleted">
+        <item quantity="one">پروژه حذف شد</item>
+        <item quantity="other">%1$d پروژه حذف شد</item>
+    </plurals>
+    <plurals name="projects_restored">
+        <item quantity="one">پروژه بازیابی شد</item>
+        <item quantity="other">%1$d پروژه بازیابی شد</item>
+    </plurals>
+    <plurals name="saved_deleted_n">
+        <item quantity="one">تصویر حذف شد</item>
+        <item quantity="other">%1$d تصویر حذف شد</item>
+    </plurals>
+    <plurals name="saved_restored_n">
+        <item quantity="one">تصویر بازیابی شد</item>
+        <item quantity="other">%1$d تصویر بازیابی شد</item>
+    </plurals>
+    <plurals name="saved_pruned_n">
+        <item quantity="one">۱ مورد ذخیره‌شده حذف شد، چون فایل آن دیگر روی دستگاه نیست</item>
+        <item quantity="other">%1$d مورد ذخیره‌شده حذف شد، چون فایل‌هایشان دیگر روی دستگاه نیستند</item>
+    </plurals>
+    <plurals name="confirm_delete_projects_n">
+        <item quantity="one">این پروژه حذف شود؟</item>
+        <item quantity="other">%1$d پروژه حذف شود؟</item>
+    </plurals>
+    <plurals name="confirm_delete_saved_n">
+        <item quantity="one">این تصویر ذخیره‌شده حذف شود؟</item>
+        <item quantity="other">%1$d تصویر ذخیره‌شده حذف شود؟</item>
+    </plurals>
+    <plurals name="backup_saved_many_n">
+        <item quantity="one">پروژه در پوشهٔ انتخابی صادر شد</item>
+        <item quantity="other">%1$d پروژه در پوشهٔ انتخابی صادر شد</item>
+    </plurals>
+    <plurals name="export_done_many_n">
+        <item quantity="one">پروژه صادر شد</item>
+        <item quantity="other">%1$d پروژه صادر شد</item>
+    </plurals>
+    <plurals name="saved_export_done_n">
+        <item quantity="one">۱ تصویر صادر شد</item>
+        <item quantity="other">%1$d تصویر صادر شد</item>
+    </plurals>
+</resources>

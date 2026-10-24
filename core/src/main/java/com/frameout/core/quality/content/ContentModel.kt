@@ -1,5 +1,7 @@
 package com.frameout.core.quality.content
 
+import com.frameout.core.quality.TagText
+
 enum class ContentGroup(val id: String, val en: String, val ar: String) {
     Vehicles("vehicles", "Vehicles", "مركبات"),
     Animals("animals", "Animals", "حيوانات"),
@@ -11,7 +13,10 @@ enum class ContentGroup(val id: String, val en: String, val ar: String) {
     Fashion("fashion", "Fashion", "أزياء"),
     People("people", "People & text", "أشخاص ونصوص");
 
-    fun title(arabic: Boolean): String = if (arabic) ar else en
+    fun title(lang: String): String = when (lang) {
+        "ar" -> ar
+        else -> TagText.forLang(lang)?.contentGroups?.get(name) ?: en
+    }
 }
 
 enum class ContentDetector { Label, Face, Smile, Group, Text, Code }
@@ -24,7 +29,10 @@ data class ContentTag(
     val labels: List<String> = emptyList(),
     val detector: ContentDetector = ContentDetector.Label
 ) {
-    fun title(arabic: Boolean): String = if (arabic) ar else en
+    fun title(lang: String): String = when (lang) {
+        "ar" -> ar
+        else -> TagText.forLang(lang)?.contentTags?.get(id) ?: en
+    }
 }
 
 internal fun tag(id: String, group: ContentGroup, en: String, ar: String, vararg labels: String) =

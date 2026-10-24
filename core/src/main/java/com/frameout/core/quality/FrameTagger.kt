@@ -20,11 +20,10 @@ import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 
 object FrameTagger {
-    const val VERSION = 3
+    const val VERSION = 4
     private const val MIN_SIDE = 48
     private const val LABEL_CONFIDENCE = 0.6f
     private const val OBJECT_CONFIDENCE = 0.4f
-    private const val LANDMARK_CONFIDENCE = 0.7f
     private const val MAX_REGIONS = 5
     private const val MIN_REGION = 28
     private const val ZOOM_REGION_TARGET = 256
@@ -78,8 +77,8 @@ object FrameTagger {
         val h = argb.height
         run.step("face") { TagRules.faceTags(FaceScanner.assessChecked(key, argb)) }
         run.step("pose") {
-            val landmarks = pose.process(image).await().allPoseLandmarks.filter { it.inFrameLikelihood >= LANDMARK_CONFIDENCE }
-            TagRules.poseTags(landmarks.size, bodyBox(landmarks.map { it.position.x to it.position.y }, w, h))
+            val points = pose.process(image).await().allPoseLandmarks.map { PoseLm(it.landmarkType, it.position.x / w, it.position.y / h, it.inFrameLikelihood) }
+            TagRules.poseTags(points, bodyBox(PoseEvidence.confident(points).map { it.x * w to it.y * h }, w, h))
         }
         val personBoxes = run.hits.filter { it.tag == TagRules.FACE || it.tag == TagRules.BODY }.flatMap { it.boxes }
         val pass = if (DeviceLimits.analysisReduced()) emptyList() else zoomPass(argb, w, h)

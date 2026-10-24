@@ -1,5 +1,7 @@
 package com.frameout.core.search
 
+import com.frameout.core.quality.TagText
+
 data class SearchEngine(
     val id: String,
     val name: String,
@@ -9,7 +11,11 @@ data class SearchEngine(
     val descAr: String
 ) {
     val supportsShare: Boolean get() = packages.isNotEmpty()
-    fun desc(arabic: Boolean): String = if (arabic) descAr else descEn
+    fun desc(lang: String): String = when (lang) {
+        "ar" -> descAr
+        "en" -> descEn
+        else -> TagText.forLang(lang)?.engines?.get(id) ?: descEn
+    }
 }
 
 object ImageSearchEngines {

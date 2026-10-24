@@ -20,6 +20,12 @@ class RouteCodecTest {
     }
 
     @Test
+    fun savedViewerRoundTrip() {
+        val route = AppRoute.SavedViewer(12L)
+        assertEquals(route, RouteCodec.decode(RouteCodec.encode(route)!!))
+    }
+
+    @Test
     fun collageKeepsFrameIds() {
         val route = AppRoute.Collage(3L, listOf(1L, 2L, 9L))
         assertEquals(route, RouteCodec.decode(RouteCodec.encode(route)!!))

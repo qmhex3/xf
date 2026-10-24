@@ -33,7 +33,7 @@ internal fun estimateFrames(spanMs: Long, mode: ExtractMode, fps: Float? = null)
         is ExtractMode.FixedCount -> minOf(mode.count.toLong(), allFrames)
         ExtractMode.SceneChange -> ms / SCENE_EVERY_MS
         ExtractMode.Slides -> ms / SLIDE_EVERY_MS
-        is ExtractMode.Content -> (ms + mode.spec.millis.coerceAtLeast(1) - 1L) / mode.spec.millis.coerceAtLeast(1)
+        is ExtractMode.Content -> (ms + com.frameout.core.quality.content.ContentSpec.SAMPLE_STEP_MS - 1L) / com.frameout.core.quality.content.ContentSpec.SAMPLE_STEP_MS
     }.coerceAtLeast(1L).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
 }
 

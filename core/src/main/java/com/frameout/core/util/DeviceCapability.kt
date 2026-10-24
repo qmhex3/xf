@@ -27,6 +27,22 @@ class DeviceCapability(context: Context) {
             else -> 2
         }
 
+    private val cores: Int get() = Runtime.getRuntime().availableProcessors()
+
+    val extractWriters: Int
+        get() = when {
+            isLowRam || isThermalThrottled -> 1
+            isPowerSave -> 2
+            else -> (cores / 2).coerceIn(2, 4)
+        }
+
+    val extractDecoders: Int
+        get() = when {
+            isLowRam || isThermalThrottled || isPowerSave -> 1
+            cores >= 8 -> 3
+            else -> maxConcurrentDecodes
+        }
+
     val maxThumbDecodes: Int
         get() = when {
             isLowRam || isThermalThrottled -> 1

@@ -13,5 +13,6 @@ sealed class AppRoute {
     data class Collage(val projectId: Long, val frameIds: List<Long>) : AppRoute()
     data class Compare(val projectId: Long, val frameIds: List<Long>) : AppRoute()
     data class Viewer(val projectId: Long, val frameId: Long, val savedId: Long? = null) : AppRoute()
+    data class SavedViewer(val savedId: Long) : AppRoute()
     data class Batch(val uris: List<String>, val session: Long = System.nanoTime()) : AppRoute()
 }

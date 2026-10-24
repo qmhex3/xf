@@ -88,6 +88,7 @@ internal fun BatchPrepare(
     val stored by prefs.extractMode.collectAsState()
     val autoSave by prefs.autoSave.collectAsState()
     var options by remember { mutableStateOf(false) }
+    var contentOpen by remember { mutableStateOf(false) }
     var seen by remember { mutableStateOf(false) }
     LaunchedEffect(items.isEmpty()) {
         if (items.isNotEmpty()) seen = true else if (seen) onBack()
@@ -121,12 +122,18 @@ internal fun BatchPrepare(
             }
             StartBar(items.size, total, enabled = items.isNotEmpty() && roomy && !starting, onClick = onStart)
         }
-        TrimSheetHost(options, TrimStrings.optionsTitle(), { options = false }) {
-            ExtractOptions(
-                prefs, autoSave, { prefs.setAutoSave(!autoSave) }, total,
-                summary = { BatchSettingsCard(items.size, total, stored, tappable = false) {} },
-                onDone = { options = false }
-            )
+        val contentMode = com.frameout.engine.extract.ExtractModeCodec.decode(stored) as? com.frameout.engine.extract.ExtractMode.Content
+        if (contentOpen && contentMode != null) {
+            com.frameout.app.trim.ContentOptionsSheet(options, prefs, contentMode) { contentOpen = false }
+        } else {
+            TrimSheetHost(options, TrimStrings.optionsTitle(), { options = false }) {
+                ExtractOptions(
+                    prefs, autoSave, { prefs.setAutoSave(!autoSave) }, total,
+                    summary = { BatchSettingsCard(items.size, total, stored, tappable = false) {} },
+                    onDone = { options = false },
+                    onContent = { contentOpen = true }
+                )
+            }
         }
         if (starting) Scrim()
     }

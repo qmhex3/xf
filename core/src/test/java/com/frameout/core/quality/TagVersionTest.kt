@@ -60,4 +60,9 @@ class TagVersionTest {
     fun taggerVersionIsAtLeastTwo() {
         assertTrue(FrameTagger.VERSION >= 2)
     }
+
+    @Test
+    fun taggerVersionForcesARescanAfterThePoseAndFashionFix() {
+        assertTrue(FrameTagger.VERSION >= 4)
+    }
 }

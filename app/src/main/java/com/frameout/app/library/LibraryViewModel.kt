@@ -227,7 +227,7 @@ class LibraryViewModel(app: Application) : AndroidViewModel(app) {
         _state.update { it.withMessage(parts.joinToString(FrameStrings.sep()).ifBlank { FrameStrings.nothingSaved() }, t.failed > 0).copy(messageSaved = if (t.done > 0) com.frameout.designsystem.icons.SaveKind.File else null) }
     }
 
-    fun openSaved(savedId: Long, onViewer: (projectId: Long, frameId: Long) -> Unit, onSystem: (android.net.Uri) -> Unit) = viewModelScope.launch {
+    fun openSaved(savedId: Long, onViewer: (projectId: Long, frameId: Long) -> Unit, onSavedImage: () -> Unit, onSystem: (android.net.Uri) -> Unit) = viewModelScope.launch {
         val saved = container.savedImages.getById(savedId) ?: return@launch
         val frame = saved.sourceFrameId?.let { container.frames.getActiveById(it) }
         if (frame != null) {
@@ -241,6 +241,19 @@ class LibraryViewModel(app: Application) : AndroidViewModel(app) {
         val uri = android.net.Uri.parse(saved.uri)
         val exists = withContext(Dispatchers.IO) {
             runCatching { getApplication<Application>().contentResolver.openFileDescriptor(uri, "r")?.use { true } ?: false }.getOrDefault(false)
+        }
+        if (exists) {
+            val still = withContext(Dispatchers.IO) {
+                runCatching { !SavedMediaDecoder(getApplication<Application>()).isMoving(uri, saved.displayName) }.getOrDefault(false)
+            }
+            if (still) {
+                val s = _state.value
+                com.frameout.app.viewer.SavedPlaylist.ids = withContext(Dispatchers.IO) {
+                    container.savedImages.orderedIds(s.selectedAlbum, escapeLike(s.query.trim()), s.savedSort.savedOrder(), s.savedKind?.code ?: -1)
+                }
+                onSavedImage()
+                return@launch
+            }
         }
         if (exists) {
             if (saved.sourceFrameId != null) _state.update { it.withMessage(FrameStrings.savedOpenSystem(), false, FrameIconsExtra.Album) }

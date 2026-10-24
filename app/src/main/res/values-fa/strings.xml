@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Frame out</string>
+    <string name="shortcut_capture_short">گرفتن فریم</string>
+    <string name="shortcut_capture_long">گرفتن فریم از آخرین ویدیو</string>
+    <string name="tile_capture_label">گرفتن فریم</string>
+    <string name="incoming_copy_failed">دسترسی به ویدیوی دریافتی حفظ نشد. آن را از گالری باز کنید، یا فضای ذخیره‌سازی را خالی کنید و دوباره ارسال کنید.</string>
+    <string name="incoming_unsupported">این نوع فایل قابل باز شدن نیست. به‌جای آن یک ویدیو، GIF یا تصویر ارسال کنید.</string>
+</resources>

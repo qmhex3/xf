@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="estimate">
+        <item quantity="other">≈ 프레임 %1$d개 · 약 %2$s MB</item>
+    </plurals>
+    <plurals name="plan_frames">
+        <item quantity="other">프레임 %1$d개</item>
+    </plurals>
+    <plurals name="reduced_quality">
+        <item quantity="other">기기 디코더가 원본 크기로 반환하지 못해 프레임 %1$d개가 낮은 해상도로 저장되었습니다.</item>
+    </plurals>
+    <plurals name="reduced_quality_to">
+        <item quantity="other">기기 메모리에 맞추기 위해 프레임 %1$d개가 원본 %2$d×%3$d 대신 %4$d×%5$d로 저장되었습니다.</item>
+    </plurals>
+    <plurals name="frame_count">
+        <item quantity="other">프레임 %1$d개</item>
+    </plurals>
+    <plurals name="content_frames">
+        <item quantity="other">프레임 %1$d개</item>
+    </plurals>
+    <plurals name="important_picked">
+        <item quantity="other">핵심 장면 %1$d개를 선택했습니다</item>
+    </plurals>
+    <plurals name="sharpest_picked">
+        <item quantity="other">가장 선명한 프레임 %1$d개를 선택했습니다</item>
+    </plurals>
+    <plurals name="duplicates_picked">
+        <item quantity="other">중복 프레임 %1$d개를 선택했습니다</item>
+    </plurals>
+    <plurals name="integrity_dup">
+        <item quantity="other">프레임 %1$d개의 타임스탬프가 같습니다.</item>
+    </plurals>
+    <plurals name="crop_all_hint">
+        <item quantity="other">프레임 %1$d개에 같은 영역 적용</item>
+    </plurals>
+    <plurals name="crop_all_applied">
+        <item quantity="other">프레임 %1$d개에 자르기를 적용했습니다</item>
+    </plurals>
+    <plurals name="jump_back">
+        <item quantity="other">%1$d프레임 뒤로</item>
+    </plurals>
+    <plurals name="jump_forward">
+        <item quantity="other">%1$d프레임 앞으로</item>
+    </plurals>
+    <plurals name="jump_size">
+        <item quantity="other">이동 단위: %1$d프레임 (탭하여 변경)</item>
+    </plurals>
+    <plurals name="queue_unsaved">
+        <item quantity="other">대기 중인 프레임 %1$d개가 저장되지 않았습니다. 저장하지 않고 나가려면 뒤로 가기를 한 번 더 누르세요.</item>
+    </plurals>
+    <plurals name="share_limited">
+        <item quantity="other">처음 %1$d개 프레임만 공유합니다</item>
+    </plurals>
+    <plurals name="frames_deleted">
+        <item quantity="other">프레임 %1$d개를 삭제됨으로 이동했습니다</item>
+    </plurals>
+    <plurals name="batch_videos">
+        <item quantity="other">동영상 %1$d개</item>
+    </plurals>
+    <plurals name="projects_deleted">
+        <item quantity="other">프로젝트 %1$d개를 삭제했습니다</item>
+    </plurals>
+    <plurals name="projects_restored">
+        <item quantity="other">프로젝트 %1$d개를 복원했습니다</item>
+    </plurals>
+    <plurals name="saved_deleted_n">
+        <item quantity="other">이미지 %1$d개를 삭제했습니다</item>
+    </plurals>
+    <plurals name="saved_restored_n">
+        <item quantity="other">이미지 %1$d개를 복원했습니다</item>
+    </plurals>
+    <plurals name="saved_pruned_n">
+        <item quantity="other">파일이 기기에 더 이상 없어 저장된 항목 %1$d개를 제거했습니다</item>
+    </plurals>
+    <plurals name="confirm_delete_projects_n">
+        <item quantity="other">프로젝트 %1$d개를 삭제할까요?</item>
+    </plurals>
+    <plurals name="confirm_delete_saved_n">
+        <item quantity="other">저장된 이미지 %1$d개를 삭제할까요?</item>
+    </plurals>
+    <plurals name="backup_saved_many_n">
+        <item quantity="other">프로젝트 %1$d개를 선택한 폴더로 내보냈습니다</item>
+    </plurals>
+    <plurals name="export_done_many_n">
+        <item quantity="other">프로젝트 %1$d개를 내보냈습니다</item>
+    </plurals>
+    <plurals name="saved_export_done_n">
+        <item quantity="other">이미지 %1$d개를 내보냈습니다</item>
+    </plurals>
+</resources>

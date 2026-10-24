@@ -28,9 +28,14 @@ class TagRulesTest {
     }
 
     @Test
-    fun poseNeedsEnoughLandmarks() {
-        assertTrue(TagRules.poseTags(3).isEmpty())
-        assertEquals(TagRules.BODY, TagRules.poseTags(25).single().tag)
+    fun poseNeedsAHumanShapedSkeleton() {
+        assertTrue(TagRules.poseTags(PoseFixtures.person(only = setOf(0, 2, 5))).isEmpty())
+        assertEquals(TagRules.BODY, TagRules.poseTags(PoseFixtures.person()).single().tag)
+    }
+
+    @Test
+    fun confidentLandmarksSpreadOnACarGiveNoBody() {
+        assertTrue(TagRules.poseTags(PoseFixtures.spreadOnACar()).isEmpty())
     }
 
     @Test
@@ -61,10 +66,10 @@ class TagRulesTest {
     fun namesAndGroups() {
         assertEquals(TagGroup.People, TagNames.group(TagRules.SMILE))
         assertEquals(TagGroup.Things, TagNames.group("l:Car"))
-        assertEquals("سيارة", TagNames.display("l:Car", true))
-        assertEquals("Car", TagNames.display("l:Car", false))
-        assertEquals("Unknown thing", TagNames.display("l:Unknown thing", true))
-        assertEquals("وجوه", TagNames.display(TagRules.FACE, true))
+        assertEquals("سيارة", TagNames.display("l:Car", "ar"))
+        assertEquals("Car", TagNames.display("l:Car", "en"))
+        assertEquals("Unknown thing", TagNames.display("l:Unknown thing", "ar"))
+        assertEquals("وجوه", TagNames.display(TagRules.FACE, "ar"))
     }
 
     @Test
@@ -89,9 +94,9 @@ class TagRulesTest {
     fun everyDefaultModelLabelHasArabicName() {
         assertEquals(430, TagLabelsAr.MAP.size)
         assertTrue(TagLabelsAr.MAP.all { (en, ar) -> ar.isNotBlank() && ar != en })
-        assertEquals("مسجد", TagNames.display("l:Mosque", true))
-        assertEquals("بابا نويل", TagNames.display("l:Santa Claus", true))
-        assertEquals("أدوات الطبخ والخَبز", TagNames.display("l:Cookware and bakeware", true))
-        assertEquals("Mosque", TagNames.display("l:Mosque", false))
+        assertEquals("مسجد", TagNames.display("l:Mosque", "ar"))
+        assertEquals("بابا نويل", TagNames.display("l:Santa Claus", "ar"))
+        assertEquals("أدوات الطبخ والخَبز", TagNames.display("l:Cookware and bakeware", "ar"))
+        assertEquals("Mosque", TagNames.display("l:Mosque", "en"))
     }
 }

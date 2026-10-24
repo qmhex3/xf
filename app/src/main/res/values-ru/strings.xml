@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Frame out</string>
+    <string name="shortcut_capture_short">Захватить кадр</string>
+    <string name="shortcut_capture_long">Захватить кадр из последнего видео</string>
+    <string name="tile_capture_label">Захватить кадр</string>
+    <string name="incoming_copy_failed">Не удалось сохранить доступ к полученному видео. Откройте его из галереи или освободите память и отправьте снова.</string>
+    <string name="incoming_unsupported">Этот тип файла нельзя открыть. Отправьте видео, GIF или изображение.</string>
+</resources>

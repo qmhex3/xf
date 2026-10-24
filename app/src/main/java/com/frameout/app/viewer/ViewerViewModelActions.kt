@@ -5,7 +5,7 @@ import com.frameout.core.edit.Transform
 import com.frameout.core.edit.toEdit
 import kotlinx.coroutines.flow.update
 
-internal const val MAX_PREFETCH_BYTES = 40 * 1024 * 1024
+internal const val MAX_PREFETCH_BYTES = 64 * 1024 * 1024
 internal const val FULL_AHEAD = 5
 internal const val WARM_AHEAD = 8
 internal const val WARM_BEHIND = 3

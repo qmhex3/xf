@@ -54,6 +54,7 @@ fun LibraryScreen(
     onExtracting: (Long) -> Unit,
     onSettings: () -> Unit = {},
     onOpenSaved: (projectId: Long, frameId: Long, savedId: Long) -> Unit = { _, _, _ -> },
+    onOpenSavedImage: (savedId: Long) -> Unit = {},
     vm: LibraryViewModel = viewModel()
 ) {
     val state by vm.state.collectAsState()
@@ -81,11 +82,12 @@ fun LibraryScreen(
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> uri?.let(vm::importBackup) }
     val exportOne = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/octet-stream")) { uri -> uri?.let(vm::exportToDocument) }
     val exportMany = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri -> uri?.let(vm::exportToFolder) }
-    val openSaved: (Long) -> Unit = remember(vm, onOpenSaved, context) {
+    val openSaved: (Long) -> Unit = remember(vm, onOpenSaved, onOpenSavedImage, context) {
         { savedId ->
             vm.openSaved(
                 savedId,
                 onViewer = { projectId, frameId -> onOpenSaved(projectId, frameId, savedId) },
+                onSavedImage = { onOpenSavedImage(savedId) },
                 onSystem = { uri ->
                     val mime = runCatching { context.contentResolver.getType(uri) }.getOrNull() ?: "image/*"
                     val view = android.content.Intent(android.content.Intent.ACTION_VIEW).setDataAndType(uri, mime).apply {
@@ -101,7 +103,7 @@ fun LibraryScreen(
         LibraryDockActions(onAddVideo, onSettings, vm::pauseFocused, vm::resumeFocused, { confirmCancel = true })
     }
     val navBar = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-    val bottomPad by animateDpAsState(navBar + if (state.focusId != null) 168.dp else 96.dp, frameSpring(), label = "libraryBottomPad")
+    val bottomPad by animateDpAsState(navBar + 96.dp, frameSpring(), label = "libraryBottomPad")
     val onProjectsExport: () -> Unit = {
         val ids = state.selectedProjects
         if (ids.size == 1) {

@@ -248,7 +248,8 @@ private fun RouteContent(
             onOpenVideo = { navigate(AppRoute.Trim(it)) },
             onExtracting = { navigate(AppRoute.Extracting(it)) },
             onSettings = { navigate(AppRoute.Settings) },
-            onOpenSaved = { projectId, frameId, savedId -> navigate(AppRoute.Viewer(projectId, frameId, savedId)) }
+            onOpenSaved = { projectId, frameId, savedId -> navigate(AppRoute.Viewer(projectId, frameId, savedId)) },
+            onOpenSavedImage = { savedId -> navigate(AppRoute.SavedViewer(savedId)) }
         )
         AppRoute.Settings -> SettingsScreen(onBack = back, onAbout = { navigate(AppRoute.About) }, onLibrary = { replaceWith(AppRoute.Library) }, onAddVideo = { navigate(AppRoute.Picker) })
         AppRoute.About -> AboutScreen(back)
@@ -293,6 +294,7 @@ private fun RouteContent(
         is AppRoute.Extracting -> ExtractingScreen(r.projectId, { finishExtraction(r.projectId) }, back, { navigate(AppRoute.Collage(r.projectId, it)) }, { navigate(AppRoute.Viewer(r.projectId, it)) }, { navigate(AppRoute.Compare(r.projectId, it)) }, onLibrary = { replaceWith(AppRoute.Library) }, onSettings = { navigate(AppRoute.Settings) })
         is AppRoute.Frames -> FramesScreen(r.projectId, back, { navigate(AppRoute.Collage(r.projectId, it)) }, { navigate(AppRoute.Viewer(r.projectId, it)) }, { navigate(AppRoute.Compare(r.projectId, it)) })
         is AppRoute.Viewer -> ViewerScreen(r.projectId, r.frameId, back, savedId = r.savedId)
+        is AppRoute.SavedViewer -> com.frameout.app.library.SavedImageViewerScreen(r.savedId, back)
         is AppRoute.Compare -> CompareScreen(r.frameIds, back)
         is AppRoute.Collage -> CollageScreen(r.projectId, r.frameIds, back, back)
         is AppRoute.Batch -> BatchScreen(r.uris, r.session, back, { navigate(AppRoute.Frames(it)) })

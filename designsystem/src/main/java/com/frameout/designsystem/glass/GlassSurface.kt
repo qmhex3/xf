@@ -36,9 +36,9 @@ fun GlassSurface(
     val colors = FrameTheme.colors
     val dark = colors.isDark
     val base = if (dark) colors.containerHigh else colors.surface
-    val fill = if (solid) base else base.copy(alpha = fillAlpha)
+    val fill = if (solid) base else base.copy(alpha = if (colors.neutral) maxOf(fillAlpha, 0.96f) else fillAlpha)
     val rimColor = if (dark) Color.White else colors.onSurface
-    val rimScale = if (dark) 1f else 0.7f
+    val rimScale = if (colors.neutral) 1.5f else if (dark) 1f else 0.7f
     val border = rimColor.copy(alpha = glassBorderAlpha(if (solid) GlassIntensity.Off else intensity) * rimScale)
     val glowing = glow != Color.Unspecified
     val edge: Brush = if (glowing) {

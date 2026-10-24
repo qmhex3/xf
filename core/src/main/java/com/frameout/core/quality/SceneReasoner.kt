@@ -15,6 +15,10 @@ object SceneReasoner {
     const val STABLE_SUPPORT = 0.6f
     const val STABLE_LABEL_MIN = 0.60f
     const val DUPLICATE_IOU = 0.6f
+    const val VEHICLE_MIN = 0.70f
+    const val FASHION_MIN = 0.60f
+    const val COARSE_ON_VEHICLE_MIN = 0.90f
+    const val STRONG_BODY = PoseEvidence.STRONG_CONFIDENT / PoseEvidence.LANDMARKS_TOTAL
 
     private val PERSON = setOf(
         "person", "people", "human", "human body", "girl", "boy", "man", "woman", "child", "toddler", "baby", "selfie",
@@ -38,6 +42,12 @@ object SceneReasoner {
     )
 
     private val GENDER = setOf("girl", "boy", "man", "woman")
+
+    private val VEHICLE = setOf(
+        "car", "vehicle", "sports car", "supercar", "race car", "performance car", "luxury vehicle", "motor vehicle", "land vehicle",
+        "automotive design", "automotive exterior", "automotive lighting", "truck", "bus", "van", "motorcycle", "coupe", "sedan"
+    )
+    private val COARSE_PRONE_TO_VEHICLE = setOf("o:fashion_good", "o:home_good")
 
     private val PARENTS: Map<String, Set<String>> = mapOf(
         "dog" to setOf("mammal", "carnivore", "canidae", "pet", "animal", "vertebrate", "companion dog", "dog breed", "terrestrial animal"),
@@ -81,7 +91,9 @@ object SceneReasoner {
             context.count { n -> n.any { it.tag == TagRules.FACE || it.tag == TagRules.BODY } }.toFloat() / context.size >= 0.5f
 
         val faces = hits.firstOrNull { it.tag == TagRules.FACE }?.boxes.orEmpty()
-        val bodies = hits.firstOrNull { it.tag == TagRules.BODY }?.boxes.orEmpty()
+        val vehicle = vehicleDominant(hits)
+        val bodyConfirmed = bodyConfirmed(hits, faces.isNotEmpty(), vehicle)
+        val bodies = if (bodyConfirmed) hits.firstOrNull { it.tag == TagRules.BODY }?.boxes.orEmpty() else emptyList()
         val personBoxes = faces + bodies
         val personPresent = faces.isNotEmpty() || bodies.isNotEmpty() || personContext
         val portrait = faces.any { it.width * it.height >= PORTRAIT_FACE_AREA }
@@ -95,7 +107,8 @@ object SceneReasoner {
                     val min = if (sup >= STABLE_SUPPORT) STABLE_LABEL_MIN else LABEL_MIN
                     if (keepLabel(hit, min, personPresent, personBoxes, portrait, hasText) && !flicker(hit, sup)) kept += stabilised(hit, sup)
                 }
-                hit.tag.startsWith(TagRules.OBJECT) -> if (keepObject(hit, personBoxes) && !(sup == 0f && hit.confidence < 0.7f)) kept += hit
+                hit.tag.startsWith(TagRules.OBJECT) -> if (keepObject(hit, personBoxes, vehicle) && !(sup == 0f && hit.confidence < 0.7f)) kept += hit
+                hit.tag == TagRules.BODY -> if (bodyConfirmed) kept += hit
                 else -> kept += hit
             }
         }
@@ -158,10 +171,27 @@ object SceneReasoner {
         return true
     }
 
-    private fun keepObject(hit: TagHit, personBoxes: List<NormBox>): Boolean {
+    private fun keepObject(hit: TagHit, personBoxes: List<NormBox>, vehicle: Boolean): Boolean {
         if (hit.confidence < OBJECT_MIN) return false
-        if (hit.tag == "o:fashion_good" || personBoxes.isEmpty()) return true
+        if (vehicle && hit.tag in COARSE_PRONE_TO_VEHICLE && hit.confidence < COARSE_ON_VEHICLE_MIN) return false
+        if (hit.tag == "o:fashion_good") return personBoxes.isNotEmpty() && hit.confidence >= FASHION_MIN
+        if (personBoxes.isEmpty()) return true
         return hit.boxes.none { overlap(it, personBoxes) >= 0.5f }
+    }
+
+    internal fun vehicleDominant(hits: List<TagHit>): Boolean =
+        hits.any { it.tag.startsWith(TagRules.LABEL) && name(it) in VEHICLE && it.confidence >= VEHICLE_MIN }
+
+    internal fun hasPersonEvidence(hits: List<TagHit>): Boolean = hits.any {
+        it.tag == TagRules.FACE || it.tag == TagRules.BODY ||
+            (it.tag.startsWith(TagRules.LABEL) && name(it) in PERSON_CORE && it.confidence >= LABEL_MIN)
+    }
+
+    private fun bodyConfirmed(hits: List<TagHit>, hasFace: Boolean, vehicle: Boolean): Boolean {
+        val body = hits.firstOrNull { it.tag == TagRules.BODY } ?: return false
+        if (hasFace) return true
+        val personLabel = hits.any { it.tag.startsWith(TagRules.LABEL) && name(it) in PERSON_CORE && it.confidence >= LABEL_MIN }
+        return personLabel || (!vehicle && body.confidence >= STRONG_BODY)
     }
 
     private fun exclusive(labels: List<TagHit>, faceCount: Int): List<TagHit> {

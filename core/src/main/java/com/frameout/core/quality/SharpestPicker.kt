@@ -1,6 +1,6 @@
 package com.frameout.core.quality
 
-data class ScoredFrame(val id: Long, val index: Int, val score: Double, val faceScore: Float? = null, val sig: ByteArray? = null, val noise: Float = 0f, val speed: Float = 0f) {
+data class ScoredFrame(val id: Long, val index: Int, val score: Double, val faceScore: Float? = null, val sig: ByteArray? = null, val noise: Float = 0f, val speed: Float = 0f, val ptsUs: Long = 0L) {
     val effective: Double get() = (if (faceScore == null) score else score * (0.4 + 1.2 * faceScore)) * MotionEstimate.factor(speed)
 }
 

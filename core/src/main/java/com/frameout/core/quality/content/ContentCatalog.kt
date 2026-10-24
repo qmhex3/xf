@@ -15,9 +15,14 @@ object ContentCatalog {
 
     fun selected(ids: Collection<String>): List<ContentTag> = ids.mapNotNull { byId[it] }
 
-    fun summary(ids: Collection<String>, arabic: Boolean, limit: Int = 3): String {
-        val names = selected(ids).map { it.title(arabic) }
-        if (names.size <= limit) return names.joinToString(if (arabic) "، " else ", ")
-        return names.take(limit).joinToString(if (arabic) "، " else ", ") + " +" + (names.size - limit)
+    fun summary(ids: Collection<String>, lang: String, limit: Int = 3): String {
+        val names = selected(ids).map { it.title(lang) }
+        val separator = when (lang) {
+            "ar", "fa", "ur" -> "، "
+            "zh" -> "、"
+            else -> ", "
+        }
+        if (names.size <= limit) return names.joinToString(separator)
+        return names.take(limit).joinToString(separator) + " +" + (names.size - limit)
     }
 }

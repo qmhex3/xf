@@ -29,7 +29,7 @@ import com.frameout.designsystem.theme.frameHairline
 @Composable
 fun TagPanel(state: FramesState, onToggle: (String) -> Unit, onClose: () -> Unit) {
     val colors = FrameTheme.colors
-    val arabic = LocalConfiguration.current.locales[0].language == "ar"
+    val lang = com.frameout.core.util.AppLang.of(LocalConfiguration.current.locales[0].language)
     val grouped = remember(state.refineCounts) { state.refineCounts.groupBy { TagNames.group(it.tag) } }
     FramesSheet(state.tagsOpen && state.filter == FrameFilter.Tagged, FrameStrings.refineTitle(), onClose) {
         if (state.refineCounts.isEmpty()) {
@@ -38,10 +38,10 @@ fun TagPanel(state: FramesState, onToggle: (String) -> Unit, onClose: () -> Unit
         ALBUM_GROUP_ORDER.forEach { group ->
             val items = grouped[group].orEmpty()
             if (items.isNotEmpty()) {
-                SettingsSection(TagNames.groupTitle(group, arabic)) {
+                SettingsSection(TagNames.groupTitle(group, lang)) {
                     SettingsCard {
                         FlowRow(Modifier.padding(12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                            items.forEach { TagChip(TagNames.display(it.tag, arabic), it.frames, it.tag in state.tagFilter) { onToggle(it.tag) } }
+                            items.forEach { TagChip(TagNames.display(it.tag, lang), it.frames, it.tag in state.tagFilter) { onToggle(it.tag) } }
                         }
                     }
                 }

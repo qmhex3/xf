@@ -80,6 +80,45 @@ class SceneReasonerTest {
         assertTrue("l:Dog" in tags(SceneReasoner.refine(listOf(TagHit("l:Dog", 0.85f)), neighbours)))
     }
 
+    private val carBody = TagHit(TagRules.BODY, 0.8f, listOf(NormBox(0.05f, 0.2f, 0.95f, 0.8f)))
+    private val carLabels = listOf(TagHit("l:Car", 0.9f), TagHit("l:Sports car", 0.85f), TagHit("l:Automotive design", 0.8f))
+    private val carAsFashion = TagHit("o:fashion_good", 0.75f, listOf(NormBox(0.05f, 0.2f, 0.95f, 0.8f)))
+
+    @Test fun skeletonOnACarIsNotABodyAndAddsNoPerson() {
+        val out = tags(SceneReasoner.refine(carLabels + carBody))
+        assertFalse(TagRules.BODY in out); assertFalse("l:Person" in out)
+    }
+
+    @Test fun fashionGuessOnACarIsDropped() {
+        assertFalse("o:fashion_good" in tags(SceneReasoner.refine(carLabels + carBody + carAsFashion)))
+        assertFalse("o:fashion_good" in tags(SceneReasoner.refine(carLabels + carAsFashion)))
+    }
+
+    @Test fun fashionWithoutAnyPersonIsDroppedEvenWithoutACar() {
+        assertFalse("o:fashion_good" in tags(SceneReasoner.refine(listOf(TagHit("l:Wall", 0.9f), carAsFashion))))
+    }
+
+    @Test fun homeGoodGuessOnACarNeedsVeryHighConfidence() {
+        val home = carAsFashion.copy(tag = "o:home_good")
+        assertFalse("o:home_good" in tags(SceneReasoner.refine(carLabels + home)))
+        assertTrue("o:home_good" in tags(SceneReasoner.refine(carLabels + home.copy(confidence = 0.95f))))
+    }
+
+    @Test fun bodyIsKeptWhenAFaceOrAPersonLabelAgrees() {
+        assertTrue(TagRules.BODY in tags(SceneReasoner.refine(listOf(faceHit, carBody))))
+        assertTrue(TagRules.BODY in tags(SceneReasoner.refine(listOf(TagHit("l:Person", 0.9f), carBody))))
+    }
+
+    @Test fun veryCompleteSkeletonSurvivesWhenNoCarIsAround() {
+        assertTrue(TagRules.BODY in tags(SceneReasoner.refine(listOf(TagHit("l:Beach", 0.9f), carBody.copy(confidence = 0.9f)))))
+        assertFalse(TagRules.BODY in tags(SceneReasoner.refine(listOf(TagHit("l:Beach", 0.9f), carBody.copy(confidence = 0.4f)))))
+    }
+
+    @Test fun personWithAShirtStillGetsFashion() {
+        val shirt = TagHit("o:fashion_good", 0.7f, listOf(NormBox(0.2f, 0.5f, 0.7f, 0.9f)))
+        assertTrue("o:fashion_good" in tags(SceneReasoner.refine(listOf(faceHit, shirt))))
+    }
+
     @Test fun duplicateBoxesAreMerged() {
         val big = NormBox(0.1f, 0.1f, 0.5f, 0.5f)
         val near = NormBox(0.11f, 0.11f, 0.5f, 0.5f)

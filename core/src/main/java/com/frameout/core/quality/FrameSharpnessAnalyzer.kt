@@ -15,7 +15,7 @@ object FrameSharpnessAnalyzer {
             val focus = FocusScore.detail(luma, bitmap.width, bitmap.height)
             profiles += MotionEstimate.profile(luma, bitmap.width, bitmap.height)
             ScoredFrame(
-                frame.id, frame.index, focus.score,
+                frame.id, frame.index, focus.score, ptsUs = frame.ptsUs,
                 sig = FrameSignature.of(luma, bitmap.width, bitmap.height),
                 noise = FrameSignature.cellNoise(focus.noise, bitmap.width, bitmap.height)
             )

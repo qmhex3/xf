@@ -39,7 +39,7 @@ class IndexSampleSource(
             is ExtractMode.FixedCount -> fixedMode(bounds, checkpoint, checkpointIndex, mode.count.coerceAtLeast(1)).collect { emit(it) }
             ExtractMode.SceneChange -> sceneMode(bounds, checkpoint, checkpointIndex, SceneChangeSelector.SCENE_STEP_US).collect { emit(it) }
             ExtractMode.Slides -> sceneMode(bounds, checkpoint, checkpointIndex, SceneChangeSelector.SLIDES_STEP_US).collect { emit(it) }
-            is ExtractMode.Content -> timeMode(bounds, checkpoint, checkpointIndex, mode.spec.millis.coerceAtLeast(1) * 1000L).collect { emit(it) }
+            is ExtractMode.Content -> timeMode(bounds, checkpoint, checkpointIndex, com.frameout.core.quality.content.ContentSpec.SAMPLE_STEP_MS * 1000L).collect { emit(it) }
         }
     }
 

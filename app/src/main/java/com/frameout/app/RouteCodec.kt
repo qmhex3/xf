@@ -23,6 +23,7 @@ object RouteCodec {
         is AppRoute.Viewer -> if (route.savedId != null) join("viewer", route.projectId, route.frameId, route.savedId) else join("viewer", route.projectId, route.frameId)
         is AppRoute.Collage -> ids(route.frameIds)?.let { join("collage", route.projectId, it) } ?: join("frames", route.projectId)
         is AppRoute.Compare -> ids(route.frameIds)?.let { join("compare", route.projectId, it) } ?: join("frames", route.projectId)
+        is AppRoute.SavedViewer -> join("savedviewer", route.savedId)
         is AppRoute.Batch -> null
     }
 
@@ -42,6 +43,7 @@ object RouteCodec {
         "extracting" -> AppRoute.Extracting(p[1].toLong())
         "frames" -> AppRoute.Frames(p[1].toLong())
         "viewer" -> AppRoute.Viewer(p[1].toLong(), p[2].toLong(), p.getOrNull(3)?.toLongOrNull())
+        "savedviewer" -> AppRoute.SavedViewer(p[1].toLong())
         "collage" -> AppRoute.Collage(p[1].toLong(), parseIds(p[2]))
         "compare" -> AppRoute.Compare(p[1].toLong(), parseIds(p[2]))
         else -> null

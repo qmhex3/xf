@@ -8,7 +8,10 @@ import kotlin.math.abs
 class TagFamily(val id: String, val en: String, val ar: String, internal val labels: String) {
     val key: String get() = TagFamilies.key(id)
 
-    fun title(arabic: Boolean): String = if (arabic) ar else en
+    fun title(lang: String): String = when (lang) {
+        "ar" -> ar
+        else -> TagText.forLang(lang)?.families?.get(id) ?: en
+    }
 }
 
 object TagFamilies {
@@ -72,11 +75,18 @@ object TagFamilies {
         else -> null
     }
 
-    fun title(tag: String, arabic: Boolean): String? = if (isFamily(tag)) byId[tag.substring(PREFIX.length)]?.title(arabic) else null
+    fun title(tag: String, lang: String): String? = if (isFamily(tag)) byId[tag.substring(PREFIX.length)]?.title(lang) else null
+
+    private val PERSON_FAMILIES = setOf("people", "fashion")
 
     fun withFamilies(hits: List<TagHit>): List<TagHit> {
         val base = hits.filterNot { isFamily(it.tag) }
-        val derived = base.mapNotNull { hit -> familyOf(hit.tag)?.let { TagHit(key(it), hit.confidence, hit.boxes) } }
+        val carWithoutPeople = SceneReasoner.vehicleDominant(base) && !SceneReasoner.hasPersonEvidence(base)
+        val derived = base.mapNotNull { hit ->
+            val id = familyOf(hit.tag) ?: return@mapNotNull null
+            if (carWithoutPeople && id in PERSON_FAMILIES) return@mapNotNull null
+            TagHit(key(id), hit.confidence, hit.boxes)
+        }
         if (derived.isEmpty()) return base
         return base + TagRules.merge(derived)
     }

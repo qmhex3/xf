@@ -98,7 +98,15 @@ internal class HdrToneMapper(private val params: ColorParams, desaturation: Floa
         val low = minOf(out[0], out[1], out[2])
         if (low < 0f) blend(y, if (y - low > MIN_LUMA) y / (y - low) else 0f)
         val high = maxOf(out[0], out[1], out[2])
-        if (high > 1f) blend(y, (1f - y) / (high - y))
+        if (high > 1f) fitHigh(y, high)
+    }
+
+    private fun fitHigh(y: Float, high: Float) {
+        val t = (1f - y) / (high - y)
+        for (i in 0 until 3) {
+            val toGrey = y + (out[i] - y) * t
+            out[i] = (1f - CHROMA_KEEP) * toGrey + CHROMA_KEEP * (out[i] / high)
+        }
     }
 
     private fun blend(y: Float, t: Float) {
@@ -109,6 +117,7 @@ internal class HdrToneMapper(private val params: ColorParams, desaturation: Floa
 
     private companion object {
         const val KNEE = 0.75f
+        const val CHROMA_KEEP = 0.75f
         const val EPS = 1f / 64f
         const val MIN_LUMA = 1e-6f
         val srgbLinear = FloatArray(256) {

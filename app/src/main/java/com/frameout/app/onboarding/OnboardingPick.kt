@@ -178,10 +178,10 @@ private fun PickFooter(phase: State<Float>) {
 
 @Composable
 internal fun PickChips(modifier: Modifier = Modifier) {
-    val arabic = LocalConfiguration.current.locales[0].language == "ar"
-    val labels = remember(arabic) {
+    val lang = com.frameout.core.util.AppLang.of(LocalConfiguration.current.locales[0].language)
+    val labels = remember(lang) {
         listOf(TagRules.GOOD_FACE, TagRules.EYES_CLOSED, TagRules.TEXT, TagRules.CODE, "l:Sunset", "l:Sea")
-            .map { TagNames.display(it, arabic) }
+            .map { TagNames.display(it, lang) }
     }
     CyclingChips(labels, null, modifier)
 }

@@ -4,8 +4,11 @@ import com.frameout.core.R
 import java.util.Locale
 
 object FrameStrings : FrameStringsExtra() {
+    fun lang(): String = AppLang.current()
     fun isAr(): Boolean = Locale.getDefault().language.startsWith("ar")
-    fun sep(): String = if (isAr()) " — " else " · "
+    fun isFa(): Boolean = Locale.getDefault().language.startsWith("fa")
+    fun isUr(): Boolean = Locale.getDefault().language.startsWith("ur")
+    fun sep(): String = if (isAr() || isFa() || isUr()) " — " else " · "
     fun appName() = s(R.string.app_name)
     fun estimate(frameCount: Int, sizeMb: String) = StringSource.plural(R.plurals.estimate, frameCount, frameCount, sizeMb)
     fun library() = s(R.string.library)

@@ -145,7 +145,8 @@ private suspend fun AwaitPointerEventScope.textGesture(latest: State<TextOverlay
         when {
             pressed.size >= 2 -> {
                 moved = true
-                if (mode == Mode.Background) pinchImage(event, now) else pinchText(event, now)
+                val onText = mode != Mode.Background || (selected != null && selectedBox != null && pressed.any { hitBody(selectedBox, selected, it.position, slop, geo, t0) })
+                if (onText) pinchText(event, now) else pinchImage(event, now)
             }
             pressed.size == 1 -> {
                 val p = pressed[0].position

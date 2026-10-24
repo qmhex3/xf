@@ -6,6 +6,7 @@ import kotlinx.coroutines.sync.withPermit
 object DeviceLimits {
     private const val DEFAULT_DECODES = 2
     private const val DEFAULT_THUMB_DECODES = 4
+    private const val DEFAULT_WRITERS = 2
     private const val DEFAULT_POOL_BYTES = 32L * 1024L * 1024L
 
     @Volatile private var device: DeviceCapability? = null
@@ -15,6 +16,10 @@ object DeviceLimits {
     }
 
     fun decodes(): Int = runCatching { device?.maxConcurrentDecodes }.getOrNull() ?: DEFAULT_DECODES
+
+    fun extractWriters(): Int = runCatching { device?.extractWriters }.getOrNull() ?: DEFAULT_WRITERS
+
+    fun extractDecoders(): Int = runCatching { device?.extractDecoders }.getOrNull() ?: DEFAULT_DECODES
 
     fun thumbDecodes(): Int = runCatching { device?.maxThumbDecodes }.getOrNull() ?: DEFAULT_THUMB_DECODES
 

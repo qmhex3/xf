@@ -19,6 +19,8 @@ import kotlinx.coroutines.job
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -33,17 +35,19 @@ class ViewerViewModel(app: Application) : AndroidViewModel(app) {
     internal val _state = MutableStateFlow(ViewerState())
     private val player = ViewerPlayer(viewModelScope, _state, c.frames, { loadFrame(it, seamless = true) }, ::refreshNeighbors)
     private val export = ViewerExport(viewModelScope, exporter, _state, app)
-    internal val tools = ViewerToolEditor(viewModelScope, _state, loader, editHistory, { sourceUri }, { loadFrame(_state.value.current) })
+    internal val tools = ViewerToolEditor(viewModelScope, _state, loader, editHistory, { sourceUri }, { loadFrame(_state.value.current) }, ::stashFinal)
     val state: StateFlow<ViewerState> = _state.asStateFlow()
     private var sourceUri: Uri? = null
     private var loadGeneration = 0L
     private var retired: Bitmap? = null
     private val cache = WindowCache<Bitmap>(
-        budgetBytes = (Runtime.getRuntime().maxMemory() / 6L).coerceIn(48L * 1024L * 1024L, 128L * 1024L * 1024L),
+        budgetBytes = (Runtime.getRuntime().maxMemory() / 5L).coerceIn(64L * 1024L * 1024L, 160L * 1024L * 1024L),
         maxEntryBytes = MAX_PREFETCH_BYTES.toLong(),
         sizeOf = { it.allocationByteCount.toLong() },
         drop = { it.takeUnless { b -> b.isRecycled }?.recycle() }
     )
+    private class Handoff(val frameId: Long, val edit: FrameEdit, val bitmap: Bitmap)
+    private var handoff: Handoff? = null
     private val inFlight = HashMap<Long, Job>()
     private val decodeGate = Semaphore(2)
     private var windowJob: Job? = null
@@ -189,6 +193,19 @@ class ViewerViewModel(app: Application) : AndroidViewModel(app) {
     private fun applyHistory(entity: FrameEditEntity) {
         _state.update { it.withEdit(fromEntity(entity)) }
     }
+    private fun stashFinal(frameId: Long, edit: FrameEdit, bitmap: Bitmap) {
+        handoff?.bitmap?.takeUnless { it.isRecycled }?.recycle()
+        handoff = Handoff(frameId, edit, bitmap)
+    }
+
+    private fun takeHandoff(frameId: Long, edit: FrameEdit): Bitmap? {
+        val h = handoff ?: return null
+        handoff = null
+        if (h.frameId == frameId && h.edit == edit && !h.bitmap.isRecycled) return h.bitmap
+        h.bitmap.takeUnless { it.isRecycled }?.recycle()
+        return null
+    }
+
     internal suspend fun loadFrame(frame: FrameEntity?, seamless: Boolean = false) {
         if (seamless && frame != null) {
             loadSeamless(frame)
@@ -201,14 +218,16 @@ class ViewerViewModel(app: Application) : AndroidViewModel(app) {
         val old = before.bitmap
         if (frame == null) { _state.update { it.cleared() }; old?.takeUnless { it.isRecycled }?.recycle(); return }
         val edit = editHistory.current(frame.id)?.let(::fromEntity) ?: FrameEdit(frame.id)
-        val ready = cache.take(frame.id, edit)
+        val ready = cache.take(frame.id, edit) ?: takeHandoff(frame.id, edit)
         val waiting = ready == null && inFlight.containsKey(frame.id)
         val sharpPlaceholder = if (ready == null) {
             EditedThumb.peekSharp(frame.fullPath, edit, screenPx) ?: neighborThumb(before, frame)
         } else null
         val placeholder = sharpPlaceholder ?: if (ready == null && edit.isIdentity) placeholderFor(frame) else null
-        _state.update { it.showing(frame, edit, ready, placeholder, sharpPlaceholder != null) }
-        keepOrRecycle(before.current, before.edit, old, frame)
+        val kept = if (ready == null && before.current?.id == frame.id) old?.takeUnless { it.isRecycled } else null
+        if (kept != null) _state.update { it.showing(frame, edit, kept, null, false) }
+        else _state.update { it.showing(frame, edit, ready, placeholder, sharpPlaceholder != null) }
+        if (kept == null) keepOrRecycle(before.current, before.edit, old, frame)
         retired?.takeUnless { it.isRecycled }?.recycle()
         retired = null
         refreshPosition(frame)
@@ -219,6 +238,7 @@ class ViewerViewModel(app: Application) : AndroidViewModel(app) {
         }
         if (ready == null) launchWindow(frame, full = false)
         if (ready == null && !loadMissing(frame, edit, waiting, placeholder, sharpPlaceholder != null, generation, neighbors)) return
+        if (kept != null && _state.value.bitmap !== kept) kept.takeUnless { it.isRecycled }?.recycle()
         launchWindow(frame)
         val detections = withContext(Dispatchers.IO) { ViewerDetections.load(c.frameTags, frame, edit) }
         if (generation == loadGeneration) _state.update { it.copy(detections = detections) }
@@ -233,7 +253,7 @@ class ViewerViewModel(app: Application) : AndroidViewModel(app) {
         generation: Long,
         neighbors: kotlinx.coroutines.Deferred<*>
     ): Boolean {
-        if (placeholder != null && !sharp) upgradePlaceholder(frame, generation)
+        if (!sharp) upgradePlaceholder(frame, edit, generation)
         val bmp = (if (waiting) awaitPrefetch(frame.id, edit) else null)
             ?: withContext(Dispatchers.IO) { loader.load(frame, sourceUri, edit) }
         if (generation != loadGeneration) { bmp?.takeUnless { it.isRecycled }?.recycle(); neighbors.cancel(); return false }
@@ -256,9 +276,9 @@ class ViewerViewModel(app: Application) : AndroidViewModel(app) {
         return ThumbCache.peek(path) ?: withContext(Dispatchers.IO) { ThumbCache.getShared(path) }
     }
 
-    private fun upgradePlaceholder(frame: FrameEntity, generation: Long) {
+    private fun upgradePlaceholder(frame: FrameEntity, edit: FrameEdit, generation: Long) {
         viewModelScope.launch {
-            val sharp = ThumbCache.loadSharp(frame.fullPath, screenPx) ?: return@launch
+            val sharp = EditedThumb.loadSharp(frame.fullPath, edit, screenPx) ?: return@launch
             if (generation != loadGeneration) return@launch
             _state.update { if (it.current?.id == frame.id && it.bitmap == null) it.copy(placeholder = sharp, placeholderSharp = true) else it }
         }
@@ -291,10 +311,17 @@ class ViewerViewModel(app: Application) : AndroidViewModel(app) {
                 cache.setWindow(fullIds)
                 inFlight.filterKeys { it !in fullIds }.values.forEach { it.cancel() }
             }
-            order.take(2).forEach { ThumbCache.loadSharp(it.fullPath, screenPx) }
-            if (full) fullList.forEach(::startPrefetch)
-            order.drop(2).forEach { ThumbCache.loadSharp(it.fullPath, screenPx) }
+            coroutineScope {
+                order.take(2).map { async { warmSharp(it) } }.awaitAll()
+                if (full) fullList.forEach(::startPrefetch)
+                order.drop(2).map { async { warmSharp(it) } }.awaitAll()
+            }
         }
+    }
+
+    private suspend fun warmSharp(frame: FrameEntity) {
+        val edit = editHistory.current(frame.id)?.let(::fromEntity)
+        EditedThumb.loadSharp(frame.fullPath, edit, screenPx)
     }
 
     private fun startPrefetch(frame: FrameEntity) {
@@ -321,6 +348,8 @@ class ViewerViewModel(app: Application) : AndroidViewModel(app) {
         inFlight.values.forEach { it.cancel() }
         inFlight.clear()
         cache.clear()
+        handoff?.bitmap?.takeUnless { it.isRecycled }?.recycle()
+        handoff = null
         _state.value.bitmap?.takeUnless { it.isRecycled }?.recycle()
         retired?.takeUnless { it.isRecycled }?.recycle()
         retired = null

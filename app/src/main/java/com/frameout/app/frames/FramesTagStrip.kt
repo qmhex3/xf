@@ -32,7 +32,7 @@ private const val STRIP_LIMIT = 12
 
 @Composable
 fun FramesTagStrip(state: FramesState, onToggle: (String) -> Unit, onClear: () -> Unit, onAll: () -> Unit) {
-    val arabic = LocalConfiguration.current.locales[0].language == "ar"
+    val lang = com.frameout.core.util.AppLang.of(LocalConfiguration.current.locales[0].language)
     val visibleTags = remember(state.tagCounts, state.tagFilter) {
         val selected = state.tagCounts.filter { it.tag in state.tagFilter }
         selected + state.tagCounts.filter { it.tag !in state.tagFilter }.take((STRIP_LIMIT - selected.size).coerceAtLeast(0))
@@ -47,7 +47,7 @@ fun FramesTagStrip(state: FramesState, onToggle: (String) -> Unit, onClear: () -
             if (state.scanning) item(key = "scan") { ScanChip(state.scanDone, state.scanTotal, state.scanFailed) }
             if (state.tagFilter.isNotEmpty()) item(key = "clear") { ClearChip(onClear) }
             items(visibleTags, key = { it.tag }) { t ->
-                TagChip(TagNames.display(t.tag, arabic), t.frames, t.tag in state.tagFilter) { onToggle(t.tag) }
+                TagChip(TagNames.display(t.tag, lang), t.frames, t.tag in state.tagFilter) { onToggle(t.tag) }
             }
             if (state.tagCounts.isNotEmpty()) item(key = "all") { AllChip(onAll) }
         }

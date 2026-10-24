@@ -57,7 +57,7 @@ internal fun DetectionOverlay(
 ) {
     if (detections.isEmpty() || imageWidth <= 0 || imageHeight <= 0) return
     val palette = rememberDetectionPalette()
-    val arabic = LocalConfiguration.current.locales[0].language == "ar"
+    val lang = com.frameout.core.util.AppLang.of(LocalConfiguration.current.locales[0].language)
     val measurer = rememberTextMeasurer()
     Canvas(modifier.fillMaxSize()) {
         val fit = minOf(size.width / imageWidth, size.height / imageHeight)
@@ -79,7 +79,7 @@ internal fun DetectionOverlay(
             val boxW = (px(d.box.r) - left).coerceAtLeast(1f)
             val boxH = (py(d.box.b) - top).coerceAtLeast(1f)
             drawRoundRect(color, Offset(left, top), Size(boxW, boxH), radius, Stroke(stroke))
-            val label = d.tags.joinToString(" · ") { TagNames.display(it, arabic) }
+            val label = d.tags.joinToString(" · ") { TagNames.display(it, lang) }
             val text = measurer.measure(label, style, overflow = TextOverflow.Ellipsis, maxLines = 1, constraints = androidx.compose.ui.unit.Constraints(maxWidth = boxW.toInt().coerceAtLeast(60.dp.roundToPx())))
             val chipW = text.size.width + padX * 2
             val chipH = text.size.height + padY * 2

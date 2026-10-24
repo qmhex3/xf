@@ -13,8 +13,6 @@ object SettingStrings {
         "Simple" -> s(R.string.value_simple)
         "Off" -> s(R.string.value_off)
         "auto" -> s(R.string.value_auto)
-        "en" -> "English"
-        "ar" -> "العربية"
         "jpg" -> "JPG"
         "jpg_hdr" -> "JPG HDR"
         "png" -> "PNG"
@@ -39,6 +37,20 @@ object SettingStrings {
         "80" -> "80"
         "92" -> "92"
         "100" -> "100"
+        else -> languageName(key)
+    }
+    private fun languageName(key: String): String = when (key) {
+        "en" -> "English"
+        "ar" -> "العربية"
+        "tr" -> "Türkçe"
+        "ru" -> "Русский"
+        "fa" -> "فارسی"
+        "ur" -> "اردو"
+        "fr" -> "Français"
+        "hi" -> "हिन्दी"
+        "ko" -> "한국어"
+        "ja" -> "日本語"
+        "zh" -> "简体中文"
         else -> size(key)
     }
     private fun size(key: String): String = when (key) {

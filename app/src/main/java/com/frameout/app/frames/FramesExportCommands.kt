@@ -110,3 +110,12 @@ internal fun compareSelected(vm: FramesViewModel, onCompare: (List<Long>) -> Uni
         if (frames.size == 2) onCompare(frames.map { it.id }) else vm.postMessage(FrameStrings.compareNeedsTwo())
     }
 }
+
+internal fun exportDataset(vm: FramesViewModel, action: DatasetExportAction, scope: CoroutineScope, projectId: Long, format: com.frameout.core.export.DatasetFormat, options: com.frameout.core.quality.DatasetOptions) {
+    if (vm.exportRunning) return
+    scope.launch {
+        vm.postBusy(com.frameout.core.util.QualityStrings.analyzing())
+        val title = vm.state.value.project?.name ?: FrameStrings.frames()
+        vm.completeExport { action.export(projectId, title, format, options) }
+    }
+}

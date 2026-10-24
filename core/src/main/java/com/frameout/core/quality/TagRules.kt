@@ -13,7 +13,6 @@ object TagRules {
     const val CODE = "b:code"
     const val LABEL = "l:"
     const val OBJECT = "o:"
-    const val MIN_LANDMARKS = 10
     const val MIN_TEXT_CHARS = 4
     const val GROUP_SIZE = 3
 
@@ -29,8 +28,11 @@ object TagRules {
         return out
     }
 
-    fun poseTags(confidentLandmarks: Int, box: NormBox? = null): List<TagHit> =
-        if (confidentLandmarks >= MIN_LANDMARKS) listOf(TagHit(BODY, (confidentLandmarks / 33f).coerceIn(0f, 1f), listOfNotNull(box))) else emptyList()
+    fun poseTags(landmarks: List<PoseLm>, box: NormBox? = null): List<TagHit> {
+        if (!PoseEvidence.humanShaped(landmarks)) return emptyList()
+        val sure = PoseEvidence.confident(landmarks).size
+        return listOf(TagHit(BODY, (sure / PoseEvidence.LANDMARKS_TOTAL).coerceIn(0f, 1f), listOfNotNull(box)))
+    }
 
     fun textTags(text: String, boxes: List<NormBox> = emptyList()): List<TagHit> =
         if (text.count { !it.isWhitespace() } >= MIN_TEXT_CHARS) listOf(TagHit(TEXT, 1f, boxes)) else emptyList()

@@ -11,10 +11,7 @@ import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 
 object PeopleRule {
-    const val POSE_CONFIDENCE = 0.7f
-
-    fun isPerson(faces: Int, confidentLandmarks: Int): Boolean =
-        faces > 0 || confidentLandmarks >= TagRules.MIN_LANDMARKS
+    fun isPerson(faces: Int, humanPose: Boolean): Boolean = faces > 0 || humanPose
 }
 
 object PeopleFilter {
@@ -42,10 +39,15 @@ object PeopleFilter {
         try {
             val image = InputImage.fromBitmap(argb, 0)
             val faceCount = detect("people-face") { faces.process(image).await().size }
-            if (faceCount != null && PeopleRule.isPerson(faceCount, 0)) return@withPermit true
+            if (faceCount != null && PeopleRule.isPerson(faceCount, false)) return@withPermit true
             if (!includeBody) return@withPermit faceCount == null
-            val landmarks = detect("people-pose") { pose.process(image).await().allPoseLandmarks.count { it.inFrameLikelihood >= PeopleRule.POSE_CONFIDENCE } }
-            if (faceCount == null && landmarks == null) true else PeopleRule.isPerson(faceCount ?: 0, landmarks ?: 0)
+            val w = argb.width.toFloat()
+            val h = argb.height.toFloat()
+            val posed = detect("people-pose") {
+                val points = pose.process(image).await().allPoseLandmarks.map { PoseLm(it.landmarkType, it.position.x / w, it.position.y / h, it.inFrameLikelihood) }
+                PoseEvidence.humanShaped(points, PoseEvidence.STRONG_CONFIDENT)
+            }
+            if (faceCount == null && posed == null) true else PeopleRule.isPerson(faceCount ?: 0, posed ?: false)
         } finally {
             if (argb !== small) argb.recycle()
             if (small !== source) small.recycle()

@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.frameout.core.prefs.AppPrefs
 import com.frameout.core.quality.content.ContentSpec
+import com.frameout.core.util.ContentStrings
 import com.frameout.core.util.FrameStrings
 import com.frameout.core.util.ModeStrings
 import com.frameout.designsystem.icons.FrameIconsExtra
@@ -46,7 +47,7 @@ internal fun modeFor(kind: String, previous: ExtractMode) = when (kind) {
 }
 
 @Composable
-fun ExtractModeSettings(prefs: AppPrefs, stored: String, onOpenSheet: () -> Unit) {
+fun ExtractModeSettings(prefs: AppPrefs, stored: String, onOpenSheet: () -> Unit, onOpenContent: () -> Unit = {}) {
     val mode = ExtractModeCodec.decode(stored)
     val kind = kindOf(mode)
     val save = { next: ExtractMode -> prefs.setExtractMode(ExtractModeCodec.encode(next)) }
@@ -63,7 +64,10 @@ fun ExtractModeSettings(prefs: AppPrefs, stored: String, onOpenSheet: () -> Unit
                 SettingsNumberField(ModeStrings.countLabel(), mode.count.toLong(), MAX_FRAMES) { save(ExtractMode.FixedCount(it.toInt())) }
             }
             is ExtractMode.EveryNMillis -> TimeModeFields(mode.millis) { save(ExtractMode.EveryNMillis(it)) }
-            is ExtractMode.Content -> ContentSettings(mode.spec) { save(ExtractMode.Content(it)) }
+            is ExtractMode.Content -> {
+                SettingsDivider(0.dp)
+                NavRow(FrameIconsExtra.Detect, ContentStrings.title(), value = contentSummary(mode.spec, FrameStrings.lang()), onClick = onOpenContent)
+            }
             else -> Unit
         }
     }

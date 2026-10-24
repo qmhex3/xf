@@ -20,6 +20,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,6 +41,7 @@ import com.frameout.app.settings.ToggleRow
 import com.frameout.app.settings.kindOf
 import com.frameout.app.settings.modeFor
 import com.frameout.core.prefs.AppPrefs
+import com.frameout.core.util.ContentStrings
 import com.frameout.core.util.FrameStrings
 import com.frameout.core.util.ModeStrings
 import com.frameout.core.util.TrimStrings
@@ -61,26 +65,41 @@ private const val MODE_BOTH = "both"
 @Composable
 internal fun BoxScope.PlanSheet(env: TrimEnv, visible: Boolean) {
     val stored by env.prefs.extractMode.collectAsState()
+    var contentOpen by rememberSaveable { mutableStateOf(false) }
+    val content = ExtractModeCodec.decode(stored) as? ExtractMode.Content
+    if (contentOpen && content != null) {
+        ContentOptionsSheet(visible, env.prefs, content) { contentOpen = false }
+        return
+    }
     TrimSheetHost(visible, TrimStrings.optionsTitle(), { env.onSheet(TrimSheet.None) }) {
         ExtractOptions(
             env.prefs, env.autoSave, env.onAutoSave, env.frameEstimate(stored),
             summary = { PlanSummary(env, compact = true, tappable = false) },
-            onDone = { env.onSheet(TrimSheet.None) }
+            onDone = { env.onSheet(TrimSheet.None) },
+            onContent = { contentOpen = true }
         )
+    }
+}
+
+@Composable
+internal fun BoxScope.ContentOptionsSheet(visible: Boolean, prefs: AppPrefs, mode: ExtractMode.Content, onBack: () -> Unit) {
+    TrimSheetHost(visible, ContentStrings.title(), onBack) {
+        com.frameout.app.settings.ContentSheetBody(mode.spec, { prefs.setExtractMode(ExtractModeCodec.encode(ExtractMode.Content(it))) })
+        DoneButton(onBack)
     }
 }
 
 @Composable
 internal fun ColumnScope.ExtractOptions(
     prefs: AppPrefs, autoSave: Boolean, onAutoSave: () -> Unit, frames: Int,
-    summary: @Composable () -> Unit, onDone: () -> Unit
+    summary: @Composable () -> Unit, onDone: () -> Unit, onContent: () -> Unit = {}
 ) {
     val stored by prefs.extractMode.collectAsState()
     val mode = ExtractModeCodec.decode(stored)
     summary()
     SectionLabel(TrimStrings.optionsMode())
     ExtractModePicker(kindOf(mode), { kind -> gateMode(kind) { prefs.setExtractMode(ExtractModeCodec.encode(modeFor(kind, mode))) } })
-    ModeParameter(mode, prefs)
+    ModeParameter(mode, prefs, onContent)
     SmartFilters(prefs, mode)
     GalleryToggle(autoSave, onAutoSave, frames)
     DoneButton(onDone)
@@ -110,10 +129,12 @@ private fun DoneButton(onClick: () -> Unit) {
 }
 
 @Composable
-private fun ModeParameter(mode: ExtractMode, prefs: AppPrefs) {
+private fun ModeParameter(mode: ExtractMode, prefs: AppPrefs, onContent: () -> Unit) {
     val save = { next: ExtractMode -> prefs.setExtractMode(ExtractModeCodec.encode(next)) }
     if (mode is ExtractMode.Content) {
-        SectionCard { com.frameout.app.settings.ContentTagPicker(mode.spec, { save(ExtractMode.Content(it)) }, Modifier.padding(14.dp)) }
+        SectionCard {
+            com.frameout.app.settings.NavRow(FrameIconsExtra.Detect, ContentStrings.title(), value = com.frameout.app.settings.contentSummary(mode.spec, FrameStrings.lang()), onClick = onContent)
+        }
         return
     }
     if (mode !is ExtractMode.EveryNFrames && mode !is ExtractMode.FixedCount && mode !is ExtractMode.EveryNMillis) return

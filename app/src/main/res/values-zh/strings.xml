@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Frame out</string>
+    <string name="shortcut_capture_short">截取帧</string>
+    <string name="shortcut_capture_long">从最近的视频中截取一帧</string>
+    <string name="tile_capture_label">截取帧</string>
+    <string name="incoming_copy_failed">无法保持对所分享视频的访问。请改为从相册中打开，或释放存储空间后再次分享。</string>
+    <string name="incoming_unsupported">无法打开此文件类型。请改为分享视频、GIF 或图片。</string>
+</resources>

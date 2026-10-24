@@ -6,7 +6,16 @@ private class AppLanguage(val key: String, val nativeName: String)
 
 private val AppLanguages = listOf(
     AppLanguage("ar", "العربية"),
-    AppLanguage("en", "English")
+    AppLanguage("en", "English"),
+    AppLanguage("tr", "Türkçe"),
+    AppLanguage("ru", "Русский"),
+    AppLanguage("fa", "فارسی"),
+    AppLanguage("ur", "اردو"),
+    AppLanguage("fr", "Français"),
+    AppLanguage("hi", "हिन्दी"),
+    AppLanguage("ko", "한국어"),
+    AppLanguage("ja", "日本語"),
+    AppLanguage("zh", "简体中文")
 )
 
 internal fun languageOptions(): List<ChoiceOption> = buildList {

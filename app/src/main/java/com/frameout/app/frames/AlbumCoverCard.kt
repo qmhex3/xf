@@ -87,7 +87,7 @@ private val FILM_BLACK = Color(0xFF0B0B0B)
 
 @Composable
 internal fun AlbumCoverCard(label: String, count: Int, tag: String, cover: suspend (String) -> AlbumCover?, columns: Int, onClick: () -> Unit) {
-    val arabic = LocalConfiguration.current.locales[0].language == "ar"
+    val lang = com.frameout.core.util.AppLang.of(LocalConfiguration.current.locales[0].language)
     val calm = LocalSystemA11y.current.reduceMotion
     val albumCover = produceState<AlbumCover?>(null, tag) { value = cover(tag) }.value
     val lanes = albumCover?.lanes.orEmpty()
@@ -108,9 +108,9 @@ internal fun AlbumCoverCard(label: String, count: Int, tag: String, cover: suspe
             .semantics { contentDescription = "$label, ${FrameStrings.frameCount(count)}" }
     ) {
         Column(Modifier.fillMaxSize()) {
-            CoverMain(label, count, albumCover, sequence, mainIndex, activeLane, columns, showStrip, animated, arabic)
+            CoverMain(label, count, albumCover, sequence, mainIndex, activeLane, columns, showStrip, animated, lang)
             if (showStrip) {
-                FilmStrip(lanes, tick, activeLane, columns <= MAX_COLUMNS_WITH_NAMES, arabic, Modifier.fillMaxWidth().weight(0.34f))
+                FilmStrip(lanes, tick, activeLane, columns <= MAX_COLUMNS_WITH_NAMES, lang, Modifier.fillMaxWidth().weight(0.34f))
             }
         }
     }
@@ -145,10 +145,10 @@ private fun ColumnScope.CoverMain(
     columns: Int,
     showStrip: Boolean,
     animated: Boolean,
-    arabic: Boolean
+    lang: String
 ) {
     val current = sequence.getOrNull(mainIndex)
-    val kindName = albumCover?.lanes.orEmpty().getOrNull(activeLane)?.kind?.let { TagNames.display(TagRules.LABEL + it, arabic) }
+    val kindName = albumCover?.lanes.orEmpty().getOrNull(activeLane)?.kind?.let { TagNames.display(TagRules.LABEL + it, lang) }
     val mainSize = if (columns <= 2) MAIN_SIZE else TILE_SIZE
     Prefetch(sequence.getOrNull((mainIndex + 1) % sequence.size.coerceAtLeast(1))?.second, mainSize)
     Box(Modifier.fillMaxWidth().weight(if (showStrip) 0.66f else 1f)) {
@@ -196,7 +196,7 @@ private fun KindPill(name: String?, modifier: Modifier) {
 }
 
 @Composable
-private fun FilmStrip(lanes: List<CoverLane>, tick: Int, active: Int, showNames: Boolean, arabic: Boolean, modifier: Modifier) {
+private fun FilmStrip(lanes: List<CoverLane>, tick: Int, active: Int, showNames: Boolean, lang: String, modifier: Modifier) {
     val holes = Color.White.copy(alpha = 0.34f)
     Box(modifier.background(FILM_BLACK).drawBehind { drawPerforations(holes) }) {
         Row(
@@ -204,14 +204,14 @@ private fun FilmStrip(lanes: List<CoverLane>, tick: Int, active: Int, showNames:
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             lanes.forEachIndexed { slot, lane ->
-                FilmTile(lane, tick, slot, slot == active, showNames, arabic, Modifier.weight(1f).fillMaxHeight())
+                FilmTile(lane, tick, slot, slot == active, showNames, lang, Modifier.weight(1f).fillMaxHeight())
             }
         }
     }
 }
 
 @Composable
-private fun FilmTile(lane: CoverLane, tick: Int, slot: Int, active: Boolean, showName: Boolean, arabic: Boolean, modifier: Modifier) {
+private fun FilmTile(lane: CoverLane, tick: Int, slot: Int, active: Boolean, showName: Boolean, lang: String, modifier: Modifier) {
     val frames = lane.frames
     val index = if (frames.isEmpty()) 0 else steps(tick, TILE_PERIOD, 1 + slot) % frames.size
     val frame = frames.getOrNull(index)
@@ -238,7 +238,7 @@ private fun FilmTile(lane: CoverLane, tick: Int, slot: Int, active: Boolean, sho
                     .padding(top = 10.dp, bottom = 2.dp)
             ) {
                 FrameText(
-                    TagNames.display(TagRules.LABEL + name, arabic),
+                    TagNames.display(TagRules.LABEL + name, lang),
                     style = FrameTheme.typography.bodySmall.copy(fontSize = 10.sp),
                     color = Color.White,
                     modifier = Modifier.align(Alignment.Center),

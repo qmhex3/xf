@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Frame out</string>
+    <string name="shortcut_capture_short">フレームをキャプチャ</string>
+    <string name="shortcut_capture_long">最後の動画からフレームをキャプチャ</string>
+    <string name="tile_capture_label">フレームをキャプチャ</string>
+    <string name="incoming_copy_failed">共有された動画へのアクセスを維持できませんでした。ギャラリーから開くか、ストレージの空き容量を確保してからもう一度共有してください。</string>
+    <string name="incoming_unsupported">このファイル形式は開けません。動画、GIF、または画像を共有してください。</string>
+</resources>

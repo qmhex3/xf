@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Frame out</string>
+    <string name="shortcut_capture_short">Kare yakala</string>
+    <string name="shortcut_capture_long">Son videodan bir kare yakala</string>
+    <string name="tile_capture_label">Kare yakala</string>
+    <string name="incoming_copy_failed">Paylaşılan videoya erişim korunamadı. Bunun yerine galeriden aç veya depolama alanı açıp yeniden paylaş.</string>
+    <string name="incoming_unsupported">Bu dosya türü açılamıyor. Bunun yerine bir video, GIF veya görsel paylaş.</string>
+</resources>

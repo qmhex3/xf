@@ -11,21 +11,32 @@ object TagNames {
         else -> TagGroup.Things
     }
 
-    fun groupTitle(group: TagGroup, arabic: Boolean): String = when (group) {
-        TagGroup.People -> if (arabic) "الأشخاص" else "People"
-        TagGroup.Things -> if (arabic) "الأشياء والمشاهد" else "Things & scenes"
-        TagGroup.Categories -> if (arabic) "الفئات" else "Categories"
-        TagGroup.Text -> if (arabic) "النصوص" else "Text"
-        TagGroup.Codes -> if (arabic) "الأكواد" else "Codes"
+    fun groupTitle(group: TagGroup, lang: String): String {
+        val arabic = lang == "ar"
+        TagText.forLang(lang)?.groups?.get(group.name)?.let { return it }
+        return when (group) {
+            TagGroup.People -> if (arabic) "الأشخاص" else "People"
+            TagGroup.Things -> if (arabic) "الأشياء والمشاهد" else "Things & scenes"
+            TagGroup.Categories -> if (arabic) "الفئات" else "Categories"
+            TagGroup.Text -> if (arabic) "النصوص" else "Text"
+            TagGroup.Codes -> if (arabic) "الأكواد" else "Codes"
+        }
     }
 
-    fun display(tag: String, arabic: Boolean): String {
+    fun display(tag: String, lang: String): String {
         val fixed = FIXED[tag]
-        if (fixed != null) return if (arabic) fixed.second else fixed.first
-        TagFamilies.title(tag, arabic)?.let { return it }
+        if (fixed != null) return fixedName(tag, fixed, lang)
+        TagFamilies.title(tag, lang)?.let { return it }
         val name = tag.substringAfter(':')
-        if (!arabic) return name
-        return TagLabelsAr.MAP[name] ?: LOWER_AR[name.lowercase()] ?: LABELS_AR[name] ?: name
+        return when (lang) {
+            "ar" -> TagLabelsAr.MAP[name] ?: LOWER_AR[name.lowercase()] ?: LABELS_AR[name] ?: name
+            else -> TagText.forLang(lang)?.label(name) ?: name
+        }
+    }
+
+    private fun fixedName(tag: String, fixed: Pair<String, String>, lang: String): String = when (lang) {
+        "ar" -> fixed.second
+        else -> TagText.forLang(lang)?.fixed?.get(tag) ?: fixed.first
     }
 
     private val LOWER_AR: Map<String, String> by lazy {

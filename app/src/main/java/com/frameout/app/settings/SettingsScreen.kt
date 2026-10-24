@@ -86,7 +86,7 @@ private fun SettingsContent(context: Context, prefs: AppPrefs, onBack: () -> Uni
             ProSettings()
             AppearanceSettings(prefs, v.theme, v.lang) { sheet = SettingsSheet.Language }
             ExportSettings(prefs, folderText, v, { sheet = SettingsSheet.Format }) { sheet = SettingsSheet.Folder }
-            ExtractionSettings(prefs, v.extract) { sheet = SettingsSheet.Mode }
+            ExtractionSettings(prefs, v.extract, { sheet = SettingsSheet.Mode }) { sheet = SettingsSheet.Content }
             SettingsSection(FrameStrings.diagnostics()) { SettingsCard { DiagnosticsSettings(context) } }
             Column(Modifier.padding(top = 12.dp)) {
                 SettingsCard {
@@ -176,12 +176,12 @@ private fun ExportSettings(prefs: AppPrefs, folderText: String, v: SettingsValue
 }
 
 @Composable
-private fun ExtractionSettings(prefs: AppPrefs, extract: String, onMode: () -> Unit) {
+private fun ExtractionSettings(prefs: AppPrefs, extract: String, onMode: () -> Unit, onContent: () -> Unit) {
     val skipBlurry by prefs.skipBlurry.collectAsState()
     val skipDuplicates by prefs.skipDuplicates.collectAsState()
     val locked = rememberProGate().locked(false)
     SettingsSection(FrameStrings.extraction(), FrameStrings.settingsApplyNotice()) {
-        SettingsCard { ExtractModeSettings(prefs, extract, onMode) }
+        SettingsCard { ExtractModeSettings(prefs, extract, onMode, onContent) }
         Spacer(Modifier.height(12.dp))
         SettingsCard {
             ToggleRow(FrameIconsExtra.Blur, FrameStrings.skipBlurryTitle(), ModeStrings.helpBlurry(), skipBlurry, locked) { gateSmart(it, "blurry") { prefs.setSkipBlurry(it) } }

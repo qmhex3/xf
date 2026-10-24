@@ -50,6 +50,7 @@ private const val HANDLE_REACH_DP = 28f
 private const val HIT_TOLERANCE_DP = 20f
 private const val SLOP_DP = 8f
 private const val MIN_EXTENT = 0.012f
+private const val PINCH_REACH_DP = 36f
 
 internal class ShapeOverlayInput(
     val geo: ViewGeometry,
@@ -90,13 +91,17 @@ private suspend fun AwaitPointerEventScope.shapeGesture(latest: State<ShapeOverl
     var multi = false
     var moved = false
     var last = start
+    var pinched = -1
     do {
         val event = awaitPointerEvent()
         val pressed = event.changes.filter { it.pressed }
         if (pressed.size >= 2) {
-            if (!multi) live.value = null
+            if (!multi) {
+                live.value = null
+                pinched = pinchTarget(latest.value, grab, pressed.map { it.position }, density)
+            }
             multi = true
-            pinch(event, latest.value)
+            if (pinched >= 0) pinchShape(event, latest.value, pinched) else pinch(event, latest.value)
         } else if (!multi && pressed.size == 1) {
             val p = pressed[0].position
             if (!moved && (p - start).getDistance() > SLOP_DP * density) {
@@ -124,6 +129,54 @@ private suspend fun AwaitPointerEventScope.shapeGesture(latest: State<ShapeOverl
         !moved && input.draft.shapeKind.marker -> input.tools.shapes.add(markerAt(start, input))
         !moved -> input.tools.shapes.select(-1)
     }
+}
+
+private fun pinchTarget(input: ShapeOverlayInput, grab: Grab, fingers: List<Offset>, density: Float): Int {
+    when (grab) {
+        is Grab.Move -> return grab.index
+        is Grab.Handle -> return grab.index
+        else -> Unit
+    }
+    val d = input.draft
+    val sel = d.shapeSelection ?: return -1
+    val geo = input.geo
+    val t = input.transformNow()
+    val tol = PINCH_REACH_DP * density
+    val a = screen(sel.x1, sel.y1, geo, t)
+    val b = screen(sel.x2, sel.y2, geo, t)
+    val inside = fingers.any { p -> p.x in (min(a.x, b.x) - tol)..(max(a.x, b.x) + tol) && p.y in (min(a.y, b.y) - tol)..(max(a.y, b.y) + tol) }
+    return if (inside) d.selectedShape else -1
+}
+
+private fun pinchShape(event: PointerEvent, input: ShapeOverlayInput, index: Int) {
+    val geo = input.geo
+    val t = input.transformNow()
+    val m = input.draft.marks.getOrNull(index) as? ShapeMark ?: return
+    val pan = event.calculatePan()
+    val unitX = geo.imageW * geo.pixelSize(t)
+    val unitY = geo.imageH * geo.pixelSize(t)
+    val cx = (m.x1 + m.x2) / 2f
+    val cy = (m.y1 + m.y2) / 2f
+    val w = abs(m.x2 - m.x1)
+    val h = abs(m.y2 - m.y1)
+    val minSide = min(geo.imageW, geo.imageH).toFloat()
+    val diag = hypot(w * geo.imageW, h * geo.imageH)
+    val low = (MIN_EXTENT * 2f * minSide) / diag.coerceAtLeast(1f)
+    val high = 1f / max(max(w, h), 1e-4f)
+    val zoom = event.calculateZoom().coerceIn(low.coerceAtMost(1f), high.coerceAtLeast(1f))
+    val nx1 = cx + (m.x1 - cx) * zoom
+    val ny1 = cy + (m.y1 - cy) * zoom
+    val nx2 = cx + (m.x2 - cx) * zoom
+    val ny2 = cy + (m.y2 - cy) * zoom
+    val lowX = min(nx1, nx2)
+    val highX = max(nx1, nx2)
+    val lowY = min(ny1, ny2)
+    val highY = max(ny1, ny2)
+    val shiftX = if (lowX < 0f) -lowX else if (highX > 1f) 1f - highX else 0f
+    val shiftY = if (lowY < 0f) -lowY else if (highY > 1f) 1f - highY else 0f
+    val dx = (pan.x / unitX).coerceIn(-(lowX + shiftX), 1f - (highX + shiftX))
+    val dy = (pan.y / unitY).coerceIn(-(lowY + shiftY), 1f - (highY + shiftY))
+    input.tools.shapes.replace(index, m.copy(x1 = nx1 + shiftX + dx, y1 = ny1 + shiftY + dy, x2 = nx2 + shiftX + dx, y2 = ny2 + shiftY + dy))
 }
 
 private fun pinch(event: PointerEvent, input: ShapeOverlayInput) {

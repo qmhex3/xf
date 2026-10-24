@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="estimate">
+        <item quantity="one">≈ %1$d فریم · ~%2$s MB</item>
+        <item quantity="other">≈ %1$d فریمز · ~%2$s MB</item>
+    </plurals>
+    <plurals name="plan_frames">
+        <item quantity="one">%1$d فریم</item>
+        <item quantity="other">%1$d فریمز</item>
+    </plurals>
+    <plurals name="reduced_quality">
+        <item quantity="one">ایک فریم کم ریزولوشن میں محفوظ ہوا کیونکہ ڈیوائس کا ڈی کوڈر اسے مکمل سائز میں واپس نہیں دے سکا۔</item>
+        <item quantity="other">%1$d فریمز کم ریزولوشن میں محفوظ ہوئے کیونکہ ڈیوائس کا ڈی کوڈر انہیں مکمل سائز میں واپس نہیں دے سکا۔</item>
+    </plurals>
+    <plurals name="reduced_quality_to">
+        <item quantity="one">ڈیوائس کی میموری میں سمانے کے لیے ایک فریم اصل %2$d×%3$d کے بجائے %4$d×%5$d میں محفوظ ہوا۔</item>
+        <item quantity="other">ڈیوائس کی میموری میں سمانے کے لیے %1$d فریمز اصل %2$d×%3$d کے بجائے %4$d×%5$d میں محفوظ ہوئے۔</item>
+    </plurals>
+    <plurals name="frame_count">
+        <item quantity="one">%1$d فریم</item>
+        <item quantity="other">%1$d فریمز</item>
+    </plurals>
+    <plurals name="content_frames">
+        <item quantity="one">%1$d فریم</item>
+        <item quantity="other">%1$d فریمز</item>
+    </plurals>
+    <plurals name="important_picked">
+        <item quantity="one">اہم لمحہ منتخب ہوا</item>
+        <item quantity="other">%1$d اہم لمحات منتخب ہوئے</item>
+    </plurals>
+    <plurals name="sharpest_picked">
+        <item quantity="one">سب سے واضح فریم منتخب ہوا</item>
+        <item quantity="other">%1$d سب سے واضح فریمز منتخب ہوئے</item>
+    </plurals>
+    <plurals name="duplicates_picked">
+        <item quantity="one">%1$d دہرایا ہوا فریم منتخب ہوا</item>
+        <item quantity="other">%1$d دہرائے ہوئے فریمز منتخب ہوئے</item>
+    </plurals>
+    <plurals name="integrity_dup">
+        <item quantity="one">%1$d فریم کا ٹائم اسٹیمپ یکساں ہے۔</item>
+        <item quantity="other">%1$d فریمز کا ٹائم اسٹیمپ یکساں ہے۔</item>
+    </plurals>
+    <plurals name="crop_all_hint">
+        <item quantity="one">%1$d فریم کے لیے وہی علاقہ</item>
+        <item quantity="other">%1$d فریمز کے لیے وہی علاقہ</item>
+    </plurals>
+    <plurals name="crop_all_applied">
+        <item quantity="one">%1$d فریم پر کراپ لاگو ہوا</item>
+        <item quantity="other">%1$d فریمز پر کراپ لاگو ہوا</item>
+    </plurals>
+    <plurals name="jump_back">
+        <item quantity="one">%1$d فریم پیچھے</item>
+        <item quantity="other">%1$d فریمز پیچھے</item>
+    </plurals>
+    <plurals name="jump_forward">
+        <item quantity="one">%1$d فریم آگے</item>
+        <item quantity="other">%1$d فریمز آگے</item>
+    </plurals>
+    <plurals name="jump_size">
+        <item quantity="one">چھلانگ کا سائز: %1$d فریم (تبدیل کرنے کے لیے ٹیپ کریں)</item>
+        <item quantity="other">چھلانگ کا سائز: %1$d فریمز (تبدیل کرنے کے لیے ٹیپ کریں)</item>
+    </plurals>
+    <plurals name="queue_unsaved">
+        <item quantity="one">قطار کا %1$d فریم محفوظ نہیں ہے۔ بغیر محفوظ کیے باہر نکلنے کے لیے دوبارہ واپس دبائیں۔</item>
+        <item quantity="other">قطار کے %1$d فریمز محفوظ نہیں ہیں۔ بغیر محفوظ کیے باہر نکلنے کے لیے دوبارہ واپس دبائیں۔</item>
+    </plurals>
+    <plurals name="share_limited">
+        <item quantity="one">صرف پہلا %1$d فریم شیئر ہو رہا ہے</item>
+        <item quantity="other">صرف پہلے %1$d فریمز شیئر ہو رہے ہیں</item>
+    </plurals>
+    <plurals name="frames_deleted">
+        <item quantity="one">%1$d فریم حذف شدہ میں منتقل ہوا</item>
+        <item quantity="other">%1$d فریمز حذف شدہ میں منتقل ہوئے</item>
+    </plurals>
+    <plurals name="batch_videos">
+        <item quantity="one">%1$d ویڈیو</item>
+        <item quantity="other">%1$d ویڈیوز</item>
+    </plurals>
+    <plurals name="projects_deleted">
+        <item quantity="one">پروجیکٹ حذف ہو گیا</item>
+        <item quantity="other">%1$d پروجیکٹس حذف ہو گئے</item>
+    </plurals>
+    <plurals name="projects_restored">
+        <item quantity="one">پروجیکٹ بحال ہو گیا</item>
+        <item quantity="other">%1$d پروجیکٹس بحال ہو گئے</item>
+    </plurals>
+    <plurals name="saved_deleted_n">
+        <item quantity="one">تصویر حذف ہو گئی</item>
+        <item quantity="other">%1$d تصاویر حذف ہو گئیں</item>
+    </plurals>
+    <plurals name="saved_restored_n">
+        <item quantity="one">تصویر بحال ہو گئی</item>
+        <item quantity="other">%1$d تصاویر بحال ہو گئیں</item>
+    </plurals>
+    <plurals name="saved_pruned_n">
+        <item quantity="one">1 محفوظ شدہ آئٹم ہٹا دیا گیا کیونکہ اس کی فائل اب ڈیوائس پر موجود نہیں</item>
+        <item quantity="other">%1$d محفوظ شدہ آئٹمز ہٹا دیے گئے کیونکہ ان کی فائلیں اب ڈیوائس پر موجود نہیں</item>
+    </plurals>
+    <plurals name="confirm_delete_projects_n">
+        <item quantity="one">یہ پروجیکٹ حذف کریں؟</item>
+        <item quantity="other">%1$d پروجیکٹس حذف کریں؟</item>
+    </plurals>
+    <plurals name="confirm_delete_saved_n">
+        <item quantity="one">یہ محفوظ شدہ تصویر حذف کریں؟</item>
+        <item quantity="other">%1$d محفوظ شدہ تصاویر حذف کریں؟</item>
+    </plurals>
+    <plurals name="backup_saved_many_n">
+        <item quantity="one">پروجیکٹ منتخب فولڈر میں ایکسپورٹ ہو گیا</item>
+        <item quantity="other">%1$d پروجیکٹس منتخب فولڈر میں ایکسپورٹ ہو گئے</item>
+    </plurals>
+    <plurals name="export_done_many_n">
+        <item quantity="one">پروجیکٹ ایکسپورٹ ہو گیا</item>
+        <item quantity="other">%1$d پروجیکٹس ایکسپورٹ ہو گئے</item>
+    </plurals>
+    <plurals name="saved_export_done_n">
+        <item quantity="one">1 تصویر ایکسپورٹ ہوئی</item>
+        <item quantity="other">%1$d تصاویر ایکسپورٹ ہوئیں</item>
+    </plurals>
+</resources>

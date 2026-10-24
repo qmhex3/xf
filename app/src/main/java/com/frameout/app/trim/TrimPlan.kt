@@ -56,8 +56,8 @@ internal fun planText(mode: ExtractMode): String = when (mode) {
 }
 
 private fun contentPlanText(mode: ExtractMode.Content): String =
-    if (mode.spec.tags.isEmpty()) TrimStrings.planEveryTime(timeText(mode.spec.millis))
-    else TrimStrings.planContent(com.frameout.core.quality.content.ContentCatalog.summary(mode.spec.tags, FrameStrings.isAr()))
+    if (mode.spec.tags.isEmpty()) TrimStrings.planEveryTime(timeText(com.frameout.core.quality.content.ContentSpec.SAMPLE_STEP_MS))
+    else TrimStrings.planContent(com.frameout.core.quality.content.ContentCatalog.summary(mode.spec.tags, FrameStrings.lang()))
 
 private fun timeText(millis: Long): String =
     if (millis % 1000L == 0L) formatExtractTime(millis) else "$millis ${ModeStrings.millis()}"

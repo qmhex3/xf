@@ -5,14 +5,11 @@ import org.junit.Test
 
 class PeopleRuleTest {
     @Test
-    fun aFaceIsEnough() = assertEquals(true, PeopleRule.isPerson(1, 0))
+    fun aFaceIsEnough() = assertEquals(true, PeopleRule.isPerson(1, false))
 
     @Test
-    fun bodyNeedsEnoughConfidentLandmarks() {
-        assertEquals(false, PeopleRule.isPerson(0, TagRules.MIN_LANDMARKS - 1))
-        assertEquals(true, PeopleRule.isPerson(0, TagRules.MIN_LANDMARKS))
-    }
+    fun aHumanShapedPoseIsEnoughWithoutAFace() = assertEquals(true, PeopleRule.isPerson(0, true))
 
     @Test
-    fun emptySceneIsNotAPerson() = assertEquals(false, PeopleRule.isPerson(0, 0))
+    fun emptySceneIsNotAPerson() = assertEquals(false, PeopleRule.isPerson(0, false))
 }

@@ -85,4 +85,7 @@ object FrameIconsExtra {
     @DrawableRes val Tag: Int = R.drawable.ic_tag
     @DrawableRes val OutputPicker: Int = R.drawable.ic_output_picker
     @DrawableRes val Webp: Int = R.drawable.ic_webp
+    @DrawableRes val Download: Int = R.drawable.ic_download
+    @DrawableRes val Bolt: Int = R.drawable.ic_bolt
+    @DrawableRes val Package: Int = R.drawable.ic_package
 }

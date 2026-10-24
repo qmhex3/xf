@@ -32,7 +32,7 @@ private fun engineIcon(engine: SearchEngine): Int = when (engine.id) {
 
 @Composable
 fun ImageSearchPanel(visible: Boolean, onPick: (SearchEngine) -> Unit, onClose: () -> Unit) {
-    val arabic = LocalConfiguration.current.locales[0].language == "ar"
+    val lang = com.frameout.core.util.AppLang.of(LocalConfiguration.current.locales[0].language)
     val maxHeight = (LocalConfiguration.current.screenHeightDp * 0.7f).dp
     BottomSheetFrame(visible, onClose, SearchStrings.title()) {
         Column(Modifier.heightIn(max = maxHeight).verticalScroll(rememberScrollState()).padding(horizontal = 16.dp)) {
@@ -48,7 +48,7 @@ fun ImageSearchPanel(visible: Boolean, onPick: (SearchEngine) -> Unit, onClose: 
                     NavRow(
                         icon = engineIcon(engine),
                         title = engine.name,
-                        hint = engine.desc(arabic),
+                        hint = engine.desc(lang),
                         value = if (engine.id == ImageSearchEngines.LENS_ID) SearchStrings.recommended() else null,
                         onClick = { onPick(engine) }
                     )

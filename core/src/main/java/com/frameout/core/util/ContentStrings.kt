@@ -22,14 +22,9 @@ object ContentStrings {
         2 -> s(R.string.ctag_strict_strict_help)
         else -> s(R.string.ctag_strict_balanced_help)
     }
-    fun intervalLabel() = s(R.string.ctag_interval_label)
-    fun gapLabel() = s(R.string.ctag_gap_label)
-    fun gapNone() = s(R.string.ctag_gap_none)
     fun groupAll() = s(R.string.ctag_group_all)
     fun groupNone() = s(R.string.ctag_group_none)
     fun slow() = s(R.string.ctag_slow)
-    fun seconds(ms: Long): String {
-        val whole = ms % 1000L == 0L
-        return s(R.string.ctag_sec_n, if (whole) (ms / 1000L).toString() else (ms / 1000.0).toString())
-    }
+    fun noneSelected() = s(R.string.ctag_none_selected)
+    fun matchHelp(all: Boolean) = s(if (all) R.string.ctag_match_all_help else R.string.ctag_match_any_help)
 }

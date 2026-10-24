@@ -54,6 +54,20 @@ class TagFamiliesTest {
     }
 
     @Test
+    fun carFrameNeverGetsPeopleOrFashionFamilies() {
+        val hits = listOf(TagHit("l:Car", 0.9f), TagHit("l:Ring", 0.8f), TagHit("l:Muscle", 0.75f), TagHit("l:Strap", 0.7f), TagHit("o:fashion_good", 0.8f))
+        val families = TagFamilies.withFamilies(hits).filter { TagFamilies.isFamily(it.tag) }.map { it.tag }.toSet()
+        assertEquals(setOf(TagFamilies.key("vehicles")), families)
+    }
+
+    @Test
+    fun personNextToACarStillGetsPeopleAndFashion() {
+        val hits = listOf(TagHit("l:Car", 0.9f), TagHit("l:Person", 0.95f), TagHit("l:Jacket", 0.8f))
+        val families = TagFamilies.withFamilies(hits).filter { TagFamilies.isFamily(it.tag) }.map { it.tag }.toSet()
+        assertEquals(setOf(TagFamilies.key("vehicles"), TagFamilies.key("people"), TagFamilies.key("fashion")), families)
+    }
+
+    @Test
     fun applyingTwiceDoesNotDuplicateFamilies() {
         val once = TagFamilies.withFamilies(listOf(TagHit("l:Dog", 0.9f), TagHit("l:Cat", 0.8f)))
         val twice = TagFamilies.withFamilies(once)
@@ -76,8 +90,8 @@ class TagFamiliesTest {
         val seen = HashMap<String, String>()
         TagFamilies.all.forEach { family ->
             assertTrue(family.en.isNotBlank() && family.ar.isNotBlank())
-            assertEquals(family.en, TagNames.display(family.key, false))
-            assertEquals(family.ar, TagNames.display(family.key, true))
+            assertEquals(family.en, TagNames.display(family.key, "en"))
+            assertEquals(family.ar, TagNames.display(family.key, "ar"))
             family.labels.split('|').filter { it.isNotEmpty() }.forEach { label ->
                 val previous = seen.put(label.lowercase(), family.id)
                 assertTrue("$label in ${family.id} and $previous", previous == null)

@@ -32,7 +32,9 @@ fun Modifier.frameControl(
         else -> frameCardBrush()
     }
     val edge: Brush = when {
+        solid && c.neutral -> Brush.verticalGradient(listOf(Color.White.copy(alpha = 0.85f), Color.White.copy(alpha = 0.35f)))
         solid -> Brush.verticalGradient(listOf(Color.White.copy(alpha = 0.45f), Color.White.copy(alpha = 0.10f)))
+        selected && c.neutral -> Brush.verticalGradient(listOf(tint.copy(alpha = 0.95f), tint.copy(alpha = 0.60f)))
         selected -> Brush.verticalGradient(listOf(tint.copy(alpha = 0.70f), tint.copy(alpha = 0.26f)))
         else -> frameCardEdge()
     }

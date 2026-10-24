@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="estimate">
+        <item quantity="one">≈ %1$d kare · ~%2$s MB</item>
+        <item quantity="other">≈ %1$d kare · ~%2$s MB</item>
+    </plurals>
+    <plurals name="plan_frames">
+        <item quantity="one">%1$d kare</item>
+        <item quantity="other">%1$d kare</item>
+    </plurals>
+    <plurals name="reduced_quality">
+        <item quantity="one">Cihaz çözücüsü tam boyutta döndüremediği için bir kare düşük çözünürlükte kaydedildi.</item>
+        <item quantity="other">Cihaz çözücüsü tam boyutta döndüremediği için %1$d kare düşük çözünürlükte kaydedildi.</item>
+    </plurals>
+    <plurals name="reduced_quality_to">
+        <item quantity="one">Cihaz belleğine sığması için bir kare, kaynağın %2$d×%3$d boyutu yerine %4$d×%5$d olarak kaydedildi.</item>
+        <item quantity="other">Cihaz belleğine sığması için %1$d kare, kaynağın %2$d×%3$d boyutu yerine %4$d×%5$d olarak kaydedildi.</item>
+    </plurals>
+    <plurals name="frame_count">
+        <item quantity="one">%1$d kare</item>
+        <item quantity="other">%1$d kare</item>
+    </plurals>
+    <plurals name="content_frames">
+        <item quantity="one">%1$d kare</item>
+        <item quantity="other">%1$d kare</item>
+    </plurals>
+    <plurals name="important_picked">
+        <item quantity="one">Önemli an seçildi</item>
+        <item quantity="other">%1$d önemli an seçildi</item>
+    </plurals>
+    <plurals name="sharpest_picked">
+        <item quantity="one">En net kare seçildi</item>
+        <item quantity="other">En net %1$d kare seçildi</item>
+    </plurals>
+    <plurals name="duplicates_picked">
+        <item quantity="one">%1$d yinelenen kare seçildi</item>
+        <item quantity="other">%1$d yinelenen kare seçildi</item>
+    </plurals>
+    <plurals name="integrity_dup">
+        <item quantity="one">%1$d kare aynı zaman damgasını paylaşıyor.</item>
+        <item quantity="other">%1$d kare aynı zaman damgasını paylaşıyor.</item>
+    </plurals>
+    <plurals name="crop_all_hint">
+        <item quantity="one">%1$d kare için aynı alan</item>
+        <item quantity="other">%1$d kare için aynı alan</item>
+    </plurals>
+    <plurals name="crop_all_applied">
+        <item quantity="one">Kırpma %1$d kareye uygulandı</item>
+        <item quantity="other">Kırpma %1$d kareye uygulandı</item>
+    </plurals>
+    <plurals name="jump_back">
+        <item quantity="one">%1$d kare geri</item>
+        <item quantity="other">%1$d kare geri</item>
+    </plurals>
+    <plurals name="jump_forward">
+        <item quantity="one">%1$d kare ileri</item>
+        <item quantity="other">%1$d kare ileri</item>
+    </plurals>
+    <plurals name="jump_size">
+        <item quantity="one">Atlama boyutu: %1$d kare (değiştirmek için dokun)</item>
+        <item quantity="other">Atlama boyutu: %1$d kare (değiştirmek için dokun)</item>
+    </plurals>
+    <plurals name="queue_unsaved">
+        <item quantity="one">Kuyruktaki %1$d kare kaydedilmedi. Kaydetmeden çıkmak için tekrar geri bas.</item>
+        <item quantity="other">Kuyruktaki %1$d kare kaydedilmedi. Kaydetmeden çıkmak için tekrar geri bas.</item>
+    </plurals>
+    <plurals name="share_limited">
+        <item quantity="one">Yalnızca ilk %1$d kare paylaşılıyor</item>
+        <item quantity="other">Yalnızca ilk %1$d kare paylaşılıyor</item>
+    </plurals>
+    <plurals name="frames_deleted">
+        <item quantity="one">%1$d kare Silinenler\'e taşındı</item>
+        <item quantity="other">%1$d kare Silinenler\'e taşındı</item>
+    </plurals>
+    <plurals name="batch_videos">
+        <item quantity="one">%1$d video</item>
+        <item quantity="other">%1$d video</item>
+    </plurals>
+    <plurals name="projects_deleted">
+        <item quantity="one">Proje silindi</item>
+        <item quantity="other">%1$d proje silindi</item>
+    </plurals>
+    <plurals name="projects_restored">
+        <item quantity="one">Proje geri yüklendi</item>
+        <item quantity="other">%1$d proje geri yüklendi</item>
+    </plurals>
+    <plurals name="saved_deleted_n">
+        <item quantity="one">Görsel silindi</item>
+        <item quantity="other">%1$d görsel silindi</item>
+    </plurals>
+    <plurals name="saved_restored_n">
+        <item quantity="one">Görsel geri yüklendi</item>
+        <item quantity="other">%1$d görsel geri yüklendi</item>
+    </plurals>
+    <plurals name="saved_pruned_n">
+        <item quantity="one">Dosyası artık cihazda olmadığı için 1 kayıtlı öğe kaldırıldı</item>
+        <item quantity="other">Dosyaları artık cihazda olmadığı için %1$d kayıtlı öğe kaldırıldı</item>
+    </plurals>
+    <plurals name="confirm_delete_projects_n">
+        <item quantity="one">Bu proje silinsin mi?</item>
+        <item quantity="other">%1$d proje silinsin mi?</item>
+    </plurals>
+    <plurals name="confirm_delete_saved_n">
+        <item quantity="one">Bu kayıtlı görsel silinsin mi?</item>
+        <item quantity="other">%1$d kayıtlı görsel silinsin mi?</item>
+    </plurals>
+    <plurals name="backup_saved_many_n">
+        <item quantity="one">Proje seçilen klasöre aktarıldı</item>
+        <item quantity="other">%1$d proje seçilen klasöre aktarıldı</item>
+    </plurals>
+    <plurals name="export_done_many_n">
+        <item quantity="one">Proje dışa aktarıldı</item>
+        <item quantity="other">%1$d proje dışa aktarıldı</item>
+    </plurals>
+    <plurals name="saved_export_done_n">
+        <item quantity="one">1 görsel dışa aktarıldı</item>
+        <item quantity="other">%1$d görsel dışa aktarıldı</item>
+    </plurals>
+</resources>

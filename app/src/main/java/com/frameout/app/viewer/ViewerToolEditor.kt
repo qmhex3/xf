@@ -33,7 +33,8 @@ internal class ViewerToolEditor(
     private val loader: FrameBitmapLoader,
     private val history: EditHistoryRepository,
     private val sourceUri: () -> Uri?,
-    private val reload: suspend () -> Unit
+    private val reload: suspend () -> Unit,
+    private val handOff: (Long, FrameEdit, Bitmap) -> Unit = { _, _, bitmap -> bitmap.recycle() }
 ) {
     private var raw: Bitmap? = null
     private var retired: Bitmap? = null
@@ -281,7 +282,9 @@ internal class ViewerToolEditor(
             try {
                 val entity = history.save(edit.toEntity())
                 saved = true
-                state.update { it.copy(edit = entity.toEdit()) }
+                val committed = entity.toEdit()
+                state.update { it.copy(edit = committed) }
+                renderFinal(frame.id, committed)
                 release()
                 reload()
             } catch (e: CancellationException) {
@@ -305,6 +308,7 @@ internal class ViewerToolEditor(
         state.update { it.copy(toolBusy = true, discardPrompt = false) }
         scope.launch {
             try {
+                current.current?.let { renderFinal(it.id, current.edit) }
                 release()
                 reload()
             } catch (e: CancellationException) {
@@ -315,6 +319,28 @@ internal class ViewerToolEditor(
                 finishClose(token)
             }
         }
+    }
+
+    private suspend fun renderFinal(frameId: Long, edit: FrameEdit) {
+        val source = raw ?: return
+        generation++
+        val result = try {
+            renderLock.withLock {
+                withContext(Dispatchers.Default) { if (edit.isIdentity) source else BitmapEditRenderer.render(source, edit) }
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            logFailure("ViewerToolFinal", e)
+            return
+        } catch (e: OutOfMemoryError) {
+            logFailure("ViewerToolFinal", e)
+            return
+        }
+        raw = null
+        if (result !== source) source.takeUnless { it.isRecycled }?.recycle()
+        if (result.isRecycled) return
+        handOff(frameId, edit, result)
     }
 
     private fun finishClose(token: Long) {

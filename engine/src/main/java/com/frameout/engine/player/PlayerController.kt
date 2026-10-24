@@ -9,6 +9,7 @@ import androidx.media3.common.PlaybackException
 import androidx.media3.common.Tracks
 import androidx.media3.common.Player
 import androidx.media3.common.VideoSize
+import androidx.media3.exoplayer.DefaultLoadControl
 import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.SeekParameters
@@ -23,6 +24,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import android.graphics.Bitmap
+import android.os.SystemClock
 
 enum class PreviewNotice { None, StillOnly, Unavailable }
 
@@ -41,6 +43,7 @@ data class PlayerUiState(
 
 class PlayerController(private val context: Context) {
     private val player: ExoPlayer = ExoPlayer.Builder(context.applicationContext, DefaultRenderersFactory(context.applicationContext).setEnableDecoderFallback(true))
+        .setLoadControl(smoothLoadControl())
         .setAudioAttributes(AudioAttributes.Builder().setUsage(C.USAGE_MEDIA).setContentType(C.AUDIO_CONTENT_TYPE_MOVIE).build(), true)
         .setHandleAudioBecomingNoisy(true)
         .build()
@@ -58,6 +61,8 @@ class PlayerController(private val context: Context) {
     @Volatile private var windowStartMs = -1L
     @Volatile private var windowEndMs = -1L
     @Volatile private var scrubbing = false
+    @Volatile private var scrubTargetMs = -1L
+    @Volatile private var bufferingSinceMs = 0L
     val frame: StateFlow<Bitmap?> = _frame.asStateFlow()
     val state: StateFlow<PlayerUiState> = _state.asStateFlow()
     val position: StateFlow<Long> = _position.asStateFlow()
@@ -87,7 +92,8 @@ class PlayerController(private val context: Context) {
         }
 
         override fun onPlaybackStateChanged(playbackState: Int) {
-            _state.value = _state.value.copy(buffering = playbackState == Player.STATE_BUFFERING)
+            noteBuffering(playbackState == Player.STATE_BUFFERING)
+            _state.value = _state.value.copy(buffering = spinnerVisible())
             if (playbackState == Player.STATE_READY) {
                 _state.value = _state.value.copy(ready = true, durationMs = player.duration.coerceAtLeast(0))
             }
@@ -273,14 +279,31 @@ class PlayerController(private val context: Context) {
             return
         }
         val d = player.duration.coerceAtLeast(0)
-        player.seekTo(ms.coerceIn(0, if (d > 0) d else ms))
+        val target = ms.coerceIn(0, if (d > 0) d else ms)
+        if (scrubbing) scrubTargetMs = target
+        player.seekTo(target)
         refresh()
     }
 
+    @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
     fun scrub(active: Boolean) {
         scrubbing = active
+        player.setScrubbingModeEnabled(active)
         player.setSeekParameters(if (active) SeekParameters.CLOSEST_SYNC else SeekParameters.EXACT)
+        if (!active) {
+            val target = scrubTargetMs
+            scrubTargetMs = -1L
+            if (target >= 0L && animated == null && !released) player.seekTo(target)
+        }
     }
+
+    private fun noteBuffering(raw: Boolean) {
+        if (!raw) bufferingSinceMs = 0L
+        else if (bufferingSinceMs == 0L) bufferingSinceMs = SystemClock.elapsedRealtime()
+    }
+
+    private fun spinnerVisible(): Boolean =
+        !scrubbing && bufferingSinceMs != 0L && SystemClock.elapsedRealtime() - bufferingSinceMs >= SPINNER_DELAY_MS
 
     fun positionNow(): Long = _position.value
     fun poll() {
@@ -296,10 +319,11 @@ class PlayerController(private val context: Context) {
         }
         _position.value = player.currentPosition.coerceAtLeast(0)
         val st = player.playbackState
+        noteBuffering(st == Player.STATE_BUFFERING)
         _state.value = _state.value.copy(
             isPlaying = player.isPlaying,
             durationMs = player.duration.coerceAtLeast(0),
-            buffering = st == Player.STATE_BUFFERING,
+            buffering = spinnerVisible(),
             ready = st == Player.STATE_READY || st == Player.STATE_BUFFERING || st == Player.STATE_ENDED
         )
     }
@@ -320,3 +344,11 @@ class PlayerController(private val context: Context) {
 
 private const val END_TOLERANCE_MS = WindowRules.END_TOLERANCE_MS
 private const val MIN_WINDOW_MS = 100L
+
+private const val SPINNER_DELAY_MS = 900L
+
+private fun smoothLoadControl(): DefaultLoadControl = DefaultLoadControl.Builder()
+    .setBufferDurationsMs(15_000, 40_000, 250, 600)
+    .setBackBuffer(15_000, true)
+    .setPrioritizeTimeOverSizeThresholds(true)
+    .build()

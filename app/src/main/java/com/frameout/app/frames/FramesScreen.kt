@@ -59,6 +59,7 @@ fun FramesScreen(projectId: Long, onBack: () -> Unit, onCollage: (List<Long>) ->
     val gridState = rememberLazyGridState()
     val scope = rememberCoroutineScope()
     val exporter = remember { FramesExportAction(context) }
+    val datasetAction = remember { DatasetExportAction(context) }
     val extracting = fab != null
     val scrollSettled = rememberScrollSettled(gridState)
     val dockCollapsed by remember(scrollSettled, extracting) { derivedStateOf { !extracting && !scrollSettled && (gridState.firstVisibleItemIndex > 0 || gridState.firstVisibleItemScrollOffset > 48) } }
@@ -67,6 +68,7 @@ fun FramesScreen(projectId: Long, onBack: () -> Unit, onCollage: (List<Long>) ->
     var scrubbing by remember { mutableStateOf(false) }
     var searchOpen by remember { mutableStateOf(false) }
     var contactOpen by remember { mutableStateOf(false) }
+    var datasetOpen by remember { mutableStateOf(false) }
     val barVisible = rememberTopBarVisible(gridState, state.selectionMode || extracting, scrollSettled) && (state.selectionMode || !scrubbing)
     val timeMsAt = remember(projectId, state.filter, state.tagFilter, state.sharpestVersion) {
         val tags = state.tagFilter.toList()
@@ -80,11 +82,12 @@ fun FramesScreen(projectId: Long, onBack: () -> Unit, onCollage: (List<Long>) ->
         vm.load(projectId)
     }
     val leave: () -> Unit = { if (!vm.holdBack()) onBack() }
-    val backConsumes = state.messageBusy || contactOpen || state.cropAll != null || state.integrityOpen || state.tagsOpen || state.toolsOpen || state.selectionMode || state.isDeletedView
+    val backConsumes = state.messageBusy || contactOpen || datasetOpen || state.cropAll != null || state.integrityOpen || state.tagsOpen || state.toolsOpen || state.selectionMode || state.isDeletedView
     androidx.activity.compose.BackHandler(enabled = backConsumes) {
         when {
             state.messageBusy -> leave()
             contactOpen -> contactOpen = false
+            datasetOpen -> datasetOpen = false
             state.cropAll != null -> vm.cancelCropAll()
             state.integrityOpen -> vm.toggleIntegrity()
             state.tagsOpen -> vm.closeTags()
@@ -165,8 +168,10 @@ fun FramesScreen(projectId: Long, onBack: () -> Unit, onCollage: (List<Long>) ->
                 { exportZip(vm, exporter, scope) }, { exportCsv(vm, exporter, scope) }, { exportEvidence(vm, exporter, scope) },
                 extracting = extracting,
                 onContactSheet = { contactOpen = true },
-                onImportant = vm::pickImportant
+                onImportant = vm::pickImportant,
+                onDataset = { if (com.frameout.app.billing.ProCheck.pass(com.frameout.core.pro.ProFeature.AdvancedExport)) datasetOpen = true }
             )
+            DatasetExportSheet(datasetOpen && !extracting, state.frameCount, { datasetOpen = false }) { format, options -> exportDataset(vm, datasetAction, scope, projectId, format, options) }
             ContactSheetSheet(
                 contactOpen && !extracting,
                 if (state.selected.isNotEmpty()) state.selected.size else state.frameCount,

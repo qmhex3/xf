@@ -12,8 +12,8 @@ import androidx.compose.ui.graphics.lerp
 
 private const val BrandDeepen = 0.34f
 
-internal val GraphiteBrand = listOf(Color(0xFF5A5A5A), Color(0xFF3A3A3A))
-internal val GraphiteFab = listOf(Color(0xFF7A7A7A), Color(0xFF555555), Color(0xFF3C3C3C))
+internal val GraphiteBrand = listOf(Color(0xFF2A2A2A), Color(0xFF161616))
+internal val GraphiteFab = listOf(Color(0xFF3A3A3A), Color(0xFF1F1F1F), Color(0xFF0E0E0E))
 
 object FrameGradients {
     val Brand: Brush
@@ -41,11 +41,19 @@ object FrameGradients {
 }
 
 @Composable
-fun frameHairline(): Color =
-    if (FrameTheme.colors.isDark) Color.White.copy(alpha = 0.13f) else Color.Black.copy(alpha = 0.08f)
+fun frameHairline(): Color {
+    val c = FrameTheme.colors
+    return when {
+        c.neutral && c.isDark -> Color.White.copy(alpha = 0.22f)
+        c.neutral -> Color.Black.copy(alpha = 0.16f)
+        c.isDark -> Color.White.copy(alpha = 0.13f)
+        else -> Color.Black.copy(alpha = 0.08f)
+    }
+}
 
 fun Modifier.frameAmbientGlow(): Modifier = composed {
     val colors = FrameTheme.colors
+    if (colors.neutral) return@composed Modifier
     val strength = if (colors.isDark) 1f else 0.55f
     Modifier.drawWithCache {
         val radius = size.width * 0.85f
@@ -68,7 +76,10 @@ fun frameCardBrush(tint: Color = Color.Transparent, tintAmount: Float = 0f): Bru
     val colors = FrameTheme.colors
     val top: Color
     val bottom: Color
-    if (colors.isDark) {
+    if (colors.neutral) {
+        top = colors.container
+        bottom = colors.container
+    } else if (colors.isDark) {
         top = lerp(colors.container, Color.White, 0.05f).copy(alpha = CardTopAlpha)
         bottom = colors.container.copy(alpha = CardBottomAlpha)
     } else {
@@ -82,8 +93,9 @@ fun frameCardBrush(tint: Color = Color.Transparent, tintAmount: Float = 0f): Bru
 @Composable
 fun frameCardEdge(accent: Color = Color.Unspecified, accentAlpha: Float = 0f): Brush {
     val dark = FrameTheme.colors.isDark
-    val hi = if (dark) Color.White.copy(alpha = 0.14f) else Color.Black.copy(alpha = 0.09f)
-    val lo = if (dark) Color.White.copy(alpha = 0.06f) else Color.Black.copy(alpha = 0.05f)
+    val mono = FrameTheme.colors.neutral
+    val hi = if (dark) Color.White.copy(alpha = if (mono) 0.28f else 0.14f) else Color.Black.copy(alpha = if (mono) 0.20f else 0.09f)
+    val lo = if (dark) Color.White.copy(alpha = if (mono) 0.16f else 0.06f) else Color.Black.copy(alpha = if (mono) 0.12f else 0.05f)
     return if (accent == Color.Unspecified) Brush.verticalGradient(listOf(hi, lo))
     else Brush.verticalGradient(listOf(accent.copy(alpha = accentAlpha), accent.copy(alpha = accentAlpha * 0.35f)))
 }

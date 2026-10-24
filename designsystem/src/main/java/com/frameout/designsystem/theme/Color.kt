@@ -36,17 +36,25 @@ object FrameColors {
     val LightError = Color(0xFFB3261E)
 
     val AmoledBackground = Color(0xFF000000)
-    val NeutralBackground = Color(0xFF0F0F0F)
-    val NeutralSurface = Color(0xFF151515)
-    val NeutralContainer = Color(0xFF1C1C1C)
-    val NeutralContainerHigh = Color(0xFF262626)
-    val NeutralOutline = Color(0xFF383838)
-    val NeutralBlackSurface = Color(0xFF0B0B0B)
-    val NeutralBlackContainer = Color(0xFF141414)
-    val NeutralBlackContainerHigh = Color(0xFF1D1D1D)
-    val NeutralBlackOutline = Color(0xFF2C2C2C)
-    val NeutralOnSurface = Color(0xFFEDEDED)
-    val NeutralOnSurfaceVariant = Color(0xFFA0A0A0)
+    val NeutralBackground = Color(0xFF000000)
+    val NeutralSurface = Color(0xFF0A0A0A)
+    val NeutralContainer = Color(0xFF121212)
+    val NeutralContainerHigh = Color(0xFF1C1C1C)
+    val NeutralOutline = Color(0xFF454545)
+    val NeutralBlackSurface = Color(0xFF050505)
+    val NeutralBlackContainer = Color(0xFF0E0E0E)
+    val NeutralBlackContainerHigh = Color(0xFF181818)
+    val NeutralBlackOutline = Color(0xFF3C3C3C)
+    val NeutralOnSurface = Color(0xFFFFFFFF)
+    val NeutralOnSurfaceVariant = Color(0xFFB5B5B5)
+
+    val NeutralLightBackground = Color(0xFFFFFFFF)
+    val NeutralLightSurface = Color(0xFFFFFFFF)
+    val NeutralLightContainer = Color(0xFFF2F2F2)
+    val NeutralLightContainerHigh = Color(0xFFE6E6E6)
+    val NeutralLightOutline = Color(0xFF000000)
+    val NeutralLightOnSurface = Color(0xFF000000)
+    val NeutralLightOnSurfaceVariant = Color(0xFF555555)
     val ViewerBlack = Color(0xFF000000)
 }
 
@@ -111,16 +119,17 @@ fun darkColorScheme(amoled: Boolean = false, accent: FrameAccent = FrameAccents.
 }
 
 fun lightColorScheme(accent: FrameAccent = FrameAccents.Indigo): FrameColorScheme {
+    val neutral = accent.neutral
     fun tint(base: Color) = lerp(base, accent.a, LightSurfaceTint)
     return FrameColorScheme(
-        background = tint(FrameColors.LightBackground),
-        surface = tint(FrameColors.LightSurface),
-        container = tint(FrameColors.LightContainer),
-        containerHigh = tint(FrameColors.LightContainerHigh),
-        outline = FrameColors.LightOutline.copy(alpha = 0.32f),
-        divider = FrameColors.LightOutline.copy(alpha = 0.32f),
-        onSurface = FrameColors.LightOnSurface,
-        onSurfaceVariant = FrameColors.LightOnSurfaceVariant,
+        background = if (neutral) FrameColors.NeutralLightBackground else tint(FrameColors.LightBackground),
+        surface = if (neutral) FrameColors.NeutralLightSurface else tint(FrameColors.LightSurface),
+        container = if (neutral) FrameColors.NeutralLightContainer else tint(FrameColors.LightContainer),
+        containerHigh = if (neutral) FrameColors.NeutralLightContainerHigh else tint(FrameColors.LightContainerHigh),
+        outline = if (neutral) FrameColors.NeutralLightOutline.copy(alpha = 0.22f) else FrameColors.LightOutline.copy(alpha = 0.32f),
+        divider = if (neutral) FrameColors.NeutralLightOutline.copy(alpha = 0.14f) else FrameColors.LightOutline.copy(alpha = 0.32f),
+        onSurface = if (neutral) FrameColors.NeutralLightOnSurface else FrameColors.LightOnSurface,
+        onSurfaceVariant = if (neutral) FrameColors.NeutralLightOnSurfaceVariant else FrameColors.LightOnSurfaceVariant,
         primary = accent.lightPrimary,
         onPrimary = accent.lightOnPrimary,
         primaryContainer = accent.lightContainer,

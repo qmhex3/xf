@@ -17,6 +17,9 @@ import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 
@@ -51,7 +54,7 @@ object ContentFilter {
         val hits = HashSet<String>()
         val labelTags = tags.filter { it.detector == ContentDetector.Label }
         if (labelTags.isNotEmpty()) {
-            val scores = labelScores(argb, image, spec.strict) ?: return true
+            val scores = labelScores(argb, image, spec, labelTags) ?: return true
             hits += ContentMatcher.labelHits(labelTags, scores, ContentMatcher.threshold(spec.strict))
             if (done(spec, hits)) return ContentMatcher.satisfied(spec, hits)
         }
@@ -83,23 +86,42 @@ object ContentFilter {
 
     private fun done(spec: ContentSpec, hits: Set<String>): Boolean = !spec.all && ContentMatcher.satisfied(spec, hits)
 
-    private suspend fun labelScores(argb: Bitmap, image: InputImage, strict: Int): Map<String, Float>? {
-        val whole = HashMap<String, Float>()
-        detect("content-labels") { labeler.process(image).await() }?.forEach { whole.best(it.text, it.confidence) } ?: return null
-        if (strict == ContentSpec.STRICT_STRICT) return whole
-        val tiles = HashMap<String, MutableList<Float>>()
-        ZoomScan.forEachTile(argb) { tile ->
-            val seen = HashMap<String, Float>()
-            detect("content-tile") { labeler.process(InputImage.fromBitmap(tile.bitmap, 0)).await() }?.forEach { seen.best(it.text, it.confidence) }
-            seen.forEach { (text, score) -> tiles.getOrPut(text) { ArrayList() } += score }
-        }
-        if (tiles.isEmpty()) return whole
-        val single = if (strict == ContentSpec.STRICT_LOOSE) LOOSE_TILE else SmartZoom.TILE_STRONG
+    private fun labelsEnough(spec: ContentSpec, labelTags: List<ContentTag>, hits: Set<String>): Boolean =
+        if (spec.all) hits.containsAll(labelTags.map { it.id }) else hits.isNotEmpty()
+
+    private fun mergeTiles(whole: Map<String, Float>, tiles: Map<String, List<Float>>, single: Float): Map<String, Float> {
         val scores = HashMap<String, Float>()
         (whole.keys + tiles.keys).forEach { text ->
             SmartZoom.vote(whole[text], tiles[text].orEmpty(), single)?.let { scores[text] = it }
         }
         return scores
+    }
+
+    private suspend fun labelScores(argb: Bitmap, image: InputImage, spec: ContentSpec, labelTags: List<ContentTag>): Map<String, Float>? {
+        val whole = HashMap<String, Float>()
+        detect("content-labels") { labeler.process(image).await() }?.forEach { whole.best(it.text, it.confidence) } ?: return null
+        if (spec.strict == ContentSpec.STRICT_STRICT) return whole
+        val min = ContentMatcher.threshold(spec.strict)
+        if (labelsEnough(spec, labelTags, ContentMatcher.labelHits(labelTags, whole, min))) return whole
+        val wanted = labelTags.flatMapTo(HashSet()) { it.labels }
+        val single = if (spec.strict == ContentSpec.STRICT_LOOSE) LOOSE_TILE else SmartZoom.TILE_STRONG
+        val crops = SmartZoom.grid(argb.width, argb.height).mapNotNull { ZoomScan.crop(argb, it, SmartZoom.TILE_TARGET, SmartZoom.MAX_UPSCALE) }
+        if (crops.isEmpty()) return whole
+        try {
+            val perTile = coroutineScope {
+                crops.map { crop -> async { detect("content-tile") { labeler.process(InputImage.fromBitmap(crop.bitmap, 0)).await() } } }.awaitAll()
+            }
+            val tiles = HashMap<String, MutableList<Float>>()
+            perTile.forEach { labels ->
+                val seen = HashMap<String, Float>()
+                labels?.forEach { if (it.text in wanted) seen.best(it.text, it.confidence) }
+                seen.forEach { (text, score) -> tiles.getOrPut(text) { ArrayList() } += score }
+            }
+            if (tiles.isEmpty()) return whole
+            return mergeTiles(whole, tiles, single)
+        } finally {
+            crops.forEach { it.release() }
+        }
     }
 
     private fun prepared(source: Bitmap): Bitmap? {

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="estimate">
+        <item quantity="one">≈ %1$d image · ~%2$s Mo</item>
+        <item quantity="many">≈ %1$d images · ~%2$s Mo</item>
+        <item quantity="other">≈ %1$d images · ~%2$s Mo</item>
+    </plurals>
+    <plurals name="plan_frames">
+        <item quantity="one">%1$d image</item>
+        <item quantity="many">%1$d images</item>
+        <item quantity="other">%1$d images</item>
+    </plurals>
+    <plurals name="reduced_quality">
+        <item quantity="one">%1$d image a été enregistrée en résolution réduite car le décodeur de l’appareil n’a pas pu la fournir en taille réelle.</item>
+        <item quantity="many">%1$d images ont été enregistrées en résolution réduite car le décodeur de l’appareil n’a pas pu les fournir en taille réelle.</item>
+        <item quantity="other">%1$d images ont été enregistrées en résolution réduite car le décodeur de l’appareil n’a pas pu les fournir en taille réelle.</item>
+    </plurals>
+    <plurals name="reduced_quality_to">
+        <item quantity="one">%1$d image a été enregistrée en %4$d×%5$d au lieu de %2$d×%3$d à la source, pour tenir dans la mémoire de l’appareil.</item>
+        <item quantity="many">%1$d images ont été enregistrées en %4$d×%5$d au lieu de %2$d×%3$d à la source, pour tenir dans la mémoire de l’appareil.</item>
+        <item quantity="other">%1$d images ont été enregistrées en %4$d×%5$d au lieu de %2$d×%3$d à la source, pour tenir dans la mémoire de l’appareil.</item>
+    </plurals>
+    <plurals name="frame_count">
+        <item quantity="one">%1$d image</item>
+        <item quantity="many">%1$d images</item>
+        <item quantity="other">%1$d images</item>
+    </plurals>
+    <plurals name="content_frames">
+        <item quantity="one">%1$d image</item>
+        <item quantity="many">%1$d images</item>
+        <item quantity="other">%1$d images</item>
+    </plurals>
+    <plurals name="important_picked">
+        <item quantity="one">%1$d moment clé sélectionné</item>
+        <item quantity="many">%1$d moments clés sélectionnés</item>
+        <item quantity="other">%1$d moments clés sélectionnés</item>
+    </plurals>
+    <plurals name="sharpest_picked">
+        <item quantity="one">%1$d image la plus nette sélectionnée</item>
+        <item quantity="many">%1$d images les plus nettes sélectionnées</item>
+        <item quantity="other">%1$d images les plus nettes sélectionnées</item>
+    </plurals>
+    <plurals name="duplicates_picked">
+        <item quantity="one">%1$d image en double sélectionnée</item>
+        <item quantity="many">%1$d images en double sélectionnées</item>
+        <item quantity="other">%1$d images en double sélectionnées</item>
+    </plurals>
+    <plurals name="integrity_dup">
+        <item quantity="one">%1$d image a le même horodatage.</item>
+        <item quantity="many">%1$d images ont le même horodatage.</item>
+        <item quantity="other">%1$d images ont le même horodatage.</item>
+    </plurals>
+    <plurals name="crop_all_hint">
+        <item quantity="one">Même zone pour %1$d image</item>
+        <item quantity="many">Même zone pour %1$d images</item>
+        <item quantity="other">Même zone pour %1$d images</item>
+    </plurals>
+    <plurals name="crop_all_applied">
+        <item quantity="one">Recadrage appliqué à %1$d image</item>
+        <item quantity="many">Recadrage appliqué à %1$d images</item>
+        <item quantity="other">Recadrage appliqué à %1$d images</item>
+    </plurals>
+    <plurals name="jump_back">
+        <item quantity="one">Reculer de %1$d image</item>
+        <item quantity="many">Reculer de %1$d images</item>
+        <item quantity="other">Reculer de %1$d images</item>
+    </plurals>
+    <plurals name="jump_forward">
+        <item quantity="one">Avancer de %1$d image</item>
+        <item quantity="many">Avancer de %1$d images</item>
+        <item quantity="other">Avancer de %1$d images</item>
+    </plurals>
+    <plurals name="jump_size">
+        <item quantity="one">Taille du saut : %1$d image (touchez pour modifier)</item>
+        <item quantity="many">Taille du saut : %1$d images (touchez pour modifier)</item>
+        <item quantity="other">Taille du saut : %1$d images (touchez pour modifier)</item>
+    </plurals>
+    <plurals name="queue_unsaved">
+        <item quantity="one">%1$d image en file n’est pas enregistrée. Appuyez de nouveau sur Retour pour quitter sans enregistrer.</item>
+        <item quantity="many">%1$d images en file ne sont pas enregistrées. Appuyez de nouveau sur Retour pour quitter sans enregistrer.</item>
+        <item quantity="other">%1$d images en file ne sont pas enregistrées. Appuyez de nouveau sur Retour pour quitter sans enregistrer.</item>
+    </plurals>
+    <plurals name="share_limited">
+        <item quantity="one">Partage de la première image uniquement</item>
+        <item quantity="many">Partage des %1$d premières images uniquement</item>
+        <item quantity="other">Partage des %1$d premières images uniquement</item>
+    </plurals>
+    <plurals name="frames_deleted">
+        <item quantity="one">%1$d image déplacée dans Supprimées</item>
+        <item quantity="many">%1$d images déplacées dans Supprimées</item>
+        <item quantity="other">%1$d images déplacées dans Supprimées</item>
+    </plurals>
+    <plurals name="batch_videos">
+        <item quantity="one">%1$d vidéo</item>
+        <item quantity="many">%1$d vidéos</item>
+        <item quantity="other">%1$d vidéos</item>
+    </plurals>
+    <plurals name="projects_deleted">
+        <item quantity="one">Projet supprimé</item>
+        <item quantity="many">%1$d projets supprimés</item>
+        <item quantity="other">%1$d projets supprimés</item>
+    </plurals>
+    <plurals name="projects_restored">
+        <item quantity="one">Projet restauré</item>
+        <item quantity="many">%1$d projets restaurés</item>
+        <item quantity="other">%1$d projets restaurés</item>
+    </plurals>
+    <plurals name="saved_deleted_n">
+        <item quantity="one">Image supprimée</item>
+        <item quantity="many">%1$d images supprimées</item>
+        <item quantity="other">%1$d images supprimées</item>
+    </plurals>
+    <plurals name="saved_restored_n">
+        <item quantity="one">Image restaurée</item>
+        <item quantity="many">%1$d images restaurées</item>
+        <item quantity="other">%1$d images restaurées</item>
+    </plurals>
+    <plurals name="saved_pruned_n">
+        <item quantity="one">1 élément enregistré retiré car son fichier n’est plus sur l’appareil</item>
+        <item quantity="many">%1$d éléments enregistrés retirés car leurs fichiers ne sont plus sur l’appareil</item>
+        <item quantity="other">%1$d éléments enregistrés retirés car leurs fichiers ne sont plus sur l’appareil</item>
+    </plurals>
+    <plurals name="confirm_delete_projects_n">
+        <item quantity="one">Supprimer ce projet ?</item>
+        <item quantity="many">Supprimer %1$d projets ?</item>
+        <item quantity="other">Supprimer %1$d projets ?</item>
+    </plurals>
+    <plurals name="confirm_delete_saved_n">
+        <item quantity="one">Supprimer cette image enregistrée ?</item>
+        <item quantity="many">Supprimer %1$d images enregistrées ?</item>
+        <item quantity="other">Supprimer %1$d images enregistrées ?</item>
+    </plurals>
+    <plurals name="backup_saved_many_n">
+        <item quantity="one">Projet exporté vers le dossier choisi</item>
+        <item quantity="many">%1$d projets exportés vers le dossier choisi</item>
+        <item quantity="other">%1$d projets exportés vers le dossier choisi</item>
+    </plurals>
+    <plurals name="export_done_many_n">
+        <item quantity="one">Projet exporté</item>
+        <item quantity="many">%1$d projets exportés</item>
+        <item quantity="other">%1$d projets exportés</item>
+    </plurals>
+    <plurals name="saved_export_done_n">
+        <item quantity="one">1 image exportée</item>
+        <item quantity="many">%1$d images exportées</item>
+        <item quantity="other">%1$d images exportées</item>
+    </plurals>
+</resources>

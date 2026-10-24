@@ -68,6 +68,14 @@ class HdrToneMapperTest {
     }
 
     @Test
+    fun brightSaturatedPrimaryKeepsItsColourInsteadOfTurningWhite() {
+        val p = pq(1000f).map(0.75f, 0f, 0f)
+        assertEquals(255, red(p))
+        assertTrue(green(p) < 200)
+        assertTrue(blue(p) < 200)
+    }
+
+    @Test
     fun perChannelGainRebuildsHdrFromBaseWithinOneCode() {
         val mapper = HdrToneMapper(ColorParams(true, true, MediaFormat.COLOR_TRANSFER_ST2084, 1000f, primaries = 0), trackGain = true)
         val samples = listOf(floatArrayOf(0.4f, 0.4f, 0.4f), floatArrayOf(0.9f, 0.9f, 0.9f), floatArrayOf(0.75f, 0.45f, 0.40f), floatArrayOf(0.6f, 0.55f, 0.3f))

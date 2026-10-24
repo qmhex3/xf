@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Frame out</string>
+    <string name="shortcut_capture_short">فریم حاصل کریں</string>
+    <string name="shortcut_capture_long">آخری ویڈیو سے فریم حاصل کریں</string>
+    <string name="tile_capture_label">فریم حاصل کریں</string>
+    <string name="incoming_copy_failed">شیئر کی گئی ویڈیو تک رسائی برقرار نہیں رہ سکی۔ اسے گیلری سے کھولیں، یا اسٹوریج خالی کر کے دوبارہ شیئر کریں۔</string>
+    <string name="incoming_unsupported">یہ فائل کی قسم کھولی نہیں جا سکتی۔ اس کے بجائے ویڈیو، GIF یا تصویر شیئر کریں۔</string>
+</resources>

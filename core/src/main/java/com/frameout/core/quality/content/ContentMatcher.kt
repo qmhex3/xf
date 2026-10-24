@@ -32,17 +32,3 @@ object ContentMatcher {
         else -> false
     }
 }
-
-class ContentCooldown(private val steps: Int) {
-    private var left = 0
-
-    fun blocked(): Boolean {
-        if (left <= 0) return false
-        left--
-        return true
-    }
-
-    fun hit() {
-        left = steps
-    }
-}

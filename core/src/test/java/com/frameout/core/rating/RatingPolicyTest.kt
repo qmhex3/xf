@@ -12,11 +12,9 @@ class RatingPolicyTest {
 
     @Test fun happyUserIsEligible() = assertTrue(RatingPolicy.eligible(happy, now, false))
 
-    @Test fun neverBeforeEnoughSessions() = assertFalse(RatingPolicy.eligible(happy.copy(sessions = 2), now, false))
-
     @Test fun neverBeforeEnoughSuccesses() = assertFalse(RatingPolicy.eligible(happy.copy(successesSinceAsk = 2), now, false))
 
-    @Test fun neverOnDayOne() = assertFalse(RatingPolicy.eligible(happy.copy(firstSeenAt = now - day), now, false))
+    @Test fun eligibleOnDayOneAfterThreeSuccesses() = assertTrue(RatingPolicy.eligible(RatingState(firstSeenAt = now, successesSinceAsk = 3, lifetimeSuccesses = 3), now, false))
 
     @Test fun neverAfterAFailureThisSession() = assertFalse(RatingPolicy.eligible(happy, now, true))
 

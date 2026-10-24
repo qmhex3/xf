@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Frame out</string>
+    <string name="shortcut_capture_short">프레임 캡처</string>
+    <string name="shortcut_capture_long">마지막 동영상에서 프레임 캡처</string>
+    <string name="tile_capture_label">프레임 캡처</string>
+    <string name="incoming_copy_failed">공유된 동영상에 계속 접근할 수 없습니다. 갤러리에서 직접 열거나, 저장 공간을 확보한 후 다시 공유해 주세요.</string>
+    <string name="incoming_unsupported">이 파일 형식은 열 수 없습니다. 동영상, GIF 또는 이미지를 공유해 주세요.</string>
+</resources>

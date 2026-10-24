@@ -39,6 +39,7 @@ import com.frameout.app.settings.SettingsCard
 import com.frameout.app.settings.SettingsDivider
 import com.frameout.app.settings.SettingsSection
 import com.frameout.core.util.FrameStrings
+import com.frameout.core.util.DatasetStrings
 import com.frameout.core.util.QualityStrings
 import com.frameout.designsystem.a11y.screenHeading
 import com.frameout.designsystem.components.FrameText
@@ -103,7 +104,8 @@ fun FramesToolsSheet(
     onEvidence: () -> Unit,
     extracting: Boolean = false,
     onContactSheet: (() -> Unit)? = null,
-    onImportant: (() -> Unit)? = null
+    onImportant: (() -> Unit)? = null,
+    onDataset: (() -> Unit)? = null
 ) {
     fun then(action: () -> Unit): () -> Unit = { onClose(); action() }
     val alert = state.integrity?.let { !it.healthy } == true
@@ -152,6 +154,10 @@ fun FramesToolsSheet(
                 NavRow(FrameIconsExtra.Warning, FrameStrings.exportEvidence(), onClick = then(onEvidence))
                 SettingsDivider()
                 NavRow(FrameIconsExtra.ImageFormat, QualityStrings.slidesPdf(), hint = QualityStrings.toolsSlidesHint(), onClick = then(onSlides))
+                onDataset?.let {
+                    SettingsDivider()
+                    NavRow(FrameIconsExtra.Detect, DatasetStrings.title(), hint = DatasetStrings.rowHint(), onClick = then(it))
+                }
             }
             FrameText(QualityStrings.toolsExportScope(), style = FrameTheme.typography.bodySmall, color = FrameTheme.colors.onSurfaceVariant, modifier = Modifier.padding(horizontal = 4.dp, vertical = 6.dp))
         }

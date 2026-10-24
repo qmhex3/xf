@@ -71,7 +71,7 @@ internal fun FramesAlbums(
     onColumns: (Int) -> Unit
 ) {
     val adaptive = rememberFrameAdaptive()
-    val arabic = LocalConfiguration.current.locales[0].language == "ar"
+    val lang = com.frameout.core.util.AppLang.of(LocalConfiguration.current.locales[0].language)
     val grouped = remember(state.tagCounts) { state.tagCounts.groupBy { TagNames.group(it.tag) } }
     if (state.tagCounts.isEmpty()) {
         AlbumsEmpty(state, onRescan)
@@ -88,9 +88,9 @@ internal fun FramesAlbums(
         ALBUM_GROUP_ORDER.forEach { group ->
             val albums = grouped[group].orEmpty()
             if (albums.isNotEmpty()) {
-                item(key = "h:$group", span = { GridItemSpan(maxLineSpan) }) { GroupTitle(TagNames.groupTitle(group, arabic)) }
+                item(key = "h:$group", span = { GridItemSpan(maxLineSpan) }) { GroupTitle(TagNames.groupTitle(group, lang)) }
                 items(albums, key = { it.tag }, contentType = { "album" }) { t ->
-                    AlbumCoverCard(TagNames.display(t.tag, arabic), t.frames, t.tag, cover, adaptive.columns(columns)) { onOpen(t.tag) }
+                    AlbumCoverCard(TagNames.display(t.tag, lang), t.frames, t.tag, cover, adaptive.columns(columns)) { onOpen(t.tag) }
                 }
             }
         }
@@ -139,12 +139,12 @@ private fun AlbumsEmpty(state: FramesState, onRescan: () -> Unit) {
 @Composable
 internal fun FramesAlbumBar(state: FramesState, onBack: () -> Unit, onRemove: (String) -> Unit, onRefine: () -> Unit) {
     val colors = FrameTheme.colors
-    val arabic = LocalConfiguration.current.locales[0].language == "ar"
+    val lang = com.frameout.core.util.AppLang.of(LocalConfiguration.current.locales[0].language)
     Row(Modifier.fillMaxWidth().padding(start = 4.dp, end = 16.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
         HeaderButton(FrameIcons.Back, FrameStrings.back(), onBack)
         LazyRow(Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(vertical = 4.dp)) {
             items(state.tagFilter.toList(), key = { it }) { tag ->
-                ActiveTagChip(TagNames.display(tag, arabic)) { onRemove(tag) }
+                ActiveTagChip(TagNames.display(tag, lang)) { onRemove(tag) }
             }
         }
         Row(
