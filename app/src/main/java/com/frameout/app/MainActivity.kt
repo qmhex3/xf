@@ -31,6 +31,21 @@ class MainActivity : ComponentActivity() {
     private var notifRationale by mutableStateOf(false)
     private var internalLaunch = false
 
+    override fun onResume() {
+        super.onResume()
+        (application as FrameOutApp).ads.setResumed(true)
+    }
+
+    override fun onPause() {
+        (application as FrameOutApp).ads.setResumed(false)
+        super.onPause()
+    }
+
+    override fun onDestroy() {
+        (application as FrameOutApp).ads.detach(this)
+        super.onDestroy()
+    }
+
     override fun onStart() {
         super.onStart()
         internalLaunch = false
@@ -72,9 +87,10 @@ class MainActivity : ComponentActivity() {
         notifRationale = shouldAskNotifications(app)
         com.frameout.core.util.LocaleHelper.apply(this, app.container.prefs.language.value)
         if (savedInstanceState == null && !launchedFromHistory(intent)) readIntent(intent)
+        app.ads.attach(this)
         setContent {
             MainContent(this, app, incoming, captureRequested, { captureRequested = false }, pendingBackup, { uri -> pendingBackup = null; importBackup(uri) }, { pendingBackup = null }, notifRationale, { notifRationale = false; requestNotifications(app) }, { notifRationale = false; app.container.prefs.setNotificationAsked() }) { incoming = emptyList() }
-            PreferredFrameTheme { com.frameout.app.billing.PaywallHost(this@MainActivity, app) }
+            PreferredFrameTheme { com.frameout.app.billing.PaywallHost(this@MainActivity, app); com.frameout.app.ads.AdsHost() }
         }
     }
 

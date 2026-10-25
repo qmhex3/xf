@@ -22,11 +22,11 @@ object Sharpness {
         return sumSq / n - mean * mean
     }
 
-    fun lumaOf(bitmap: Bitmap): IntArray {
-        val w = bitmap.width
-        val h = bitmap.height
-        val pixels = IntArray(w * h)
-        bitmap.getPixels(pixels, 0, w, 0, 0, w, h)
+    fun lumaOf(bitmap: Bitmap): IntArray = lumaRegion(bitmap, 0, 0, bitmap.width, bitmap.height)
+
+    fun lumaRegion(bitmap: Bitmap, left: Int, top: Int, width: Int, height: Int): IntArray {
+        val pixels = IntArray(width * height)
+        bitmap.getPixels(pixels, 0, width, left, top, width, height)
         for (i in pixels.indices) {
             val p = pixels[i]
             pixels[i] = (77 * ((p shr 16) and 0xFF) + 150 * ((p shr 8) and 0xFF) + 29 * (p and 0xFF)) shr 8

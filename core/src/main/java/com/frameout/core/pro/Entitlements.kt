@@ -65,6 +65,10 @@ class Entitlements(context: Context, val enforced: Boolean, legacyInstall: Boole
         return true
     }
 
+    fun grantTicket(feature: ProFeature, durationMs: Long) {
+        synchronized(tickets) { tickets[feature] = System.currentTimeMillis() + durationMs }
+    }
+
     fun gate(feature: ProFeature, free: Boolean, item: String, action: () -> Unit) {
         if (!enforced || free || tryOnce(feature, item)) action() else showPaywall(feature)
     }

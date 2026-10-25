@@ -133,7 +133,7 @@
     <string name="oem_steps_oppo">OPPO/Realme/OnePlus: ترتیبات ← ایپس ← Frame out ← بیٹری کا استعمال ← بیک گراؤنڈ سرگرمی کی اجازت دیں۔ اگر آٹو اسٹارٹ نظر آئے تو اسے فعال کریں۔</string>
     <string name="oem_steps_vivo">Vivo/iQOO: ترتیبات ← بیٹری ← بیک گراؤنڈ بجلی کھپت کا نظم ← Frame out ← اجازت دیں۔ آٹو اسٹارٹ بھی فعال کریں۔</string>
     <string name="oem_steps_samsung">Samsung: ترتیبات ← ایپس ← Frame out ← بیٹری ← بیک گراؤنڈ سرگرمی کی اجازت دیں۔ اگر ایپ سلیپنگ ایپس کی فہرست میں ہو تو اسے ہٹا دیں۔</string>
-    <string name="onboarding_oem_battery_link">بیٹری کی ترتیبات کھولیں</string>
+    <string name="onboarding_oem_battery_link">بیٹری اور آٹو اسٹارٹ کی ترتیبات کھولیں</string>
     <string name="fit">فٹ</string>
     <string name="fill">بھریں</string>
     <string name="on">آن</string>
@@ -367,6 +367,10 @@
     <string name="save_empty">محفوظ کی گئی تصویر خالی ہے۔ دوبارہ کوشش کریں۔</string>
     <string name="capture_failed">یہ فریم پڑھا نہیں جا سکا</string>
     <string name="open_saved">کھولیں</string>
+    <string name="show_in_folder">فولڈر میں دکھائیں</string>
+    <string name="export_folder">برآمد کا فولڈر</string>
+    <string name="export_folder_hint">ZIP، PDF، CSV اور دیگر فائلیں</string>
+    <string name="save_folder_hint">تصاویر، GIF اور ویڈیوز</string>
     <string name="capture_size">تصویر کا سائز</string>
     <string name="value_size_original">اصل</string>
     <string name="value_size_half">آدھا</string>
@@ -424,7 +428,7 @@
     <string name="onboarding_start">ابھی شروع کریں</string>
     <string name="onboarding_hero_a">فیصلہ کن لمحہ قید کریں</string>
     <string name="onboarding_hero_b">کسی بھی ویڈیو سے</string>
-    <string name="onboarding_hero_sub">ہر فریم پر مکمل کنٹرول رکھیں اور بغیر کسی نقصان کے اعلیٰ ترین معیار نکالیں۔</string>
+    <string name="onboarding_hero_sub">ہر فریم پر مکمل کنٹرول رکھیں اور دستیاب اعلیٰ ترین معیار نکالیں۔</string>
     <string name="onboarding_step">مرحلہ %1$d از %2$d</string>
     <string name="onboarding_formats_a">کوئی بھی ویڈیو۔</string>
     <string name="onboarding_formats_b">کسی بھی فارمیٹ میں۔</string>
@@ -434,12 +438,10 @@
     <string name="onboarding_pick_b">خودکار طور پر چنیں</string>
     <string name="onboarding_pick_sub">یہ دھندلے اور دہرائے ہوئے فریمز چھوڑ دیتا ہے، سب سے واضح فریم نمایاں کرتا ہے، بند آنکھوں سے خبردار کرتا ہے اور مواد کو ترتیب دیتا ہے، یہ سب آپ کی ڈیوائس پر ہی ہوتا ہے۔</string>
     <string name="onboarding_pick_analysis">خودکار برسٹ تجزیہ</string>
-    <string name="onboarding_pick_burst">%1$d متواتر فریمز</string>
     <string name="onboarding_pick_local">ڈیوائس پر AI</string>
     <string name="onboarding_tag_duplicate">دہرایا ہوا</string>
     <string name="onboarding_tag_blurry">دھندلا</string>
     <string name="onboarding_pick_clarity">وضاحت کا اسکور:</string>
-    <string name="onboarding_pick_excluded">خارج: %1$d فریمز</string>
     <string name="onboarding_ready_a">اپنا لمحہ</string>
     <string name="onboarding_ready_b">قید کرنے کے لیے تیار</string>
     <string name="onboarding_ready_sub">آپ یہ ترتیبات بعد میں ترتیبات میں بدل سکتے ہیں۔</string>
@@ -737,14 +739,13 @@
     <string name="edit_reset_rotate">گردش اور پلٹنا ری سیٹ کریں</string>
     <string name="rating_title">Frame out پسند آ رہی ہے؟</string>
     <string name="rating_body">اگر یہ آپ کا وقت بچاتی ہے تو ایک مختصر ریٹنگ بہت مددگار ہوگی۔ اس میں صرف 10 سیکنڈ لگتے ہیں۔</string>
-    <string name="rating_stat">اب تک %1$d کامیاب محفوظ شدہ فریمز</string>
     <string name="rating_hint">ستاروں کو ٹیپ کریں</string>
     <string name="rating_label_1">خراب</string>
     <string name="rating_label_2">بہتر ہو سکتی ہے</string>
     <string name="rating_label_3">اچھی</string>
     <string name="rating_label_4">بہت اچھی</string>
     <string name="rating_label_5">بہت پسند آئی!</string>
-    <string name="rating_cta_choose">اپنی ریٹنگ منتخب کریں</string>
+    <string name="rating_cta_choose">ریٹنگ بھیجیں</string>
     <string name="rating_cta_store">Google Play پر ریٹ کریں</string>
     <string name="rating_cta_feedback">بتائیں کیا ٹھیک کرنا ہے</string>
     <string name="rating_note_positive">شکریہ! آپ کی ریٹنگ دوسروں کو Frame out تلاش کرنے میں مدد دیتی ہے۔</string>
@@ -997,4 +998,14 @@
     <string name="update_fixes_body">تراشنا، ڈسپلے کوالٹی، ایپ کا استحکام</string>
     <string name="update_later">بعد میں</string>
     <string name="update_now">ابھی اپ ڈیٹ کریں</string>
+    <string name="viewer_show_in_project">پروجیکٹ میں دکھائیں</string>
+    <string name="frame_saved_hint">محفوظ شدہ فریم</string>
+    <string name="ads_reward_title">مختصر اشتہار کے ساتھ کھولیں</string>
+    <string name="ads_reward_body">اس فیچر کو چند منٹ مفت استعمال کرنے کے لیے ایک مختصر اشتہار دیکھیں، یا اشتہارات ہمیشہ کے لیے ہٹانے کے لیے Pro لیں۔</string>
+    <string name="ads_reward_watch">اشتہار دیکھیں</string>
+    <string name="ads_reward_pro">Pro حاصل کریں</string>
+    <string name="ads_blocked_title">اشتہارات لوڈ نہیں ہو سکتے</string>
+    <string name="ads_blocked_body">Frame out اشتہارات کی بدولت مفت رہتا ہے۔ اس ڈیوائس یا نیٹ ورک پر کوئی چیز انہیں روک رہی ہے۔ آپ اشتہارات کی اجازت دے سکتے ہیں، یا بغیر اشتہارات کے ایپ کی حمایت کے لیے Pro لے سکتے ہیں۔</string>
+    <string name="ads_blocked_close">ابھی نہیں</string>
+    <string name="ads_privacy_options">اشتہارات کی رازداری کے اختیارات</string>
 </resources>

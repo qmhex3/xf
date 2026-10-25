@@ -1,5 +1,6 @@
 package com.frameout.core.export
 
+import com.frameout.core.storage.AsciiName
 import com.frameout.core.storage.FrameNaming
 import java.io.OutputStream
 import java.util.Locale
@@ -11,8 +12,9 @@ object ArchiveNames {
     fun resolve(frames: List<StagedFrame>, reserved: Set<String>): List<StagedFrame> {
         val used = HashSet<String>()
         reserved.forEach { used.add(it.lowercase(Locale.ROOT)) }
-        return frames.map { frame ->
-            val safe = frame.name.replace('/', '_').replace('\\', '_').ifBlank { "frame" }
+        return frames.mapIndexed { position, frame ->
+            val raw = frame.name.replace('/', '_').replace('\\', '_').ifBlank { "frame" }
+            val safe = AsciiName.fileName(raw, "frame_${(position + 1).toString().padStart(4, '0')}")
             val name = FrameNaming.unique(safe, used)
             if (name == frame.name) frame else frame.withName(name)
         }

@@ -87,4 +87,13 @@
     <plurals name="saved_export_done_n">
         <item quantity="other">%1$d imej dieksport</item>
     </plurals>
+    <plurals name="onboarding_pick_burst">
+        <item quantity="other">%1$d bingkai berturutan</item>
+    </plurals>
+    <plurals name="onboarding_pick_excluded">
+        <item quantity="other">Dikecualikan: %1$d bingkai</item>
+    </plurals>
+    <plurals name="rating_stat">
+        <item quantity="other">%1$d simpanan berjaya setakat ini</item>
+    </plurals>
 </resources>

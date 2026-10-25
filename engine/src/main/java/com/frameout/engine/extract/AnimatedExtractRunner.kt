@@ -43,7 +43,7 @@ class AnimatedExtractRunner(
 
     private suspend fun createState(request: ExtractRequest, decoder: AnimatedFrameSource, project: com.frameout.core.db.ProjectEntity?): LoopState {
         val done = frameDao.countAll(request.projectId)
-        gate = GateResume.gate(request, frameDao, done > 0)
+        gate = GateResume.gate(request, frameDao, done > 0, blockAware = false)
         val lastPts = if (done > 0) project?.lastPtsUs ?: -1L else -1L
         val lastIndex = if (done > 0) project?.lastSampleIndex ?: -1 else -1
         val selectedCount = AnimatedSelection.count(decoder, request.mode, request.startMs, request.endMs, lastPts, lastIndex)

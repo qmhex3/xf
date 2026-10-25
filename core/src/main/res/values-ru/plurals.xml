@@ -174,4 +174,22 @@
         <item quantity="many">Экспортировано %1$d изображений</item>
         <item quantity="other">Экспортировано %1$d изображения</item>
     </plurals>
+    <plurals name="onboarding_pick_burst">
+        <item quantity="one">Подряд идущих кадров: %1$d</item>
+        <item quantity="few">Подряд идущих кадров: %1$d</item>
+        <item quantity="many">Подряд идущих кадров: %1$d</item>
+        <item quantity="other">Подряд идущих кадров: %1$d</item>
+    </plurals>
+    <plurals name="onboarding_pick_excluded">
+        <item quantity="one">Исключено кадров: %1$d</item>
+        <item quantity="few">Исключено кадров: %1$d</item>
+        <item quantity="many">Исключено кадров: %1$d</item>
+        <item quantity="other">Исключено кадров: %1$d</item>
+    </plurals>
+    <plurals name="rating_stat">
+        <item quantity="one">Успешных сохранений: %1$d</item>
+        <item quantity="few">Успешных сохранений: %1$d</item>
+        <item quantity="many">Успешных сохранений: %1$d</item>
+        <item quantity="other">Успешных сохранений: %1$d</item>
+    </plurals>
 </resources>

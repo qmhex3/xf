@@ -12,7 +12,7 @@ The app declares the INTERNET permission only for optional image search: when yo
 
 ## Advertising
 
-The app shows ads served by a third-party ad network. The ad SDK may collect and use device identifiers (such as the advertising ID) and approximate usage data to deliver and measure ads, according to that provider's privacy policy and the ad settings on your device. Where required (for example in the EEA and UK), the app asks for your consent before personalised ads. TODO before release: name the ad provider here and link its policy.
+The app shows ads served by a third-party ad network. The ad SDK may collect and use device identifiers (such as the advertising ID) and approximate usage data to deliver and measure ads, according to that provider's privacy policy and the ad settings on your device. Where required (for example in the EEA and UK), the app asks for your consent before personalised ads. The ads are served by Google AdMob (Google Ireland Limited in the EEA and UK, Google LLC elsewhere); see https://policies.google.com/technologies/ads. Consent and privacy choices are collected through Google's User Messaging Platform, and a privacy-choices entry appears in Settings wherever the law requires one. Ads are never shown to Pro subscribers, and watching an optional rewarded ad grants a few minutes of a Pro feature on the device only. To detect blocked ads the app resolves a few ad-network host names through your normal DNS and checks whether the device is online; it stores only counters and timestamps on the device.
 
 ## Purchases (Google Play build only)
 

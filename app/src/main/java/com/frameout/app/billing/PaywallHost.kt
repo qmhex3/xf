@@ -27,8 +27,12 @@ fun PaywallHost(activity: Activity, app: FrameOutApp) {
         wasPro = pro
     }
     if (celebrating) ProUnlockedDialog { celebrating = false; entitlements.dismissPaywall() }
+    var skipOffer by remember(feature) { mutableStateOf(false) }
+    val rewardOffer = feature?.let { com.frameout.app.ads.rewardOfferAvailable(it) } ?: false
     feature?.let { shown ->
-        if (BuildConfig.REVENUECAT_PAYWALL && RevenueCatSync.isActive) {
+        if (rewardOffer && !skipOffer) {
+            com.frameout.app.ads.RewardOffer(shown, onPro = { skipOffer = true }, onFinished = entitlements::dismissPaywall)
+        } else if (BuildConfig.REVENUECAT_PAYWALL && RevenueCatSync.isActive) {
             RevenueCatPaywall(onDismiss = entitlements::dismissPaywall)
         } else {
             CompositionLocalProvider(LocalPaywallSample provides PaywallSample.image) {

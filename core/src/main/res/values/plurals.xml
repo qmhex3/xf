@@ -116,4 +116,16 @@
         <item quantity="one">Exported 1 image</item>
         <item quantity="other">Exported %1$d images</item>
     </plurals>
+    <plurals name="onboarding_pick_burst">
+        <item quantity="one">%1$d consecutive frame</item>
+        <item quantity="other">%1$d consecutive frames</item>
+    </plurals>
+    <plurals name="onboarding_pick_excluded">
+        <item quantity="one">Excluded: %1$d frame</item>
+        <item quantity="other">Excluded: %1$d frames</item>
+    </plurals>
+    <plurals name="rating_stat">
+        <item quantity="one">%1$d successful save so far</item>
+        <item quantity="other">%1$d successful saves so far</item>
+    </plurals>
 </resources>

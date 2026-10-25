@@ -10,6 +10,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -31,12 +32,13 @@ internal fun RatingButton(rating: Int, onClick: () -> Unit, modifier: Modifier =
     val colors = FrameTheme.colors
     val enabled = rating > 0
     val shape = RoundedCornerShape(50)
-    val brush = if (enabled) FrameGradients.Fab else Brush.linearGradient(listOf(colors.container, colors.container))
-    val edge = if (enabled) Color.White.copy(alpha = 0.18f) else colors.outline.copy(alpha = 0.35f)
+    val idle = Brush.linearGradient(listOf(colors.accentA.copy(alpha = 0.16f), colors.accentB.copy(alpha = 0.10f)))
+    val brush = if (enabled) FrameGradients.Fab else idle
+    val edge = if (enabled) Color.White.copy(alpha = 0.22f) else colors.accentA.copy(alpha = 0.40f)
     Box(
         modifier
             .fillMaxWidth()
-            .height(54.dp)
+            .height(56.dp)
             .clip(shape)
             .background(brush)
             .border(1.dp, edge, shape)
@@ -51,7 +53,7 @@ internal fun RatingButton(rating: Int, onClick: () -> Unit, modifier: Modifier =
             FrameText(
                 ctaFor(bucket),
                 style = FrameTheme.typography.titleSmall,
-                color = if (enabled) colors.onDarkAccent else colors.onSurfaceVariant,
+                color = if (enabled) colors.onDarkAccent else colors.onSurface.copy(alpha = 0.88f),
                 textAlign = TextAlign.Center
             )
         }
@@ -67,7 +69,7 @@ private fun ctaFor(bucket: Bucket): String = when (bucket) {
 
 @Composable
 internal fun TextAction(label: String, color: Color, onClick: () -> Unit) {
-    Box(Modifier.frameClickable(onClick = onClick).padding(horizontal = 10.dp, vertical = 8.dp), Alignment.Center) {
+    Box(Modifier.heightIn(min = 44.dp).frameClickable(onClick = onClick).padding(horizontal = 14.dp, vertical = 10.dp), Alignment.Center) {
         FrameText(label, style = FrameTheme.typography.label, color = color)
     }
 }

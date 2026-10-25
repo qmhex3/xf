@@ -17,8 +17,35 @@ val revenueCatReleaseKey = System.getenv("REVENUECAT_API_KEY")
 val revenueCatPaywall = providers.gradleProperty("revenueCatPaywall").orElse("true").get() == "true"
 val appProjectPath = project.path
 
+val adsEnabled = providers.gradleProperty("adsEnabled").orElse("false").get() == "true"
+val adsDebugEea = providers.gradleProperty("adsDebugEea").orElse("false").get() == "true"
+val adsTestDevice = providers.gradleProperty("adsTestDevice").orElse("").get()
+val testAdIds = mapOf(
+    "app" to "ca-app-pub-3940256099942544~3347511713",
+    "banner" to "ca-app-pub-3940256099942544/9214589741",
+    "interstitial" to "ca-app-pub-3940256099942544/1033173712",
+    "rewarded" to "ca-app-pub-3940256099942544/5224354917"
+)
+
+fun adValue(env: String, prop: String): String =
+    System.getenv(env) ?: providers.gradleProperty(prop).orElse("").get()
+
+val liveAdIds = mapOf(
+    "app" to adValue("ADMOB_APP_ID", "admobAppId"),
+    "banner" to adValue("ADMOB_BANNER_ID", "admobBannerId"),
+    "interstitial" to adValue("ADMOB_INTERSTITIAL_ID", "admobInterstitialId"),
+    "rewarded" to adValue("ADMOB_REWARDED_ID", "admobRewardedId")
+)
+
 gradle.taskGraph.whenReady {
     val shipping = allTasks.any { it.path.startsWith("$appProjectPath:") && Regex("(assemble|bundle|package)Release.*").matches(it.name) }
+    val adIdsBad = liveAdIds.values.any { it.isBlank() || it.contains("3940256099942544") }
+    if (shipping && adsEnabled && adIdsBad) {
+        throw GradleException(
+            "Release builds with -PadsEnabled=true need your real AdMob IDs: admobAppId, admobBannerId, " +
+                "admobInterstitialId, admobRewardedId (or ADMOB_* environment variables). Google test IDs are not allowed in release."
+        )
+    }
     if (shipping && storeBuild && !revenueCatReleaseKey.startsWith("goog_")) {
         throw GradleException(
             "Store release builds need the RevenueCat Google Play key: pass -PrevenueCatApiKey=goog_... " +
@@ -43,6 +70,13 @@ android {
         buildConfigField("long", "PAYWALL_CUTOFF_MS", "${paywallCutoffMs}L")
         buildConfigField("String", "REVENUECAT_ENTITLEMENT_ID", "\"frame_out_pro\"")
         buildConfigField("boolean", "REVENUECAT_PAYWALL", revenueCatPaywall.toString())
+        buildConfigField("boolean", "ADS_ENABLED", adsEnabled.toString())
+        buildConfigField("boolean", "ADS_DEBUG_EEA", adsDebugEea.toString())
+        buildConfigField("String", "ADS_TEST_DEVICE", "\"$adsTestDevice\"")
+        buildConfigField("String", "ADMOB_BANNER_ID", "\"${testAdIds.getValue("banner")}\"")
+        buildConfigField("String", "ADMOB_INTERSTITIAL_ID", "\"${testAdIds.getValue("interstitial")}\"")
+        buildConfigField("String", "ADMOB_REWARDED_ID", "\"${testAdIds.getValue("rewarded")}\"")
+        manifestPlaceholders["admobAppId"] = testAdIds.getValue("app")
     }
 
     signingConfigs {
@@ -61,6 +95,12 @@ android {
         release {
             buildConfigField("String", "CERT_SHA256", "\"$expectedCert\"")
             buildConfigField("String", "REVENUECAT_API_KEY", "\"$revenueCatReleaseKey\"")
+            if (adsEnabled) {
+                buildConfigField("String", "ADMOB_BANNER_ID", "\"${liveAdIds.getValue("banner")}\"")
+                buildConfigField("String", "ADMOB_INTERSTITIAL_ID", "\"${liveAdIds.getValue("interstitial")}\"")
+                buildConfigField("String", "ADMOB_REWARDED_ID", "\"${liveAdIds.getValue("rewarded")}\"")
+                manifestPlaceholders["admobAppId"] = liveAdIds.getValue("app")
+            }
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
@@ -137,6 +177,13 @@ android {
     }
 }
 
+androidComponents {
+    onVariants { variant ->
+        val dir = "$projectDir/src/" + if (adsEnabled) "adsOn/java" else "adsOff/java"
+        (variant.sources.kotlin ?: variant.sources.java)?.addStaticSourceDirectory(dir)
+    }
+}
+
 dependencies {
     implementation(project(":core"))
     implementation(project(":engine"))
@@ -154,6 +201,10 @@ dependencies {
     implementation(libs.androidx.profileinstaller)
     implementation(libs.revenuecat.purchases)
     implementation(libs.revenuecat.purchases.ui)
+    if (adsEnabled) {
+        implementation(libs.admob)
+        implementation(libs.ump)
+    }
 
     val composeBom = platform(libs.compose.bom)
     implementation(composeBom)

@@ -21,6 +21,7 @@ private suspend fun FramesViewModel.completeExport(block: suspend () -> ExportOu
         exportEnded()
     }
     postExport(outcome)
+    if (outcome.saved != null) com.frameout.app.ads.AdsGateway.exportDone()
 }
 
 internal fun exportSelected(vm: FramesViewModel, exporter: FramesExportAction, scope: CoroutineScope, gif: Boolean) {

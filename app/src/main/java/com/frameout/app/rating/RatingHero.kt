@@ -57,7 +57,7 @@ internal fun Hero(rating: Int, reduce: Boolean) {
     val infinite = rememberInfiniteTransition(label = "hero")
     val float by infinite.animateFloat(0f, 1f, infiniteRepeatable(tween(2400, easing = FastOutSlowInEasing), RepeatMode.Reverse), label = "float")
     val pulse by infinite.animateFloat(0.55f, 1f, infiniteRepeatable(tween(1800, easing = FastOutSlowInEasing), RepeatMode.Reverse), label = "pulse")
-    Box(Modifier.size(132.dp), Alignment.Center) {
+    Box(Modifier.size(112.dp), Alignment.Center) {
         HeroGlow(mid, if (reduce) 0.8f else pulse)
         HeroDisc(Brush.linearGradient(listOf(top, mid, bottom)), rating, reduce, float)
     }
@@ -76,8 +76,9 @@ private fun HeroGlow(color: Color, glow: Float) {
 private fun faceFor(rating: Int) = when (rating) {
     1, 2 -> FrameIcons.FacePoor
     3 -> FrameIcons.FaceFair
+    4 -> FrameIcons.FaceSmile
     5 -> FrameIcons.FaceGood
-    else -> FrameIcons.FaceSmile
+    else -> FrameIcons.StarFilled
 }
 
 private fun faceTransition(reduce: Boolean): ContentTransform =
@@ -88,14 +89,14 @@ private fun faceTransition(reduce: Boolean): ContentTransform =
 private fun HeroDisc(brush: Brush, rating: Int, reduce: Boolean, float: Float) {
     Box(
         Modifier
-            .size(88.dp)
+            .size(78.dp)
             .graphicsLayer { translationY = if (reduce) 0f else (float - 0.5f) * 6.dp.toPx() }
             .border(1.5.dp, Color.White.copy(alpha = 0.22f), CircleShape)
             .background(brush, CircleShape),
         Alignment.Center
     ) {
         AnimatedContent(targetState = faceFor(rating), transitionSpec = { faceTransition(reduce) }, label = "face") { icon ->
-            Image(painterResource(icon), null, Modifier.size(52.dp), colorFilter = ColorFilter.tint(Color.White))
+            Image(painterResource(icon), null, Modifier.size(44.dp), colorFilter = ColorFilter.tint(Color.White))
         }
     }
 }
@@ -103,15 +104,17 @@ private fun HeroDisc(brush: Brush, rating: Int, reduce: Boolean, float: Float) {
 @Composable
 internal fun SuccessChip(text: String, modifier: Modifier = Modifier) {
     val colors = FrameTheme.colors
+    val tint = colors.accentA
     Row(
         modifier
             .clip(RoundedCornerShape(50))
-            .background(colors.success.copy(alpha = 0.14f))
-            .padding(horizontal = 12.dp, vertical = 6.dp),
+            .background(tint.copy(alpha = 0.14f))
+            .border(1.dp, tint.copy(alpha = 0.30f), RoundedCornerShape(50))
+            .padding(horizontal = 14.dp, vertical = 7.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(6.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Image(painterResource(FrameIcons.Check), null, Modifier.size(14.dp), colorFilter = ColorFilter.tint(colors.success))
-        FrameText(text, style = FrameTheme.typography.label, color = colors.success)
+        Image(painterResource(FrameIcons.Check), null, Modifier.size(14.dp), colorFilter = ColorFilter.tint(tint))
+        FrameText(text, style = FrameTheme.typography.label, color = colors.onSurface)
     }
 }

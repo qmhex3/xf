@@ -133,7 +133,7 @@
     <string name="oem_steps_oppo">OPPO/Realme/OnePlus: Tetapan → Apl → Frame out → Penggunaan bateri → Benarkan aktiviti latar belakang. Dayakan Mula automatik jika dipaparkan.</string>
     <string name="oem_steps_vivo">Vivo/iQOO: Tetapan → Bateri → Pengurusan penggunaan kuasa latar belakang → Frame out → Benarkan. Dayakan juga Mula automatik.</string>
     <string name="oem_steps_samsung">Samsung: Tetapan → Apl → Frame out → Bateri → Benarkan aktiviti latar belakang. Alih keluar daripada Apl tidur jika disenaraikan.</string>
-    <string name="onboarding_oem_battery_link">Buka tetapan bateri</string>
+    <string name="onboarding_oem_battery_link">Buka tetapan bateri &amp; mula automatik</string>
     <string name="fit">Muat</string>
     <string name="fill">Penuh</string>
     <string name="on">HIDUP</string>
@@ -367,6 +367,10 @@
     <string name="save_empty">Imej yang disimpan kosong. Cuba lagi.</string>
     <string name="capture_failed">Tidak dapat membaca bingkai ini</string>
     <string name="open_saved">Buka</string>
+    <string name="show_in_folder">Tunjuk dalam folder</string>
+    <string name="export_folder">Folder eksport</string>
+    <string name="export_folder_hint">ZIP, PDF, CSV dan fail lain</string>
+    <string name="save_folder_hint">Imej, GIF dan video</string>
     <string name="capture_size">Saiz imej</string>
     <string name="value_size_original">Asal</string>
     <string name="value_size_half">Separuh</string>
@@ -424,7 +428,7 @@
     <string name="onboarding_start">Mulakan sekarang</string>
     <string name="onboarding_hero_a">Rakam detik penentu</string>
     <string name="onboarding_hero_b">daripada mana-mana video</string>
-    <string name="onboarding_hero_sub">Kawal setiap bingkai dan ekstrak kualiti tertinggi tanpa sebarang kehilangan.</string>
+    <string name="onboarding_hero_sub">Kawal setiap bingkai dan ekstrak kualiti tertinggi yang tersedia.</string>
     <string name="onboarding_step">Langkah %1$d daripada %2$d</string>
     <string name="onboarding_formats_a">Mana-mana video.</string>
     <string name="onboarding_formats_b">Dalam apa jua format.</string>
@@ -434,12 +438,10 @@
     <string name="onboarding_pick_b">secara automatik</string>
     <string name="onboarding_pick_sub">Ia melangkau bingkai kabur dan pendua, menonjolkan yang paling tajam, memberi amaran tentang mata tertutup dan menyusun kandungan, semuanya pada peranti anda.</string>
     <string name="onboarding_pick_analysis">Analisis rentetan automatik</string>
-    <string name="onboarding_pick_burst">%1$d bingkai berturutan</string>
     <string name="onboarding_pick_local">AI pada peranti</string>
     <string name="onboarding_tag_duplicate">Pendua</string>
     <string name="onboarding_tag_blurry">Kabur</string>
     <string name="onboarding_pick_clarity">Skor kejelasan:</string>
-    <string name="onboarding_pick_excluded">Dikecualikan: %1$d bingkai</string>
     <string name="onboarding_ready_a">Sedia untuk merakam</string>
     <string name="onboarding_ready_b">detik anda</string>
     <string name="onboarding_ready_sub">Anda boleh menukar tetapan ini kemudian dalam Tetapan.</string>
@@ -737,14 +739,13 @@
     <string name="edit_reset_rotate">Tetap semula putaran dan balikan</string>
     <string name="rating_title">Suka Frame out?</string>
     <string name="rating_body">Jika ia menjimatkan masa anda, penilaian ringkas sangat membantu. Hanya 10 saat.</string>
-    <string name="rating_stat">%1$d simpanan berjaya setakat ini</string>
     <string name="rating_hint">Ketik bintang</string>
     <string name="rating_label_1">Teruk</string>
     <string name="rating_label_2">Boleh lebih baik</string>
     <string name="rating_label_3">Bagus</string>
     <string name="rating_label_4">Hebat</string>
     <string name="rating_label_5">Suka sangat!</string>
-    <string name="rating_cta_choose">Pilih penilaian anda</string>
+    <string name="rating_cta_choose">Hantar penilaian</string>
     <string name="rating_cta_store">Nilai di Google Play</string>
     <string name="rating_cta_feedback">Beritahu kami apa perlu dibaiki</string>
     <string name="rating_note_positive">Terima kasih! Penilaian anda membantu orang lain menemui Frame out.</string>
@@ -997,4 +998,14 @@
     <string name="update_fixes_body">Pemotongan, kualiti paparan, kestabilan apl</string>
     <string name="update_later">Nanti</string>
     <string name="update_now">Kemas kini sekarang</string>
+    <string name="viewer_show_in_project">Tunjuk dalam projek</string>
+    <string name="frame_saved_hint">Bingkai disimpan</string>
+    <string name="ads_reward_title">Buka kunci dengan iklan pendek</string>
+    <string name="ads_reward_body">Tonton satu iklan pendek untuk guna ciri ini percuma beberapa minit, atau dapatkan Pro untuk buang iklan selama-lamanya.</string>
+    <string name="ads_reward_watch">Tonton iklan</string>
+    <string name="ads_reward_pro">Dapatkan Pro</string>
+    <string name="ads_blocked_title">Iklan tidak dapat dimuatkan</string>
+    <string name="ads_blocked_body">Frame out kekal percuma berkat iklan. Sesuatu pada peranti atau rangkaian ini menyekatnya. Anda boleh benarkan iklan, atau dapatkan Pro untuk menyokong apl tanpa iklan.</string>
+    <string name="ads_blocked_close">Bukan sekarang</string>
+    <string name="ads_privacy_options">Pilihan privasi iklan</string>
 </resources>

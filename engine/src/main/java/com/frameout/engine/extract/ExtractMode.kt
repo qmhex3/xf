@@ -30,8 +30,8 @@ data class ExtractRequest(
 ) {
     val peopleOnlyApplied: Boolean get() = peopleOnly && !mode.decidesContent()
 
-    fun newGate(): com.frameout.core.quality.ExtractQualityGate? =
-        if (skipBlurry || skipDuplicates || peopleOnlyApplied || mode is ExtractMode.Content) com.frameout.core.quality.ExtractQualityGate(skipBlurry, skipDuplicates, peopleOnlyApplied, peopleBody, contentGate()) { com.frameout.core.quality.SkipStats.record(projectId, it) } else null
+    fun newGate(blockAware: Boolean = true): com.frameout.core.quality.ExtractQualityGate? =
+        if (skipBlurry || skipDuplicates || peopleOnlyApplied || mode is ExtractMode.Content) com.frameout.core.quality.ExtractQualityGate(skipBlurry, skipDuplicates, peopleOnlyApplied, peopleBody, contentGate(), blockAware) { com.frameout.core.quality.SkipStats.record(projectId, it) } else null
 
     private fun contentGate(): com.frameout.core.quality.content.ContentGate? =
         (mode as? ExtractMode.Content)?.let { com.frameout.core.quality.content.ContentGate(it.spec) }

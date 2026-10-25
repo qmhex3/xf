@@ -1,7 +1,18 @@
 package com.frameout.core.quality
 
-data class ScoredFrame(val id: Long, val index: Int, val score: Double, val faceScore: Float? = null, val sig: ByteArray? = null, val noise: Float = 0f, val speed: Float = 0f, val ptsUs: Long = 0L) {
+data class ScoredFrame(val id: Long, val index: Int, val score: Double, val faceScore: Float? = null, val sig: ByteArray? = null, val noise: Float = 0f, val speed: Float = 0f, val ptsUs: Long = 0L, val isKeyframe: Boolean = false) {
     val effective: Double get() = (if (faceScore == null) score else score * (0.4 + 1.2 * faceScore)) * MotionEstimate.factor(speed)
+}
+
+object KeyframeTie {
+    const val MARGIN = 0.01
+
+    fun best(frames: List<ScoredFrame>): ScoredFrame {
+        val top = frames.maxBy { it.effective }
+        if (top.isKeyframe || top.effective <= 0.0) return top
+        val floor = top.effective * (1.0 - MARGIN)
+        return frames.filter { it.isKeyframe && it.effective >= floor }.maxByOrNull { it.effective } ?: top
+    }
 }
 
 object SharpestPicker {
@@ -11,7 +22,7 @@ object SharpestPicker {
         if (frames.isEmpty()) return emptyList()
         val winners = frames.sortedBy { it.index }
             .chunked(windowFor(frames.size))
-            .map { chunk -> chunk.maxBy { it.effective } }
+            .map { chunk -> KeyframeTie.best(chunk) }
         return withoutRepeats(winners).map { it.id }
     }
 

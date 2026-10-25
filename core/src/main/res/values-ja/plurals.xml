@@ -87,4 +87,13 @@
     <plurals name="saved_export_done_n">
         <item quantity="other">%1$d枚の画像を書き出しました</item>
     </plurals>
+    <plurals name="onboarding_pick_burst">
+        <item quantity="other">連続 %1$d フレーム</item>
+    </plurals>
+    <plurals name="onboarding_pick_excluded">
+        <item quantity="other">除外：%1$d フレーム</item>
+    </plurals>
+    <plurals name="rating_stat">
+        <item quantity="other">これまでに %1$d 回保存に成功しました</item>
+    </plurals>
 </resources>

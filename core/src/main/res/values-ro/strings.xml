@@ -133,7 +133,7 @@
     <string name="oem_steps_oppo">OPPO/Realme/OnePlus: Setări → Aplicații → Frame out → Utilizare baterie → Permite activitatea în fundal. Activează Pornirea automată dacă apare.</string>
     <string name="oem_steps_vivo">Vivo/iQOO: Setări → Baterie → Gestionarea consumului în fundal → Frame out → Permite. Activează și Pornirea automată.</string>
     <string name="oem_steps_samsung">Samsung: Setări → Aplicații → Frame out → Baterie → Permite activitatea în fundal. Elimin-o din Aplicații în repaus dacă apare acolo.</string>
-    <string name="onboarding_oem_battery_link">Deschide setările bateriei</string>
+    <string name="onboarding_oem_battery_link">Deschide setările bateriei și pornirii automate</string>
     <string name="fit">Potrivire</string>
     <string name="fill">Umplere</string>
     <string name="on">ACTIV</string>
@@ -367,6 +367,10 @@
     <string name="save_empty">Imaginea salvată este goală. Încearcă din nou.</string>
     <string name="capture_failed">Cadrul nu a putut fi citit</string>
     <string name="open_saved">Deschide</string>
+    <string name="show_in_folder">Arată în dosar</string>
+    <string name="export_folder">Dosar de export</string>
+    <string name="export_folder_hint">ZIP, PDF, CSV și alte fișiere</string>
+    <string name="save_folder_hint">Imagini, GIF-uri și videoclipuri</string>
     <string name="capture_size">Dimensiunea imaginii</string>
     <string name="value_size_original">Originală</string>
     <string name="value_size_half">Jumătate</string>
@@ -424,7 +428,7 @@
     <string name="onboarding_start">Începe acum</string>
     <string name="onboarding_hero_a">Surprinde momentul decisiv</string>
     <string name="onboarding_hero_b">din orice videoclip</string>
-    <string name="onboarding_hero_sub">Controlează fiecare cadru și extrage cea mai înaltă calitate, fără nicio pierdere.</string>
+    <string name="onboarding_hero_sub">Controlează fiecare cadru și extrage cea mai înaltă calitate disponibilă.</string>
     <string name="onboarding_step">Pasul %1$d din %2$d</string>
     <string name="onboarding_formats_a">Orice videoclip.</string>
     <string name="onboarding_formats_b">În orice format.</string>
@@ -434,12 +438,10 @@
     <string name="onboarding_pick_b">automat</string>
     <string name="onboarding_pick_sub">Omite cadrele neclare și duplicate, evidențiază cel mai clar cadru, te avertizează când ochii sunt închiși și sortează conținutul, totul pe dispozitivul tău.</string>
     <string name="onboarding_pick_analysis">Analiză automată a rafalei</string>
-    <string name="onboarding_pick_burst">%1$d cadre consecutive</string>
     <string name="onboarding_pick_local">IA pe dispozitiv</string>
     <string name="onboarding_tag_duplicate">Duplicat</string>
     <string name="onboarding_tag_blurry">Neclar</string>
     <string name="onboarding_pick_clarity">Scor de claritate:</string>
-    <string name="onboarding_pick_excluded">Excluse: %1$d cadre</string>
     <string name="onboarding_ready_a">Gata să surprindă</string>
     <string name="onboarding_ready_b">momentul tău</string>
     <string name="onboarding_ready_sub">Poți modifica aceste setări ulterior, din Setări.</string>
@@ -737,14 +739,13 @@
     <string name="edit_reset_rotate">Resetează rotirea și oglindirea</string>
     <string name="rating_title">Îți place Frame out?</string>
     <string name="rating_body">Dacă îți economisește timp, o evaluare rapidă ajută foarte mult. Durează 10 secunde.</string>
-    <string name="rating_stat">%1$d salvări reușite până acum</string>
     <string name="rating_hint">Atinge stelele</string>
     <string name="rating_label_1">Slab</string>
     <string name="rating_label_2">Ar putea fi mai bine</string>
     <string name="rating_label_3">Bine</string>
     <string name="rating_label_4">Foarte bine</string>
     <string name="rating_label_5">Îmi place!</string>
-    <string name="rating_cta_choose">Alege evaluarea</string>
+    <string name="rating_cta_choose">Trimite evaluarea</string>
     <string name="rating_cta_store">Evaluează pe Google Play</string>
     <string name="rating_cta_feedback">Spune-ne ce să reparăm</string>
     <string name="rating_note_positive">Mulțumim! Evaluarea ta îi ajută pe alții să descopere Frame out.</string>
@@ -997,4 +998,14 @@
     <string name="update_fixes_body">Decupare, calitatea afișării, stabilitatea aplicației</string>
     <string name="update_later">Mai târziu</string>
     <string name="update_now">Actualizează acum</string>
+    <string name="viewer_show_in_project">Arată în proiect</string>
+    <string name="frame_saved_hint">Cadru salvat</string>
+    <string name="ads_reward_title">Deblochează cu o reclamă scurtă</string>
+    <string name="ads_reward_body">Urmărește o reclamă scurtă ca să folosești gratuit această funcție câteva minute sau ia Pro ca să elimini reclamele definitiv.</string>
+    <string name="ads_reward_watch">Vezi reclama</string>
+    <string name="ads_reward_pro">Ia Pro</string>
+    <string name="ads_blocked_title">Reclamele nu se pot încărca</string>
+    <string name="ads_blocked_body">Frame out rămâne gratuit datorită reclamelor. Ceva de pe acest dispozitiv sau din rețea le blochează. Poți permite reclamele sau poți lua Pro pentru a susține aplicația fără ele.</string>
+    <string name="ads_blocked_close">Nu acum</string>
+    <string name="ads_privacy_options">Opțiuni de confidențialitate pentru reclame</string>
 </resources>

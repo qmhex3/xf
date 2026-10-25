@@ -33,11 +33,14 @@ object FocusScore {
 
     fun measure(luma: IntArray, width: Int, height: Int): Double = detail(luma, width, height).score
 
-    fun detail(luma: IntArray, width: Int, height: Int): Detail {
+    fun detail(luma: IntArray, width: Int, height: Int): Detail = detail(luma, width, height, BlockGrid.Grid.NONE)
+
+    fun detail(luma: IntArray, width: Int, height: Int, blocks: BlockGrid.Grid): Detail {
         if (width < MIN_SIDE || height < MIN_SIDE || luma.size < width * height) return EMPTY
         val grid = Grid((width / CELL).coerceIn(1, MAX_GRID), (height / CELL).coerceIn(1, MAX_GRID))
         val stats = lumaStats(luma, width * height)
-        for (y in 1 until height - 1) accumulateRow(grid, luma, width, height, y)
+        val skip = Skip(blocks, width, height)
+        for (y in 1 until height - 1) if (!skip.rows[y]) accumulateRow(grid, luma, width, height, y, skip.cols)
         val noise = noiseFloor(grid.noiseSum, grid.noiseCount)
         val values = rankedBlocks(grid, NOISE_GAIN * noise * noise)
         if (values.isEmpty()) return Detail(0.0, noise, stats.contrast, 1.0)
@@ -54,6 +57,11 @@ object FocusScore {
         val count = IntArray(blocks)
         val noiseSum = DoubleArray(blocks)
         val noiseCount = IntArray(blocks)
+    }
+
+    private class Skip(blocks: BlockGrid.Grid, width: Int, height: Int) {
+        val cols = BooleanArray(width) { blocks.x.straddles(it) }
+        val rows = BooleanArray(height) { blocks.y.straddles(it) }
     }
 
     private class LumaStats(val mean: Double, val contrast: Double)
@@ -73,12 +81,13 @@ object FocusScore {
         return LumaStats(mean, sqrt(max(0.0, sumSq / n - mean * mean)))
     }
 
-    private fun accumulateRow(grid: Grid, luma: IntArray, width: Int, height: Int, y: Int) {
+    private fun accumulateRow(grid: Grid, luma: IntArray, width: Int, height: Int, y: Int, skipCols: BooleanArray) {
         val by = min(grid.rows - 1, y * grid.rows / height)
         val up = (y - 1) * width
         val mid = y * width
         val down = (y + 1) * width
         for (x in 1 until width - 1) {
+            if (skipCols[x]) continue
             val b = by * grid.cols + min(grid.cols - 1, x * grid.cols / width)
             val tl = luma[up + x - 1]
             val tc = luma[up + x]

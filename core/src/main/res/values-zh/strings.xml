@@ -133,7 +133,7 @@
     <string name="oem_steps_oppo">OPPO/Realme/一加：设置 → 应用 → Frame out → 耗电管理 → 允许后台活动。如有“自启动”选项，请一并开启。</string>
     <string name="oem_steps_vivo">vivo/iQOO：设置 → 电池 → 后台高耗电 → Frame out → 允许。同时开启“自启动”。</string>
     <string name="oem_steps_samsung">三星：设置 → 应用程序 → Frame out → 电池 → 允许后台活动。如果列在“休眠应用”中，请将其移除。</string>
-    <string name="onboarding_oem_battery_link">打开电池设置</string>
+    <string name="onboarding_oem_battery_link">打开电池和自启动设置</string>
     <string name="fit">适应</string>
     <string name="fill">填充</string>
     <string name="on">开</string>
@@ -367,6 +367,10 @@
     <string name="save_empty">保存的图片是空的。请重试。</string>
     <string name="capture_failed">无法读取这一帧</string>
     <string name="open_saved">打开</string>
+    <string name="show_in_folder">在文件夹中显示</string>
+    <string name="export_folder">导出文件夹</string>
+    <string name="export_folder_hint">ZIP、PDF、CSV 等文件</string>
+    <string name="save_folder_hint">图片、GIF 和视频</string>
     <string name="capture_size">图片尺寸</string>
     <string name="value_size_original">原始</string>
     <string name="value_size_half">一半</string>
@@ -424,7 +428,7 @@
     <string name="onboarding_start">立即开始</string>
     <string name="onboarding_hero_a">捕捉决定性的瞬间</string>
     <string name="onboarding_hero_b">来自任何视频</string>
-    <string name="onboarding_hero_sub">掌控每一帧，零损失提取最高画质。</string>
+    <string name="onboarding_hero_sub">掌控每一帧，以可用的最高画质提取。</string>
     <string name="onboarding_step">第 %1$d 步，共 %2$d 步</string>
     <string name="onboarding_formats_a">任何视频，</string>
     <string name="onboarding_formats_b">任何格式。</string>
@@ -434,12 +438,10 @@
     <string name="onboarding_pick_b">自动完成</string>
     <string name="onboarding_pick_sub">它会跳过模糊和重复的帧，突出最清晰的帧，提醒你有人闭眼，并对内容分类，这一切都在你的设备上完成。</string>
     <string name="onboarding_pick_analysis">自动连拍分析</string>
-    <string name="onboarding_pick_burst">连续 %1$d 帧</string>
     <string name="onboarding_pick_local">设备端 AI</string>
     <string name="onboarding_tag_duplicate">重复</string>
     <string name="onboarding_tag_blurry">模糊</string>
     <string name="onboarding_pick_clarity">清晰度评分：</string>
-    <string name="onboarding_pick_excluded">已排除：%1$d 帧</string>
     <string name="onboarding_ready_a">准备好捕捉</string>
     <string name="onboarding_ready_b">你的精彩瞬间</string>
     <string name="onboarding_ready_sub">你之后可以在设置中更改这些选项。</string>
@@ -737,14 +739,13 @@
     <string name="edit_reset_rotate">重置旋转和翻转</string>
     <string name="rating_title">喜欢 Frame out 吗？</string>
     <string name="rating_body">如果它为你节省了时间，请花 10 秒钟给个评分，这会帮上大忙。</string>
-    <string name="rating_stat">目前已成功保存 %1$d 次</string>
     <string name="rating_hint">点按星星</string>
     <string name="rating_label_1">很差</string>
     <string name="rating_label_2">有待改进</string>
     <string name="rating_label_3">不错</string>
     <string name="rating_label_4">很棒</string>
     <string name="rating_label_5">太喜欢了！</string>
-    <string name="rating_cta_choose">选择你的评分</string>
+    <string name="rating_cta_choose">提交评分</string>
     <string name="rating_cta_store">在 Google Play 上评分</string>
     <string name="rating_cta_feedback">告诉我们哪里需要改进</string>
     <string name="rating_note_positive">谢谢！你的评分能帮助更多人发现 Frame out。</string>
@@ -997,4 +998,14 @@
     <string name="update_fixes_body">裁剪、显示质量、应用稳定性</string>
     <string name="update_later">以后再说</string>
     <string name="update_now">立即更新</string>
+    <string name="viewer_show_in_project">在项目中显示</string>
+    <string name="frame_saved_hint">已保存的帧</string>
+    <string name="ads_reward_title">观看短广告即可解锁</string>
+    <string name="ads_reward_body">观看一条短广告，即可免费使用此功能几分钟；或升级 Pro 永久去除广告。</string>
+    <string name="ads_reward_watch">观看广告</string>
+    <string name="ads_reward_pro">升级 Pro</string>
+    <string name="ads_blocked_title">无法加载广告</string>
+    <string name="ads_blocked_body">Frame out 依靠广告保持免费。此设备或网络上有内容正在拦截广告。你可以允许广告，或升级 Pro 无广告地支持应用。</string>
+    <string name="ads_blocked_close">暂不</string>
+    <string name="ads_privacy_options">广告隐私选项</string>
 </resources>

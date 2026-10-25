@@ -33,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.SpanStyle
@@ -65,12 +66,10 @@ import kotlinx.coroutines.launch
 
 internal enum class OnboardingPage { Hero, Formats, Pick, Ready }
 
-private val ProPages = setOf(OnboardingPage.Pick)
-
 private val CopyReserve = 176.dp
 
 @Composable
-fun OnboardingScreen(onAllowNotifications: () -> Unit = {}, onStart: () -> Unit = {}, onDone: () -> Unit) {
+fun OnboardingScreen(onAllowNotifications: () -> Unit = {}, onStart: () -> Unit = {}, ready: Boolean = true, onDone: () -> Unit) {
     val pages = remember {
         listOf(
             OnboardingPage.Hero,
@@ -79,11 +78,11 @@ fun OnboardingScreen(onAllowNotifications: () -> Unit = {}, onStart: () -> Unit 
             OnboardingPage.Ready
         )
     }
-    PreferredFrameTheme { OnboardingContent(pages, onAllowNotifications, onStart, onDone) }
+    PreferredFrameTheme { OnboardingContent(pages, onAllowNotifications, onStart, ready, onDone) }
 }
 
 @Composable
-private fun OnboardingContent(pages: List<OnboardingPage>, onAllowNotifications: () -> Unit, onStart: () -> Unit, onDone: () -> Unit) {
+private fun OnboardingContent(pages: List<OnboardingPage>, onAllowNotifications: () -> Unit, onStart: () -> Unit, ready: Boolean, onDone: () -> Unit) {
     val colors = FrameTheme.colors
     val pager = rememberPagerState(pageCount = { pages.size })
     val scope = rememberCoroutineScope()
@@ -98,7 +97,7 @@ private fun OnboardingContent(pages: List<OnboardingPage>, onAllowNotifications:
     BackHandler(enabled = current > 0) { goTo(current - 1) }
 
     var entered by remember { mutableStateOf(false) }
-    LaunchedEffect(Unit) { entered = true }
+    LaunchedEffect(ready) { if (ready) entered = true }
     val enter by animateFloatAsState(if (entered) 1f else 0f, frameSpring(), label = "enter")
 
     var pending by remember { mutableStateOf<(() -> Unit)?>(null) }
@@ -115,7 +114,7 @@ private fun OnboardingContent(pages: List<OnboardingPage>, onAllowNotifications:
     fun finish(action: () -> Unit) { if (pending == null) pending = action }
 
     Box(Modifier.fillMaxSize().background(colors.background).frameAmbientGlow()) {
-        OnboardingColumn(pages, pager, enter, leave, onAllowNotifications, { finish(onStart) }, { finish(onDone) }, ::goTo)
+        OnboardingColumn(pages, pager, enter, leave, ready, onAllowNotifications, { finish(onStart) }, { finish(onDone) }, ::goTo)
     }
 }
 
@@ -125,6 +124,7 @@ private fun OnboardingColumn(
     pager: PagerState,
     enter: Float,
     leave: Float,
+    ready: Boolean,
     onAllowNotifications: () -> Unit,
     onStart: () -> Unit,
     onDone: () -> Unit,
@@ -146,10 +146,9 @@ private fun OnboardingColumn(
                 }
         ) {
             OnboardingTopBar(page = current, total = pages.size, showSkip = !last, onSkip = onDone)
-            OnboardingBrand(Modifier.align(Alignment.CenterHorizontally).padding(top = 2.dp), showBadge = pages[current] in ProPages)
-            OnboardingPager(pager, pages, onAllowNotifications, Modifier.weight(1f).fillMaxWidth())
+            OnboardingBrand(Modifier.align(Alignment.CenterHorizontally).padding(top = 2.dp), showBadge = false)
+            OnboardingPager(pager, pages, ready, onAllowNotifications, Modifier.weight(1f).fillMaxWidth())
             val label = when {
-                current == 0 -> FrameStrings.onboardingStart()
                 last -> FrameStrings.onboardingReadyStart()
                 else -> FrameStrings.onboardingNext()
             }
@@ -174,35 +173,57 @@ private fun PageBody(page: OnboardingPage, offset: () -> Float, onAllowNotificat
     BoxWithConstraints(Modifier.fillMaxSize()) {
         val (factor, extra) = pageHeight(page)
         val wide = page == OnboardingPage.Formats || page == OnboardingPage.Pick || page == OnboardingPage.Ready
-        val reserve = pageReserve(page)
         val cap = if (wide) 340.dp else 320.dp
-        val floor = if (wide) 220.dp else 150.dp
         if (maxWidth >= 560.dp && maxWidth > maxHeight) {
             val side = ((maxHeight - extra - 16.dp) / factor).coerceAtMost(cap).coerceAtLeast(120.dp)
-            Row(
-                Modifier.fillMaxSize().padding(horizontal = 32.dp),
-                horizontalArrangement = Arrangement.spacedBy(32.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(Modifier.weight(1f).stageParallax(offset, dir), contentAlignment = Alignment.Center) { PageStage(page, side) }
-                PageCopy(page, onAllowNotifications, Modifier.weight(1f).copyParallax(offset, dir).verticalScroll(rememberScrollState()))
-            }
+            PageBodyWide(page, side, offset, dir, onAllowNotifications)
         } else {
-            val side = (maxWidth - 48.dp).coerceAtMost(cap).coerceAtMost((maxHeight - reserve - extra) / factor).coerceAtLeast(floor)
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .verticalScroll(rememberScrollState())
-                    .heightIn(min = maxHeight)
-                    .padding(horizontal = 24.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Box(Modifier.stageParallax(offset, dir)) { PageStage(page, side) }
-                Spacer(Modifier.height(24.dp))
-                PageCopy(page, onAllowNotifications, Modifier.fillMaxWidth().copyParallax(offset, dir))
-            }
+            val floor = if (wide) 220.dp else 150.dp
+            val side = (maxWidth - 48.dp).coerceAtMost(cap).coerceAtMost((maxHeight - pageReserve(page) - extra) / factor).coerceAtLeast(floor)
+            PageBodyNarrow(page, side, maxHeight, offset, dir, onAllowNotifications)
         }
+    }
+}
+
+@Composable
+private fun PageBodyWide(page: OnboardingPage, side: Dp, offset: () -> Float, dir: Float, onAllowNotifications: () -> Unit) {
+    Row(
+        Modifier.fillMaxSize().padding(horizontal = 32.dp),
+        horizontalArrangement = Arrangement.spacedBy(32.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(Modifier.weight(1f).stageParallax(offset, dir), contentAlignment = Alignment.Center) { PageStage(page, side) }
+        PageCopy(page, onAllowNotifications, Modifier.weight(1f).copyParallax(offset, dir).verticalScroll(rememberScrollState()))
+    }
+}
+
+@Composable
+private fun PageBodyNarrow(page: OnboardingPage, side: Dp, maxHeight: Dp, offset: () -> Float, dir: Float, onAllowNotifications: () -> Unit) {
+    val scroll = rememberScrollState()
+    val hintAlpha by animateFloatAsState(if (scroll.canScrollForward) 1f else 0f, frameSpring(), label = "scrollHint")
+    val fade = FrameTheme.colors.background
+    Box(Modifier.fillMaxSize()) {
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .verticalScroll(scroll)
+                .heightIn(min = maxHeight)
+                .padding(horizontal = 24.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Box(Modifier.stageParallax(offset, dir)) { PageStage(page, side) }
+            Spacer(Modifier.height(24.dp))
+            PageCopy(page, onAllowNotifications, Modifier.fillMaxWidth().copyParallax(offset, dir))
+        }
+        Box(
+            Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .height(40.dp)
+                .graphicsLayer { alpha = hintAlpha }
+                .background(Brush.verticalGradient(listOf(Color.Transparent, fade)))
+        )
     }
 }
 
@@ -271,10 +292,10 @@ private fun AccentCopy(page: OnboardingPage, headline: TextStyle, body: TextStyl
 }
 
 @Composable
-private fun OnboardingPager(pager: PagerState, pages: List<OnboardingPage>, onAllowNotifications: () -> Unit, modifier: Modifier) {
+private fun OnboardingPager(pager: PagerState, pages: List<OnboardingPage>, ready: Boolean, onAllowNotifications: () -> Unit, modifier: Modifier) {
     HorizontalPager(state = pager, modifier = modifier, key = { pages[it].ordinal }) { index ->
         val offset = { (pager.currentPage - index) + pager.currentPageOffsetFraction }
-        CompositionLocalProvider(LocalPageActive provides (pager.currentPage == index)) {
+        CompositionLocalProvider(LocalPageActive provides (ready && pager.currentPage == index)) {
             Box(Modifier.fillMaxSize()) { PageBody(pages[index], offset, onAllowNotifications) }
         }
     }

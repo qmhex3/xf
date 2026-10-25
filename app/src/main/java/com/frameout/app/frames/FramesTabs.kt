@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.frameout.core.util.FrameStrings
 import com.frameout.designsystem.a11y.frameSelectable
 import com.frameout.designsystem.components.FrameText
@@ -31,6 +33,15 @@ import com.frameout.designsystem.theme.FrameShapes
 import com.frameout.designsystem.theme.FrameTheme
 import com.frameout.designsystem.theme.fieldFill
 import com.frameout.designsystem.theme.frameHairline
+
+private val TabsPillHeight = 44.dp
+private val TabsVerticalPad = 4.dp
+
+@Composable
+fun FramesTabsSlot(visible: Boolean, current: FrameFilter, all: Int, favorites: Int, sharpest: Int, items: Int, onSelect: (FrameFilter) -> Unit) {
+    if (visible) FramesTabs(current, all, favorites, sharpest, items, onSelect)
+    else Spacer(Modifier.fillMaxWidth().height(TabsPillHeight + TabsVerticalPad * 2))
+}
 
 @Composable
 fun FramesTabs(current: FrameFilter, all: Int, favorites: Int, sharpest: Int, items: Int, onSelect: (FrameFilter) -> Unit) {
@@ -45,8 +56,8 @@ fun FramesTabs(current: FrameFilter, all: Int, favorites: Int, sharpest: Int, it
     BoxWithConstraints(
         Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 4.dp)
-            .height(44.dp)
+            .padding(horizontal = 16.dp, vertical = TabsVerticalPad)
+            .height(TabsPillHeight)
             .background(colors.fieldFill, FrameShapes.pill)
             .border(1.dp, frameHairline(), FrameShapes.pill)
     ) {
@@ -65,13 +76,13 @@ fun FramesTabs(current: FrameFilter, all: Int, favorites: Int, sharpest: Int, it
                 .border(1.dp, colors.primary.copy(alpha = 0.40f), FrameShapes.pill)
         )
         Row(Modifier.fillMaxWidth().fillMaxHeight().padding(4.dp), verticalAlignment = Alignment.CenterVertically) {
-            tabs.forEachIndexed { i, (filter, label, count) -> Tab(label, count, i == index, showBadge = roomy || i == index) { onSelect(filter) } }
+            tabs.forEachIndexed { i, (filter, label, count) -> Tab(label, count, i == index, compact = !roomy) { onSelect(filter) } }
         }
     }
 }
 
 @Composable
-private fun RowScope.Tab(label: String, count: Int, selected: Boolean, showBadge: Boolean, onClick: () -> Unit) {
+private fun RowScope.Tab(label: String, count: Int, selected: Boolean, compact: Boolean, onClick: () -> Unit) {
     val colors = FrameTheme.colors
     val content by animateColorAsState(if (selected) colors.primary else colors.onSurfaceVariant, frameSpring(), label = "framesTabContent")
     val badge by animateColorAsState(if (selected) colors.primary.copy(alpha = 0.18f) else colors.onSurface.copy(alpha = 0.08f), frameSpring(), label = "framesTabBadge")
@@ -79,11 +90,22 @@ private fun RowScope.Tab(label: String, count: Int, selected: Boolean, showBadge
         Modifier.weight(1f).fillMaxHeight().clip(FrameShapes.pill).frameSelectable(selected, onClick = onClick),
         contentAlignment = Alignment.Center
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(if (compact) 3.dp else 4.dp)) {
             FrameText(label, style = FrameTheme.typography.label, color = content, maxLines = 1)
-            if (showBadge && count >= 0) Box(Modifier.background(badge, FrameShapes.pill).padding(horizontal = 5.dp, vertical = 1.dp)) {
-                FrameText(count.toString(), style = FrameTheme.typography.monoSmall, color = content, maxLines = 1)
+            if (count >= 0) Box(Modifier.background(badge, FrameShapes.pill).padding(horizontal = if (compact) 4.dp else 5.dp, vertical = 1.dp)) {
+                FrameText(
+                    compactCount(count),
+                    style = FrameTheme.typography.monoSmall.let { if (compact) it.copy(fontSize = 10.sp) else it },
+                    color = content,
+                    maxLines = 1
+                )
             }
         }
     }
+}
+
+private fun compactCount(count: Int): String = when {
+    count < 1000 -> count.toString()
+    count < 10_000 -> "%d.%dK".format(count / 1000, count % 1000 / 100)
+    else -> "${count / 1000}K"
 }

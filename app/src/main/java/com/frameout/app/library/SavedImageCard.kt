@@ -48,6 +48,9 @@ import com.frameout.designsystem.icons.FrameIcons
 import com.frameout.designsystem.icons.FrameIconsExtra
 import com.frameout.designsystem.theme.FrameShapes
 import com.frameout.designsystem.theme.FrameTheme
+import com.frameout.app.CellOrigin
+import androidx.compose.ui.layout.LayoutCoordinates
+import androidx.compose.ui.layout.onGloballyPositioned
 
 @Composable
 fun SavedImageCard(
@@ -75,12 +78,14 @@ fun SavedImageCard(
     }
     val kind = remember(item.displayName) { savedKindOf(item.displayName) }
     val format = item.displayName.substringAfterLast('.', "").uppercase().takeIf { it.length in 2..4 }
+    val coords = remember { arrayOfNulls<LayoutCoordinates>(1) }
     Box(
         Modifier
             .padding(3.dp)
-            .frameCombinedClickable(onClick, onLongClick, FrameA11y.select())
+            .frameCombinedClickable({ if (!selectionMode) CellOrigin.mark(coords[0]); onClick() }, onLongClick, FrameA11y.select())
             .semantics { this.selected = selected }
             .aspectRatio(1f)
+            .onGloballyPositioned { coords[0] = it }
             .clip(shape)
             .background(if (isMissing) colors.error.copy(alpha = 0.10f) else colors.container),
         contentAlignment = Alignment.Center

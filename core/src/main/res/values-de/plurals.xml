@@ -116,4 +116,16 @@
         <item quantity="one">1 Bild exportiert</item>
         <item quantity="other">%1$d Bilder exportiert</item>
     </plurals>
+    <plurals name="onboarding_pick_burst">
+        <item quantity="one">%1$d aufeinanderfolgende Frames</item>
+        <item quantity="other">%1$d aufeinanderfolgende Frames</item>
+    </plurals>
+    <plurals name="onboarding_pick_excluded">
+        <item quantity="one">Ausgeschlossen: %1$d Frames</item>
+        <item quantity="other">Ausgeschlossen: %1$d Frames</item>
+    </plurals>
+    <plurals name="rating_stat">
+        <item quantity="one">Bisher %1$d erfolgreiche Speicherungen</item>
+        <item quantity="other">Bisher %1$d erfolgreiche Speicherungen</item>
+    </plurals>
 </resources>

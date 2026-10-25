@@ -50,6 +50,8 @@ class AppPrefs(context: Context) : SessionPrefs(
 
     private val _saveFolder = MutableStateFlow(prefs.getString(KEY_FOLDER, "Pictures/FrameOut") ?: "Pictures/FrameOut")
     private val _saveFolderUri = MutableStateFlow(prefs.getString(KEY_FOLDER_URI, "") ?: "")
+    private val _exportFolderUri = MutableStateFlow(prefs.getString(KEY_EXPORT_FOLDER_URI, "") ?: "")
+    val exportFolderUri: StateFlow<String> = _exportFolderUri.asStateFlow()
     val saveFolderUri: StateFlow<String> = _saveFolderUri.asStateFlow()
     val saveFolder: StateFlow<String> = _saveFolder.asStateFlow()
 
@@ -166,6 +168,12 @@ class AppPrefs(context: Context) : SessionPrefs(
 
     fun clearSaveFolderUri() = setSaveFolderUri("")
 
+    fun setExportFolderUri(value: String) = save(KEY_EXPORT_FOLDER_URI, value, _exportFolderUri)
+
+    fun clearExportFolderUri() = setExportFolderUri("")
+
+    fun documentsTreeUri(): String? = _exportFolderUri.value.ifBlank { _saveFolderUri.value }.ifBlank { null }
+
     fun setSaveFolder(value: String) = save(KEY_FOLDER, value, _saveFolder)
 
     fun setDatePolicy(value: String) = save(KEY_DATE, value, _datePolicy)
@@ -193,6 +201,7 @@ class AppPrefs(context: Context) : SessionPrefs(
         private const val KEY_TRIM_OUTPUT = "trim_output"
         private const val KEY_FOLDER = "save_folder"
         private const val KEY_FOLDER_URI = "save_folder_uri"
+        private const val KEY_EXPORT_FOLDER_URI = "export_folder_uri"
         private const val KEY_DATE = "date_policy"
         private const val KEY_KEEP_LOCATION = "keep_location"
         private const val KEY_BACKUP_HINT = "backup_hint_shown"

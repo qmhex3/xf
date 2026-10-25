@@ -53,17 +53,17 @@ fun MainContent(activity: ComponentActivity, app: FrameOutApp, incoming: List<Ur
     val wave = remember { ThemeWaveState() }
     CompositionLocalProvider(LocalThemeWave provides wave) {
         androidx.compose.foundation.layout.Box(Modifier.fillMaxSize()) {
-            MainContentBody(activity, app, incoming, capture, onCaptureHandled, pendingBackup, onBackupConfirm, onBackupDismiss, notifPrompt, onNotifAllow, onNotifDismiss, onIncomingHandled)
+            MainContentBody(activity, app, incoming, capture, onCaptureHandled, pendingBackup, onBackupConfirm, onBackupDismiss, notifPrompt, onNotifAllow, onNotifDismiss, onIncomingHandled, splashActive = splash)
             ThemeWaveHost(wave)
             IncomingBusyOverlay()
             com.frameout.app.security.IntegrityGate(activity)
-            if (splash) com.frameout.app.splash.BrandSplash { splash = false }
+            if (splash) com.frameout.app.splash.BrandSplash(fast = app.container.prefs.onboardingDone()) { splash = false }
         }
     }
 }
 
 @Composable
-private fun MainContentBody(activity: ComponentActivity, app: FrameOutApp, incoming: List<Uri> = emptyList(), capture: Boolean = false, onCaptureHandled: () -> Unit = {}, pendingBackup: Uri? = null, onBackupConfirm: (Uri) -> Unit = {}, onBackupDismiss: () -> Unit = {}, notifPrompt: Boolean = false, onNotifAllow: () -> Unit = {}, onNotifDismiss: () -> Unit = {}, onIncomingHandled: () -> Unit = {}) {
+private fun MainContentBody(activity: ComponentActivity, app: FrameOutApp, incoming: List<Uri> = emptyList(), capture: Boolean = false, onCaptureHandled: () -> Unit = {}, pendingBackup: Uri? = null, onBackupConfirm: (Uri) -> Unit = {}, onBackupDismiss: () -> Unit = {}, notifPrompt: Boolean = false, onNotifAllow: () -> Unit = {}, onNotifDismiss: () -> Unit = {}, onIncomingHandled: () -> Unit = {}, splashActive: Boolean = false) {
     val stack = rememberSaveable(saver = routeStackSaver) { mutableStateListOf<AppRoute>(AppRoute.Library) }
     var showOem by remember { mutableStateOf(app.container.prefs.recoveryPending() && app.container.device.oemFamily != "stock") }
     var showOnboarding by remember { mutableStateOf(!app.container.prefs.onboardingDone()) }
@@ -80,10 +80,10 @@ private fun MainContentBody(activity: ComponentActivity, app: FrameOutApp, incom
     val fab = remember { FabRevealState() }
     val viewerReveal = remember { ViewerRevealState() }
     fun navigate(route: AppRoute) {
-        if (stack.lastOrNull() != route) { viewerReveal.onNavigate(stack.lastOrNull(), route); if (isTabSwitch(stack.lastOrNull(), route)) fab.reset() else fab.onNavigate(route); direction = 1; stack.add(route) }
+        if (stack.lastOrNull() != route) { com.frameout.app.ads.AdsGateway.action(); viewerReveal.onNavigate(stack.lastOrNull(), route); if (isTabSwitch(stack.lastOrNull(), route)) fab.reset() else fab.onNavigate(route); direction = 1; stack.add(route) }
     }
     fun back() {
-        if (stack.size > 1) { viewerReveal.onBack(stack.last()); if (isTabSwitch(stack.last(), stack[stack.lastIndex - 1])) fab.reset() else fab.onBack(stack.last()); direction = -1; stack.removeAt(stack.lastIndex) }
+        if (stack.size > 1) { viewerReveal.onBack(stack.last()); if (isTabSwitch(stack.last(), stack[stack.lastIndex - 1])) fab.reset() else fab.onBack(stack.last()); direction = -1; stack.removeAt(stack.lastIndex); if (stack.last() is AppRoute.Library) com.frameout.app.ads.AdsGateway.screenBreak() }
     }
     fun finishExtraction(projectId: Long) {
         val target = AppRoute.Frames(projectId)
@@ -145,6 +145,7 @@ private fun MainContentBody(activity: ComponentActivity, app: FrameOutApp, incom
     if (showOnboarding) {
         OnboardingScreen(
             onAllowNotifications = onNotifAllow,
+            ready = !splashActive,
             onStart = {
                 app.container.prefs.setOnboardingDone()
                 app.container.prefs.setOemGuideDone()
@@ -292,8 +293,8 @@ private fun RouteContent(
             }
         }
         is AppRoute.Extracting -> ExtractingScreen(r.projectId, { finishExtraction(r.projectId) }, back, { navigate(AppRoute.Collage(r.projectId, it)) }, { navigate(AppRoute.Viewer(r.projectId, it)) }, { navigate(AppRoute.Compare(r.projectId, it)) }, onLibrary = { replaceWith(AppRoute.Library) }, onSettings = { navigate(AppRoute.Settings) })
-        is AppRoute.Frames -> FramesScreen(r.projectId, back, { navigate(AppRoute.Collage(r.projectId, it)) }, { navigate(AppRoute.Viewer(r.projectId, it)) }, { navigate(AppRoute.Compare(r.projectId, it)) })
-        is AppRoute.Viewer -> ViewerScreen(r.projectId, r.frameId, back, savedId = r.savedId)
+        is AppRoute.Frames -> FramesScreen(r.projectId, back, { navigate(AppRoute.Collage(r.projectId, it)) }, { navigate(AppRoute.Viewer(r.projectId, it)) }, { navigate(AppRoute.Compare(r.projectId, it)) }, focusFrameId = r.focusFrameId)
+        is AppRoute.Viewer -> ViewerScreen(r.projectId, r.frameId, back, savedId = r.savedId, onShowInProject = { project, frame -> navigate(AppRoute.Frames(project, frame)) })
         is AppRoute.SavedViewer -> com.frameout.app.library.SavedImageViewerScreen(r.savedId, back)
         is AppRoute.Compare -> CompareScreen(r.frameIds, back)
         is AppRoute.Collage -> CollageScreen(r.projectId, r.frameIds, back, back)

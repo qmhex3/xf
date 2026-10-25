@@ -4,7 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
+import com.frameout.app.viewer.PagerPage
+import com.frameout.app.viewer.viewerFling
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
@@ -77,9 +84,14 @@ fun SavedImageViewerScreen(savedId: Long, onClose: () -> Unit) {
     PreferredFrameTheme {
         Box(Modifier.fillMaxSize().background(FrameColors.ViewerBlack)) {
             SavedImagePager(pager, ids, !zoomed, onZoomed = { zoomed = it }, onTap = { chrome = !chrome })
-            if (chrome) {
-                val label = if (ids.size > 1) "${pager.currentPage + 1} / ${ids.size}" else items[ids[pager.currentPage]]?.displayName.orEmpty()
-                SavedImageTopBar(label, items[ids[pager.currentPage]]?.uri, onClose, Modifier.align(Alignment.TopCenter))
+            val label = if (ids.size > 1) "${pager.currentPage + 1} / ${ids.size}" else items[ids[pager.currentPage]]?.displayName.orEmpty()
+            AnimatedVisibility(
+                visible = chrome,
+                modifier = Modifier.align(Alignment.TopCenter),
+                enter = fadeIn() + slideInVertically { -it / 2 },
+                exit = fadeOut() + slideOutVertically { -it / 2 }
+            ) {
+                SavedImageTopBar(label, items[ids[pager.currentPage]]?.uri, onClose, Modifier)
             }
         }
     }
@@ -91,14 +103,17 @@ private fun SavedImagePager(pager: PagerState, ids: List<Long>, scrollEnabled: B
         state = pager,
         userScrollEnabled = scrollEnabled,
         beyondViewportPageCount = 1,
+        flingBehavior = viewerFling(pager),
         modifier = Modifier.fillMaxSize()
     ) { page ->
-        SavedImagePage(
-            id = ids[page],
-            active = page == pager.currentPage,
-            onZoomed = { if (page == pager.currentPage) onZoomed(it) },
-            onTap = onTap
-        )
+        PagerPage(pager, page) {
+            SavedImagePage(
+                id = ids[page],
+                active = page == pager.currentPage,
+                onZoomed = { if (page == pager.currentPage) onZoomed(it) },
+                onTap = onTap
+            )
+        }
     }
 }
 

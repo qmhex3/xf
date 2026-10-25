@@ -20,6 +20,8 @@ class FrameOutApp : Application() {
         private set
     lateinit var billing: BillingManager
         private set
+    lateinit var ads: com.frameout.app.ads.AdsHub
+        private set
 
     override fun onCreate() {
         super.onCreate()
@@ -33,6 +35,8 @@ class FrameOutApp : Application() {
         container = AppContainer(this, BuildConfig.PLAY_BILLING, existingInstall && BuildConfig.GRANDFATHER)
         if (BuildConfig.PLAY_BILLING) com.frameout.app.billing.RevenueCatSync.configure(this)
         billing = BillingManager(container.entitlements, appScope)
+        ads = com.frameout.app.ads.AdsHub(this, container.entitlements, appScope)
+        com.frameout.app.ads.AdsGateway.hub = ads
         if (BuildConfig.PLAY_BILLING) {
             billing.start()
         }

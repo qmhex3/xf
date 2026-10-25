@@ -58,7 +58,9 @@ import com.frameout.core.util.EditedThumb
 import com.frameout.core.util.FrameStrings
 import com.frameout.core.util.QualityStrings
 import com.frameout.designsystem.components.FrameText
+import androidx.compose.animation.core.animateFloat
 import com.frameout.designsystem.icons.FrameIcons
+import com.frameout.designsystem.icons.FrameIconsExtra
 import androidx.compose.ui.res.painterResource
 import com.frameout.designsystem.theme.FrameShapes
 import com.frameout.designsystem.theme.FrameTheme
@@ -67,7 +69,7 @@ import com.frameout.engine.timeline.formatTimestamp
 private const val FOCUS_THUMB = 512
 
 @Composable
-fun FrameCell(frame: FrameEntity, selected: Boolean, selectionIndex: Int?, fit: GridFit, onClick: () -> Unit, onLongClick: () -> Unit, onToggleFavorite: () -> Unit = {}, waitIdle: suspend () -> Unit = {}, edit: FrameEdit? = null, focus: NormBox? = null, modifier: Modifier = Modifier) {
+fun FrameCell(frame: FrameEntity, selected: Boolean, selectionIndex: Int?, fit: GridFit, onClick: () -> Unit, onLongClick: () -> Unit, onToggleFavorite: () -> Unit = {}, waitIdle: suspend () -> Unit = {}, edit: FrameEdit? = null, focus: NormBox? = null, modifier: Modifier = Modifier, hint: Boolean = false) {
     val colors = FrameTheme.colors
     val path = frame.thumbnailPath ?: frame.fullPath
     val editKey = EditedThumb.key(path, edit)
@@ -96,6 +98,14 @@ fun FrameCell(frame: FrameEntity, selected: Boolean, selectionIndex: Int?, fit: 
             }
         }
     }.value
+    val pulse = if (hint) {
+        val p by androidx.compose.animation.core.rememberInfiniteTransition(label = "hintPulse").animateFloat(
+            0.35f, 1f,
+            androidx.compose.animation.core.infiniteRepeatable(androidx.compose.animation.core.tween(800), androidx.compose.animation.core.RepeatMode.Reverse),
+            label = "hintAlpha"
+        )
+        p
+    } else 1f
     val shrink by animateFloatAsState(if (selected) 0.9f else 1f, fxBouncy(), label = "cellShrink")
     val coords = remember { arrayOfNulls<androidx.compose.ui.layout.LayoutCoordinates>(1) }
     BoxWithConstraints(
@@ -104,6 +114,7 @@ fun FrameCell(frame: FrameEntity, selected: Boolean, selectionIndex: Int?, fit: 
             .padding(2.dp)
             .background(colors.container, FrameShapes.sm)
             .then(if (selected) Modifier.border(2.dp, colors.primary, FrameShapes.sm) else Modifier)
+            .then(if (hint) Modifier.border(3.dp, colors.primary.copy(alpha = pulse), FrameShapes.sm) else Modifier)
             .onGloballyPositioned { coords[0] = it }
             .frameCombinedClickable({ CellOrigin.mark(coords[0]); onClick() }, onLongClick, FrameA11y.select())
             .semantics {
@@ -192,6 +203,26 @@ fun FrameCell(frame: FrameEntity, selected: Boolean, selectionIndex: Int?, fit: 
         }
         if (showWhy) {
             FaceDetailsDialog(face) { showWhy = false }
+        }
+        if (hint) {
+            androidx.compose.foundation.layout.Row(
+                Modifier
+                    .align(Alignment.Center)
+                    .widthIn(max = maxWidth - 6.dp)
+                    .background(colors.primary, FrameShapes.pill)
+                    .padding(horizontal = 6.dp, vertical = 3.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(3.dp)
+            ) {
+                Image(painterResource(FrameIconsExtra.GoToFrame), null, Modifier.size(12.dp), colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(colors.onPrimary))
+                FrameText(
+                    FrameStrings.savedFrameHint(),
+                    FrameTheme.typography.label.copy(fontSize = density.timeSize, lineHeight = TextUnit.Unspecified),
+                    colors.onPrimary,
+                    maxLines = 1,
+                    overflow = TextOverflow.Clip
+                )
+            }
         }
         if (frame.isDeleted) {
             FrameText(

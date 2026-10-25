@@ -133,7 +133,7 @@
     <string name="oem_steps_oppo">OPPO/Realme/OnePlus：設定 → アプリ → Frame out → バッテリー使用量 → バックグラウンドでのアクティビティを許可。表示される場合は自動起動も有効にします。</string>
     <string name="oem_steps_vivo">Vivo/iQOO：設定 → バッテリー → バックグラウンドの電力消費管理 → Frame out → 許可。自動起動も有効にします。</string>
     <string name="oem_steps_samsung">Samsung：設定 → アプリ → Frame out → バッテリー → バックグラウンドでのアクティビティを許可。表示される場合は、スリープ状態のアプリから削除します。</string>
-    <string name="onboarding_oem_battery_link">バッテリー設定を開く</string>
+    <string name="onboarding_oem_battery_link">バッテリーと自動起動の設定を開く</string>
     <string name="fit">フィット</string>
     <string name="fill">フィル</string>
     <string name="on">ON</string>
@@ -367,6 +367,10 @@
     <string name="save_empty">保存した画像が空です。もう一度お試しください。</string>
     <string name="capture_failed">このフレームを読み取れませんでした</string>
     <string name="open_saved">開く</string>
+    <string name="show_in_folder">フォルダで表示</string>
+    <string name="export_folder">エクスポート先フォルダ</string>
+    <string name="export_folder_hint">ZIP、PDF、CSV などのファイル</string>
+    <string name="save_folder_hint">画像、GIF、動画</string>
     <string name="capture_size">画像サイズ</string>
     <string name="value_size_original">オリジナル</string>
     <string name="value_size_half">半分</string>
@@ -424,7 +428,7 @@
     <string name="onboarding_start">今すぐ開始</string>
     <string name="onboarding_hero_a">決定的瞬間を捉える</string>
     <string name="onboarding_hero_b">どんな動画からでも</string>
-    <string name="onboarding_hero_sub">すべてのフレームを思いのままに。劣化なしで最高品質の画像を抽出します。</string>
+    <string name="onboarding_hero_sub">すべてのフレームを思いのままに。利用可能な最高品質で抽出します。</string>
     <string name="onboarding_step">ステップ %1$d / %2$d</string>
     <string name="onboarding_formats_a">どんな動画でも。</string>
     <string name="onboarding_formats_b">どんな形式でも。</string>
@@ -434,12 +438,10 @@
     <string name="onboarding_pick_b">自動で選択</string>
     <string name="onboarding_pick_sub">ぼやけたフレームや重複したフレームをスキップし、最も鮮明なものを強調表示します。目を閉じているフレームを警告し、内容も自動で仕分けます。すべて端末内で処理されます。</string>
     <string name="onboarding_pick_analysis">連写の自動分析</string>
-    <string name="onboarding_pick_burst">連続 %1$d フレーム</string>
     <string name="onboarding_pick_local">端末内 AI</string>
     <string name="onboarding_tag_duplicate">重複</string>
     <string name="onboarding_tag_blurry">ぼやけ</string>
     <string name="onboarding_pick_clarity">鮮明度スコア：</string>
-    <string name="onboarding_pick_excluded">除外：%1$d フレーム</string>
     <string name="onboarding_ready_a">準備完了</string>
     <string name="onboarding_ready_b">あなたの瞬間を捉えましょう</string>
     <string name="onboarding_ready_sub">これらの設定はあとから設定で変更できます。</string>
@@ -737,14 +739,13 @@
     <string name="edit_reset_rotate">回転と反転をリセット</string>
     <string name="rating_title">Frame out を気に入っていただけましたか？</string>
     <string name="rating_body">お役に立てていれば、簡単な評価が大きな励みになります。所要時間は約10秒です。</string>
-    <string name="rating_stat">これまでに %1$d 回保存に成功しました</string>
     <string name="rating_hint">星をタップしてください</string>
     <string name="rating_label_1">不満</string>
     <string name="rating_label_2">もう少し改善が必要</string>
     <string name="rating_label_3">良い</string>
     <string name="rating_label_4">とても良い</string>
     <string name="rating_label_5">大好き</string>
-    <string name="rating_cta_choose">評価を選択</string>
+    <string name="rating_cta_choose">評価を送信</string>
     <string name="rating_cta_store">Google Play で評価</string>
     <string name="rating_cta_feedback">改善点を送る</string>
     <string name="rating_note_positive">ありがとうございます。いただいた評価は、他の方が Frame out を見つける助けになります。</string>
@@ -997,4 +998,14 @@
     <string name="update_fixes_body">切り抜き、表示品質、アプリの安定性</string>
     <string name="update_later">あとで</string>
     <string name="update_now">今すぐ更新</string>
+    <string name="viewer_show_in_project">プロジェクトで表示</string>
+    <string name="frame_saved_hint">保存したフレーム</string>
+    <string name="ads_reward_title">短い広告でロック解除</string>
+    <string name="ads_reward_body">短い広告を見ると、この機能を数分間無料で使えます。広告を完全に消すにはProをご利用ください。</string>
+    <string name="ads_reward_watch">広告を見る</string>
+    <string name="ads_reward_pro">Proにする</string>
+    <string name="ads_blocked_title">広告を読み込めません</string>
+    <string name="ads_blocked_body">Frame outは広告のおかげで無料で使えます。この端末またはネットワークの何かが広告をブロックしています。広告を許可するか、Proで広告なしでアプリを応援してください。</string>
+    <string name="ads_blocked_close">今はしない</string>
+    <string name="ads_privacy_options">広告のプライバシー設定</string>
 </resources>

@@ -60,9 +60,10 @@ internal fun StarPicker(rating: Int, reduce: Boolean, onChange: (Int) -> Unit, m
             burst.animateTo(1f, tween(900, easing = FastOutSlowInEasing))
         }
     }
+    val rtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-        Box(modifier.starTouch { current(it) }.starSemantics(rating, description) { current(it) }, Alignment.Center) {
-            StarRow(rating, reduce)
+        Box(modifier.starTouch(rtl) { current(it) }.starSemantics(rating, description) { current(it) }, Alignment.Center) {
+            StarRow(rating, reduce, rtl)
             if (burst.value > 0f && burst.value < 1f) {
                 Canvas(Modifier.matchParentSize()) { drawSparks(burst.value, accent) }
             }
@@ -70,15 +71,15 @@ internal fun StarPicker(rating: Int, reduce: Boolean, onChange: (Int) -> Unit, m
     }
 }
 
-private fun Modifier.starTouch(onPick: (Int) -> Unit): Modifier = pointerInput(Unit) {
+private fun Modifier.starTouch(rtl: Boolean, onPick: (Int) -> Unit): Modifier = pointerInput(rtl) {
     awaitEachGesture {
         val down = awaitFirstDown()
-        onPick(starAt(down.position.x, size.width))
+        onPick(starAt(down.position.x, size.width, rtl))
         down.consume()
         while (true) {
             val change = awaitPointerEvent().changes.firstOrNull() ?: break
             if (!change.pressed) break
-            onPick(starAt(change.position.x, size.width))
+            onPick(starAt(change.position.x, size.width, rtl))
             change.consume()
         }
     }
@@ -91,17 +92,21 @@ private fun Modifier.starSemantics(rating: Int, description: String, onPick: (In
 }
 
 @Composable
-private fun StarRow(rating: Int, reduce: Boolean) {
-    val outline = FrameTheme.colors.outline
-    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-        for (i in 1..RATING_STARS) {
-            Star(selected = i <= rating, index = i - 1, reduce = reduce, size = 44.dp, outline = outline)
+private fun StarRow(rating: Int, reduce: Boolean, rtl: Boolean) {
+    val outline = FrameTheme.colors.onSurfaceVariant.copy(alpha = 0.78f)
+    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        for (position in 0 until RATING_STARS) {
+            val number = if (rtl) RATING_STARS - position else position + 1
+            Star(selected = number <= rating, index = number - 1, reduce = reduce, size = 46.dp, outline = outline)
         }
     }
 }
 
-private fun starAt(x: Float, width: Int): Int =
-    if (width <= 0) 1 else ((x / width) * RATING_STARS).toInt().plus(1).coerceIn(1, RATING_STARS)
+private fun starAt(x: Float, width: Int, rtl: Boolean): Int {
+    if (width <= 0) return 1
+    val position = ((x / width) * RATING_STARS).toInt().coerceIn(0, RATING_STARS - 1)
+    return if (rtl) RATING_STARS - position else position + 1
+}
 
 @Composable
 private fun Star(selected: Boolean, index: Int, reduce: Boolean, size: Dp, outline: Color) {

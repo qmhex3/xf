@@ -38,27 +38,35 @@ internal fun folderValue(context: Context, uri: String): String =
     if (hasFolderAccess(context, uri)) folderLabel(context, uri) ?: FrameStrings.customFolder() else FrameStrings.defaultFolder()
 
 @Composable
-internal fun rememberFolderPicker(prefs: AppPrefs): () -> Unit {
+internal fun rememberFolderPicker(prefs: AppPrefs, onPicked: (String) -> Unit = { prefs.setSaveFolderUri(it) }): () -> Unit {
     val context = LocalContext.current
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) { tree ->
         if (tree != null) {
             val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
             val granted = runCatching { context.contentResolver.takePersistableUriPermission(tree, flags) }.isSuccess
-            if (granted) prefs.setSaveFolderUri(tree.toString())
+            if (granted) onPicked(tree.toString())
         }
     }
     return remember(launcher) { { launcher.launch(null) } }
 }
 
 @Composable
-internal fun SaveFolderSheet(visible: Boolean, prefs: AppPrefs, uri: String, onPick: () -> Unit, onClose: () -> Unit) {
+internal fun SaveFolderSheet(visible: Boolean, prefs: AppPrefs, uri: String, onPick: () -> Unit, onClose: () -> Unit) =
+    FolderSheet(visible, FrameStrings.saveFolder(), DEFAULT_PATH, uri, { prefs.clearSaveFolderUri() }, onPick, onClose)
+
+@Composable
+internal fun ExportFolderSheet(visible: Boolean, prefs: AppPrefs, uri: String, followsText: String, onPick: () -> Unit, onClose: () -> Unit) =
+    FolderSheet(visible, FrameStrings.exportFolder(), followsText, uri, { prefs.clearExportFolderUri() }, onPick, onClose)
+
+@Composable
+private fun FolderSheet(visible: Boolean, title: String, defaultText: String, uri: String, onClear: () -> Unit, onPick: () -> Unit, onClose: () -> Unit) {
     val context = LocalContext.current
     val custom = hasFolderAccess(context, uri)
-    LaunchedEffect(uri) { if (uri.isNotBlank() && !custom) prefs.clearSaveFolderUri() }
-    BottomSheetFrame(visible, onClose, FrameStrings.saveFolder()) {
+    LaunchedEffect(uri) { if (uri.isNotBlank() && !custom) onClear() }
+    BottomSheetFrame(visible, onClose, title) {
         Column(Modifier.padding(horizontal = 12.dp, vertical = 8.dp), Arrangement.spacedBy(2.dp)) {
-            ChoiceItem(ChoiceOption("default", FrameStrings.defaultFolder(), DEFAULT_PATH), !custom) {
-                prefs.clearSaveFolderUri()
+            ChoiceItem(ChoiceOption("default", FrameStrings.defaultFolder(), defaultText), !custom) {
+                onClear()
                 onClose()
             }
             if (custom) ChoiceItem(ChoiceOption("custom", folderLabel(context, uri) ?: FrameStrings.customFolder(), FrameStrings.customFolder()), true) { onClose() }

@@ -116,4 +116,16 @@
         <item quantity="one">1 görsel dışa aktarıldı</item>
         <item quantity="other">%1$d görsel dışa aktarıldı</item>
     </plurals>
+    <plurals name="onboarding_pick_burst">
+        <item quantity="one">%1$d ardışık kare</item>
+        <item quantity="other">%1$d ardışık kare</item>
+    </plurals>
+    <plurals name="onboarding_pick_excluded">
+        <item quantity="one">Hariç tutulan: %1$d kare</item>
+        <item quantity="other">Hariç tutulan: %1$d kare</item>
+    </plurals>
+    <plurals name="rating_stat">
+        <item quantity="one">Şimdiye kadar %1$d başarılı kayıt</item>
+        <item quantity="other">Şimdiye kadar %1$d başarılı kayıt</item>
+    </plurals>
 </resources>

@@ -133,7 +133,7 @@
     <string name="oem_steps_oppo">OPPO/Realme/OnePlus: Ayarlar → Uygulamalar → Frame out → Pil kullanımı → Arka plan etkinliğine izin ver. Görünüyorsa Otomatik başlat seçeneğini de aç.</string>
     <string name="oem_steps_vivo">Vivo/iQOO: Ayarlar → Pil → Arka plan güç tüketimi yönetimi → Frame out → İzin ver. Otomatik başlat seçeneğini de aç.</string>
     <string name="oem_steps_samsung">Samsung: Ayarlar → Uygulamalar → Frame out → Pil → Arka plan etkinliğine izin ver. Listede varsa Uyuyan uygulamalar\'dan kaldır.</string>
-    <string name="onboarding_oem_battery_link">Pil ayarlarını aç</string>
+    <string name="onboarding_oem_battery_link">Pil ve otomatik başlatma ayarlarını aç</string>
     <string name="fit">Sığdır</string>
     <string name="fill">Doldur</string>
     <string name="on">AÇIK</string>
@@ -367,6 +367,10 @@
     <string name="save_empty">Kaydedilen görsel boş. Tekrar dene.</string>
     <string name="capture_failed">Bu kare okunamadı</string>
     <string name="open_saved">Aç</string>
+    <string name="show_in_folder">Klasörde göster</string>
+    <string name="export_folder">Dışa aktarma klasörü</string>
+    <string name="export_folder_hint">ZIP, PDF, CSV ve diğer dosyalar</string>
+    <string name="save_folder_hint">Görseller, GIF\'ler ve videolar</string>
     <string name="capture_size">Görsel boyutu</string>
     <string name="value_size_original">Orijinal</string>
     <string name="value_size_half">Yarım</string>
@@ -424,7 +428,7 @@
     <string name="onboarding_start">Şimdi başla</string>
     <string name="onboarding_hero_a">Belirleyici anı yakala</string>
     <string name="onboarding_hero_b">her videodan</string>
-    <string name="onboarding_hero_sub">Her kareyi kontrol et ve en yüksek kaliteyi sıfır kayıpla çıkar.</string>
+    <string name="onboarding_hero_sub">Her kareyi kontrol et ve mevcut en yüksek kaliteyi çıkar.</string>
     <string name="onboarding_step">Adım %1$d / %2$d</string>
     <string name="onboarding_formats_a">Her video.</string>
     <string name="onboarding_formats_b">Her biçimde.</string>
@@ -434,12 +438,10 @@
     <string name="onboarding_pick_b">otomatik seç</string>
     <string name="onboarding_pick_sub">Bulanık ve yinelenen kareleri atlar, en netleri vurgular, kapalı gözler için uyarır ve içeriği sıralar; hepsi cihazında.</string>
     <string name="onboarding_pick_analysis">Otomatik seri analizi</string>
-    <string name="onboarding_pick_burst">%1$d ardışık kare</string>
     <string name="onboarding_pick_local">Cihaz üstü yapay zeka</string>
     <string name="onboarding_tag_duplicate">Yinelenen</string>
     <string name="onboarding_tag_blurry">Bulanık</string>
     <string name="onboarding_pick_clarity">Netlik puanı:</string>
-    <string name="onboarding_pick_excluded">Hariç tutulan: %1$d kare</string>
     <string name="onboarding_ready_a">Anını yakalamaya</string>
     <string name="onboarding_ready_b">hazır ol</string>
     <string name="onboarding_ready_sub">Bu ayarları daha sonra Ayarlar\'dan değiştirebilirsin.</string>
@@ -737,14 +739,13 @@
     <string name="edit_reset_rotate">Döndürmeyi ve çevirmeyi sıfırla</string>
     <string name="rating_title">Frame out\'u beğeniyor musun?</string>
     <string name="rating_body">Zamanından tasarruf ettiriyorsa, hızlı bir puan çok yardımcı olur. 10 saniye sürer.</string>
-    <string name="rating_stat">Şimdiye kadar %1$d başarılı kayıt</string>
     <string name="rating_hint">Yıldızlara dokun</string>
     <string name="rating_label_1">Kötü</string>
     <string name="rating_label_2">Daha iyi olabilir</string>
     <string name="rating_label_3">İyi</string>
     <string name="rating_label_4">Harika</string>
     <string name="rating_label_5">Bayıldım!</string>
-    <string name="rating_cta_choose">Puanını seç</string>
+    <string name="rating_cta_choose">Değerlendirmeyi gönder</string>
     <string name="rating_cta_store">Google Play\'de puanla</string>
     <string name="rating_cta_feedback">Neyi düzelteceğimizi söyle</string>
     <string name="rating_note_positive">Teşekkürler! Puanın başkalarının Frame out\'u bulmasına yardımcı olur.</string>
@@ -997,4 +998,14 @@
     <string name="update_fixes_body">Kırpma, görüntü kalitesi, uygulama kararlılığı</string>
     <string name="update_later">Sonra</string>
     <string name="update_now">Şimdi güncelle</string>
+    <string name="viewer_show_in_project">Projede göster</string>
+    <string name="frame_saved_hint">Kaydedilen kare</string>
+    <string name="ads_reward_title">Kısa bir reklamla aç</string>
+    <string name="ads_reward_body">Bu özelliği birkaç dakika ücretsiz kullanmak için kısa bir reklam izleyin ya da reklamları tamamen kaldırmak için Pro\'ya geçin.</string>
+    <string name="ads_reward_watch">Reklamı izle</string>
+    <string name="ads_reward_pro">Pro\'ya geç</string>
+    <string name="ads_blocked_title">Reklamlar yüklenemiyor</string>
+    <string name="ads_blocked_body">Frame out reklamlar sayesinde ücretsiz kalır. Bu cihazdaki veya ağdaki bir şey reklamları engelliyor. Reklamlara izin verebilir ya da reklamsız desteklemek için Pro\'ya geçebilirsiniz.</string>
+    <string name="ads_blocked_close">Şimdi değil</string>
+    <string name="ads_privacy_options">Reklam gizliliği seçenekleri</string>
 </resources>

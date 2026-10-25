@@ -14,7 +14,9 @@ object SaveFolderGuard {
     fun resolve(context: Context, treeUri: String?): String? {
         if (treeUri.isNullOrBlank()) return null
         if (usable(context, Uri.parse(treeUri))) return treeUri
-        AppPrefs(context).clearSaveFolderUri()
+        val prefs = AppPrefs(context)
+        if (prefs.saveFolderUri.value == treeUri) prefs.clearSaveFolderUri()
+        if (prefs.exportFolderUri.value == treeUri) prefs.clearExportFolderUri()
         notice()
         return null
     }

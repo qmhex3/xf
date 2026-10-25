@@ -21,10 +21,13 @@ fun ViewerDock(
     onEdit: () -> Unit = {},
     playing: Boolean = false,
     onPlay: () -> Unit = {},
-    showPlay: Boolean = true
+    showPlay: Boolean = true,
+    showGoTo: Boolean = false,
+    onGoTo: () -> Unit = {}
 ) {
     val items = listOfNotNull(
         if (!showPlay) null else DockItem("play", if (playing) FrameStrings.pause() else FrameStrings.play(), FrameIcons.PlayFilled, selectedIcon = FrameIcons.PauseFilled, selected = playing, onClick = onPlay),
+        if (!showGoTo) null else DockItem("goto", FrameStrings.showInProject(), FrameIconsExtra.GoToFrame, onClick = onGoTo),
         DockItem("save", FrameStrings.save(), FrameIcons.Save, onClick = onSave),
         DockItem("share", FrameStrings.share(), FrameIcons.Share, onClick = onShare),
         DockItem("search", SearchStrings.actionShort(), FrameIcons.Search, onClick = onSearch),

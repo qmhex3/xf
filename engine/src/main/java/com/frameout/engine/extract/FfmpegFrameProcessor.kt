@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import com.frameout.codecpack.MediaFailureException
 import com.frameout.core.db.FrameEntity
 import com.frameout.core.db.VideoIndexDao
+import com.frameout.core.quality.BlockProbe
 import com.frameout.core.quality.ExtractQualityGate
 import com.frameout.core.storage.StorageManager
 import com.frameout.engine.decode.FfmpegDecodedFrame
@@ -53,6 +54,7 @@ internal class FfmpegFrameProcessor(
             } else {
                 null
             }
+            BlockProbe.record(storage.projectDir(request.projectId), staged.index, bitmap)
             AnalysisCopy.write(storage, request, staged.index, bitmap)
             return FrameEntity(projectId = request.projectId, index = staged.index, ptsUs = staged.pts, isKeyframe = staged.keyframe, thumbnailPath = thumbPath, fullPath = fullPath)
         } finally {

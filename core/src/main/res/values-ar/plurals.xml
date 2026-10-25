@@ -203,4 +203,27 @@
         <item quantity="many">صُدّرت %1$d صورة</item>
         <item quantity="other">صُدّرت %1$d صورة</item>
     </plurals>
+    <plurals name="onboarding_pick_burst">
+        <item quantity="zero">لا إطارات متتالية</item>
+        <item quantity="one">إطار واحد</item>
+        <item quantity="two">إطاران متتاليان</item>
+        <item quantity="few">%1$d إطارات متتالية</item>
+        <item quantity="many">%1$d إطارًا متتاليًا</item>
+        <item quantity="other">%1$d إطار متتالٍ</item>
+    </plurals>
+    <plurals name="onboarding_pick_excluded">
+        <item quantity="zero">لم يُستبعد أي إطار</item>
+        <item quantity="one">تم استبعاد إطار واحد</item>
+        <item quantity="two">تم استبعاد إطارين</item>
+        <item quantity="few">تم استبعاد %1$d إطارات</item>
+        <item quantity="many">تم استبعاد %1$d إطارًا</item>
+        <item quantity="other">تم استبعاد %1$d إطار</item>
+    </plurals>
+    <plurals name="rating_stat">
+        <item quantity="one">عملية حفظ ناجحة واحدة حتى الآن</item>
+        <item quantity="two">عمليتا حفظ ناجحتان حتى الآن</item>
+        <item quantity="few">%1$d عمليات حفظ ناجحة حتى الآن</item>
+        <item quantity="many">%1$d عملية حفظ ناجحة حتى الآن</item>
+        <item quantity="other">%1$d عملية حفظ ناجحة حتى الآن</item>
+    </plurals>
 </resources>

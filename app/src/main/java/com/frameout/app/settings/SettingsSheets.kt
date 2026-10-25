@@ -46,7 +46,7 @@ import com.frameout.designsystem.theme.FrameGradients
 import com.frameout.designsystem.theme.FrameShapes
 import com.frameout.designsystem.theme.FrameTheme
 
-internal enum class SettingsSheet { Language, Format, Mode, Folder, Content }
+internal enum class SettingsSheet { Language, Format, Mode, Folder, ExportFolder, Content }
 
 internal class ChoiceOption(val key: String, val label: String, val caption: String? = null, val tag: String? = null, val pro: Boolean = false)
 
@@ -61,9 +61,9 @@ internal class SheetSpec(
 private const val SEARCH_THRESHOLD = 7
 
 @Composable
-internal fun SettingsSheets(sheet: SettingsSheet?, prefs: AppPrefs, context: Context, v: SettingsValues, onPickFolder: () -> Unit, onClose: () -> Unit) {
+internal fun SettingsSheets(sheet: SettingsSheet?, prefs: AppPrefs, context: Context, v: SettingsValues, onPickFolder: () -> Unit, onPickExportFolder: () -> Unit, onClose: () -> Unit) {
     val holder = remember { arrayOfNulls<SheetSpec>(1) }
-    val choice = sheet != null && sheet != SettingsSheet.Mode && sheet != SettingsSheet.Folder && sheet != SettingsSheet.Content
+    val choice = sheet != null && sheet != SettingsSheet.Mode && sheet != SettingsSheet.Folder && sheet != SettingsSheet.ExportFolder && sheet != SettingsSheet.Content
     sheet?.takeIf { choice }?.let { holder[0] = specFor(it, prefs, context, v, onClose) }
     holder[0]?.let { ChoiceSheet(choice, it, onClose) }
     ModeSheet(sheet == SettingsSheet.Mode, prefs, v.extract, onClose)
@@ -71,6 +71,8 @@ internal fun SettingsSheets(sheet: SettingsSheet?, prefs: AppPrefs, context: Con
     val contentSpec = (stored as? com.frameout.engine.extract.ExtractMode.Content)?.spec ?: com.frameout.core.quality.content.ContentSpec()
     ContentSheet(sheet == SettingsSheet.Content, contentSpec, { prefs.setExtractMode(com.frameout.engine.extract.ExtractModeCodec.encode(com.frameout.engine.extract.ExtractMode.Content(it))) }, onClose)
     SaveFolderSheet(sheet == SettingsSheet.Folder, prefs, v.folder, onPickFolder, onClose)
+    val followsText = if (hasFolderAccess(context, v.folder)) folderValue(context, v.folder) else "Documents/${FrameStrings.appName()}"
+    ExportFolderSheet(sheet == SettingsSheet.ExportFolder, prefs, v.exportFolder, followsText, onPickExportFolder, onClose)
 }
 
 private fun specFor(sheet: SettingsSheet, prefs: AppPrefs, context: Context, v: SettingsValues, onClose: () -> Unit): SheetSpec = when (sheet) {
@@ -91,7 +93,7 @@ private fun specFor(sheet: SettingsSheet, prefs: AppPrefs, context: Context, v: 
         val free = com.frameout.core.pro.ProCatalog.formatIsFree(ImageFormat.fromKey(key))
         com.frameout.core.pro.ProAccess.source?.gate(com.frameout.core.pro.ProFeature.ExportFormats, free, key) { prefs.setSaveFormat(key) } ?: prefs.setSaveFormat(key)
     }
-    SettingsSheet.Mode, SettingsSheet.Folder, SettingsSheet.Content -> error("Shown by its own sheet")
+    SettingsSheet.Mode, SettingsSheet.Folder, SettingsSheet.ExportFolder, SettingsSheet.Content -> error("Shown by its own sheet")
 }
 
 @Composable

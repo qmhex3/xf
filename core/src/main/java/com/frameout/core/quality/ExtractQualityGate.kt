@@ -3,24 +3,29 @@ package com.frameout.core.quality
 import com.frameout.core.util.SmoothScale
 import android.graphics.Bitmap
 
-class ExtractQualityGate(private val skipBlurry: Boolean, private val skipDuplicates: Boolean, private val peopleOnly: Boolean = false, private val includeBody: Boolean = true, private val content: com.frameout.core.quality.content.ContentGate? = null, private val onReject: (SkipReason) -> Unit = {}) {
+class ExtractQualityGate(private val skipBlurry: Boolean, private val skipDuplicates: Boolean, private val peopleOnly: Boolean = false, private val includeBody: Boolean = true, private val content: com.frameout.core.quality.content.ContentGate? = null, private val blockAware: Boolean = false, private val onReject: (SkipReason) -> Unit = {}) {
     private val recent = ArrayDeque<Double>()
     private var lastSig: ByteArray? = null
     private var lastNoise = 0f
 
-    fun accept(bitmap: Bitmap): Boolean = withSample(bitmap) { luma, w, h -> accept(luma, w, h) }
-
-    fun seed(bitmap: Bitmap) {
-        withSample(bitmap) { luma, w, h -> seed(luma, w, h) }
+    fun accept(bitmap: Bitmap): Boolean {
+        val blocks = measuredFactor(bitmap)
+        return withSample(bitmap) { luma, w, h -> accept(luma, w, h, blocks) }
     }
 
-    fun seed(luma: IntArray, width: Int, height: Int) {
-        remember(FocusScore.detail(luma, width, height))
+    fun seed(bitmap: Bitmap, blockFactor: Double = 1.0) {
+        withSample(bitmap) { luma, w, h -> seed(luma, w, h, blockFactor) }
+    }
+
+    fun seed(luma: IntArray, width: Int, height: Int, blockFactor: Double = 1.0) {
+        remember(FocusScore.detail(luma, width, height), blockFactor)
         if (skipDuplicates) {
             lastSig = FrameSignature.of(luma, width, height)
             lastNoise = FrameSignature.cellNoise(FocusScore.detail(luma, width, height).noise, width, height)
         }
     }
+
+    private fun measuredFactor(bitmap: Bitmap): Double = if (blockAware && skipBlurry) BlockProbe.factor(bitmap) else 1.0
 
     private inline fun <T> withSample(bitmap: Bitmap, block: (IntArray, Int, Int) -> T): T {
         val scale = SAMPLE_SIDE.toFloat() / maxOf(bitmap.width, bitmap.height)
@@ -39,13 +44,14 @@ class ExtractQualityGate(private val skipBlurry: Boolean, private val skipDuplic
     private suspend fun acceptPeople(bitmap: Bitmap): Boolean =
         !peopleOnly || PeopleFilter.containsPerson(bitmap, includeBody).also { if (!it) onReject(SkipReason.NoPeople) }
 
-    fun accept(luma: IntArray, width: Int, height: Int): Boolean {
+    fun accept(luma: IntArray, width: Int, height: Int, blockFactor: Double = 1.0): Boolean {
         val detail = FocusScore.detail(luma, width, height)
+        val score = detail.score * blockFactor
         val baseline = median()
         val enough = recent.size >= MIN_HISTORY
         if (!detail.plain) {
-            val blurry = skipBlurry && enough && baseline > 0.0 && detail.score < baseline * BLUR_RATIO
-            remember(detail)
+            val blurry = skipBlurry && enough && baseline > 0.0 && score < baseline * BLUR_RATIO
+            remember(detail, blockFactor)
             if (blurry) { onReject(SkipReason.Blurry); return false }
         }
         if (skipDuplicates) {
@@ -59,9 +65,9 @@ class ExtractQualityGate(private val skipBlurry: Boolean, private val skipDuplic
         return true
     }
 
-    private fun remember(detail: FocusScore.Detail) {
+    private fun remember(detail: FocusScore.Detail, blockFactor: Double) {
         if (detail.plain) return
-        recent.addLast(detail.score)
+        recent.addLast(detail.score * blockFactor)
         if (recent.size > HISTORY) recent.removeFirst()
     }
 

@@ -6,7 +6,7 @@ object RatingStrings {
     private fun s(id: Int, vararg args: Any): String = StringSource.get(id, *args)
     fun title() = s(R.string.rating_title)
     fun body() = s(R.string.rating_body)
-    fun stat(count: Int) = s(R.string.rating_stat, count)
+    fun stat(count: Int) = StringSource.plural(R.plurals.rating_stat, count, count)
     fun hint() = s(R.string.rating_hint)
     fun label(stars: Int) = when (stars) {
         1 -> s(R.string.rating_label_1)

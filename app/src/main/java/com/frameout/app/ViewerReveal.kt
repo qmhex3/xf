@@ -55,7 +55,9 @@ class ViewerRevealState {
     private var revealed: AppRoute? = null
 
     fun onNavigate(from: AppRoute?, to: AppRoute) {
-        val ok = allowed && to is AppRoute.Viewer && (from is AppRoute.Frames || from is AppRoute.Extracting) && CellOrigin.fresh()
+        val fromGrid = to is AppRoute.Viewer && (from is AppRoute.Frames || from is AppRoute.Extracting)
+        val fromSaved = from is AppRoute.Library && ((to is AppRoute.Viewer && to.savedId != null) || to is AppRoute.SavedViewer)
+        val ok = allowed && (fromGrid || fromSaved) && CellOrigin.fresh()
         active = ok
         opening = true
         revealed = if (ok) to else null

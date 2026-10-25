@@ -133,7 +133,7 @@
     <string name="oem_steps_oppo">OPPO/Realme/OnePlus: Innstillinger → Apper → Frame out → Batteribruk → Tillat bakgrunnsaktivitet. Slå på Autostart hvis det vises.</string>
     <string name="oem_steps_vivo">Vivo/iQOO: Innstillinger → Batteri → Administrasjon av bakgrunnsstrømforbruk → Frame out → Tillat. Slå også på Autostart.</string>
     <string name="oem_steps_samsung">Samsung: Innstillinger → Apper → Frame out → Batteri → Tillat bakgrunnsaktivitet. Fjern appen fra Sovende apper hvis den står der.</string>
-    <string name="onboarding_oem_battery_link">Åpne batteriinnstillinger</string>
+    <string name="onboarding_oem_battery_link">Åpne batteri- og autostartinnstillinger</string>
     <string name="fit">Tilpass</string>
     <string name="fill">Fyll</string>
     <string name="on">PÅ</string>
@@ -367,6 +367,10 @@
     <string name="save_empty">Det lagrede bildet er tomt. Prøv igjen.</string>
     <string name="capture_failed">Kunne ikke lese dette bildet</string>
     <string name="open_saved">Åpne</string>
+    <string name="show_in_folder">Vis i mappe</string>
+    <string name="export_folder">Eksportmappe</string>
+    <string name="export_folder_hint">ZIP, PDF, CSV og andre filer</string>
+    <string name="save_folder_hint">Bilder, GIF-er og videoer</string>
     <string name="capture_size">Bildestørrelse</string>
     <string name="value_size_original">Original</string>
     <string name="value_size_half">Halv</string>
@@ -424,7 +428,7 @@
     <string name="onboarding_start">Start nå</string>
     <string name="onboarding_hero_a">Fang det avgjørende øyeblikket</string>
     <string name="onboarding_hero_b">fra enhver video</string>
-    <string name="onboarding_hero_sub">Ta kontroll over hvert bilde og trekk ut høyeste kvalitet uten tap.</string>
+    <string name="onboarding_hero_sub">Ta kontroll over hvert bilde og trekk ut høyeste tilgjengelige kvalitet.</string>
     <string name="onboarding_step">Trinn %1$d av %2$d</string>
     <string name="onboarding_formats_a">Enhver video.</string>
     <string name="onboarding_formats_b">I alle formater.</string>
@@ -434,12 +438,10 @@
     <string name="onboarding_pick_b">automatisk</string>
     <string name="onboarding_pick_sub">Appen hopper over uskarpe og like bilder, utheber det skarpeste, advarer deg om lukkede øyne og sorterer innholdet, alt på enheten din.</string>
     <string name="onboarding_pick_analysis">Automatisk serieanalyse</string>
-    <string name="onboarding_pick_burst">%1$d bilder på rad</string>
     <string name="onboarding_pick_local">KI på enheten</string>
     <string name="onboarding_tag_duplicate">Duplikat</string>
     <string name="onboarding_tag_blurry">Uskarpt</string>
     <string name="onboarding_pick_clarity">Skarphetspoeng:</string>
-    <string name="onboarding_pick_excluded">Utelatt: %1$d bilder</string>
     <string name="onboarding_ready_a">Klar til å fange</string>
     <string name="onboarding_ready_b">øyeblikket ditt</string>
     <string name="onboarding_ready_sub">Du kan endre disse innstillingene senere under Innstillinger.</string>
@@ -737,14 +739,13 @@
     <string name="edit_reset_rotate">Tilbakestill rotasjon og speiling</string>
     <string name="rating_title">Liker du Frame out?</string>
     <string name="rating_body">Hvis appen sparer deg for tid, hjelper en rask vurdering veldig. Det tar 10 sekunder.</string>
-    <string name="rating_stat">%1$d vellykkede lagringer så langt</string>
     <string name="rating_hint">Trykk på stjernene</string>
     <string name="rating_label_1">Dårlig</string>
     <string name="rating_label_2">Kunne vært bedre</string>
     <string name="rating_label_3">Bra</string>
     <string name="rating_label_4">Flott</string>
     <string name="rating_label_5">Elsker den!</string>
-    <string name="rating_cta_choose">Velg vurderingen din</string>
+    <string name="rating_cta_choose">Send vurdering</string>
     <string name="rating_cta_store">Vurder på Google Play</string>
     <string name="rating_cta_feedback">Fortell oss hva vi bør rette</string>
     <string name="rating_note_positive">Takk! Vurderingen din hjelper andre med å finne Frame out.</string>
@@ -997,4 +998,14 @@
     <string name="update_fixes_body">Beskjæring, visningskvalitet, appstabilitet</string>
     <string name="update_later">Senere</string>
     <string name="update_now">Oppdater nå</string>
+    <string name="viewer_show_in_project">Vis i prosjektet</string>
+    <string name="frame_saved_hint">Lagret bilde</string>
+    <string name="ads_reward_title">Lås opp med en kort annonse</string>
+    <string name="ads_reward_body">Se en kort annonse for å bruke denne funksjonen gratis i noen minutter, eller skaff Pro for å fjerne annonser for godt.</string>
+    <string name="ads_reward_watch">Se annonse</string>
+    <string name="ads_reward_pro">Skaff Pro</string>
+    <string name="ads_blocked_title">Annonser kan ikke lastes</string>
+    <string name="ads_blocked_body">Frame out er gratis takket være annonser. Noe på denne enheten eller dette nettverket blokkerer dem. Du kan tillate annonser eller skaffe Pro for å støtte appen uten dem.</string>
+    <string name="ads_blocked_close">Ikke nå</string>
+    <string name="ads_privacy_options">Personvernvalg for annonser</string>
 </resources>

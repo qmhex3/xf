@@ -133,7 +133,7 @@
     <string name="oem_steps_oppo">OPPO/Realme/OnePlus: تنظیمات ← برنامه‌ها ← Frame out ← مصرف باتری ← فعالیت در پس‌زمینه را مجاز کنید. در صورت نمایش، اجرای خودکار را فعال کنید.</string>
     <string name="oem_steps_vivo">Vivo/iQOO: تنظیمات ← باتری ← مدیریت مصرف انرژی در پس‌زمینه ← Frame out ← مجاز. اجرای خودکار را هم فعال کنید.</string>
     <string name="oem_steps_samsung">Samsung: تنظیمات ← برنامه‌ها ← Frame out ← باتری ← فعالیت در پس‌زمینه را مجاز کنید. اگر در فهرست برنامه‌های خواب است، آن را حذف کنید.</string>
-    <string name="onboarding_oem_battery_link">باز کردن تنظیمات باتری</string>
+    <string name="onboarding_oem_battery_link">باز کردن تنظیمات باتری و اجرای خودکار</string>
     <string name="fit">متناسب</string>
     <string name="fill">پر کردن</string>
     <string name="on">روشن</string>
@@ -367,6 +367,10 @@
     <string name="save_empty">تصویر ذخیره‌شده خالی است. دوباره تلاش کنید.</string>
     <string name="capture_failed">خواندن این فریم ممکن نبود</string>
     <string name="open_saved">باز کردن</string>
+    <string name="show_in_folder">نمایش در پوشه</string>
+    <string name="export_folder">پوشه خروجی</string>
+    <string name="export_folder_hint">ZIP، PDF، CSV و فایل‌های دیگر</string>
+    <string name="save_folder_hint">تصاویر، GIF و ویدیوها</string>
     <string name="capture_size">اندازه تصویر</string>
     <string name="value_size_original">اصلی</string>
     <string name="value_size_half">نصف</string>
@@ -424,7 +428,7 @@
     <string name="onboarding_start">همین حالا شروع کنید</string>
     <string name="onboarding_hero_a">لحظه سرنوشت‌ساز را ثبت کنید</string>
     <string name="onboarding_hero_b">از هر ویدیو</string>
-    <string name="onboarding_hero_sub">کنترل هر فریم را در دست بگیرید و با بالاترین کیفیت و بدون هیچ افت، استخراج کنید.</string>
+    <string name="onboarding_hero_sub">کنترل هر فریم را در دست بگیرید و با بالاترین کیفیت موجود، استخراج کنید.</string>
     <string name="onboarding_step">مرحله %1$d از %2$d</string>
     <string name="onboarding_formats_a">هر ویدیویی.</string>
     <string name="onboarding_formats_b">در هر قالبی.</string>
@@ -434,12 +438,10 @@
     <string name="onboarding_pick_b">خودکار انتخاب کنید</string>
     <string name="onboarding_pick_sub">فریم‌های تار و تکراری را رد می‌کند، واضح‌ترین را مشخص می‌کند، درباره چشم‌های بسته هشدار می‌دهد و محتوا را دسته‌بندی می‌کند؛ همه روی دستگاه شما.</string>
     <string name="onboarding_pick_analysis">تحلیل خودکار پشت‌سرهم‌ها</string>
-    <string name="onboarding_pick_burst">%1$d فریم پیاپی</string>
     <string name="onboarding_pick_local">هوش مصنوعی روی دستگاه</string>
     <string name="onboarding_tag_duplicate">تکراری</string>
     <string name="onboarding_tag_blurry">تار</string>
     <string name="onboarding_pick_clarity">امتیاز وضوح:</string>
-    <string name="onboarding_pick_excluded">حذف‌شده: %1$d فریم</string>
     <string name="onboarding_ready_a">آماده ثبت</string>
     <string name="onboarding_ready_b">لحظه شما</string>
     <string name="onboarding_ready_sub">این تنظیمات را بعداً می‌توانید در تنظیمات تغییر دهید.</string>
@@ -737,14 +739,13 @@
     <string name="edit_reset_rotate">بازنشانی چرخش و وارونگی</string>
     <string name="rating_title">از Frame out راضی هستید؟</string>
     <string name="rating_body">اگر در وقت شما صرفه‌جویی کرده، یک امتیاز کوتاه کمک بزرگی است. فقط ۱۰ ثانیه طول می‌کشد.</string>
-    <string name="rating_stat">تا اینجا %1$d ذخیرهٔ موفق</string>
     <string name="rating_hint">روی ستاره‌ها بزنید</string>
     <string name="rating_label_1">ضعیف</string>
     <string name="rating_label_2">می‌تواند بهتر باشد</string>
     <string name="rating_label_3">خوب</string>
     <string name="rating_label_4">عالی</string>
     <string name="rating_label_5">عاشقشم!</string>
-    <string name="rating_cta_choose">امتیاز خود را انتخاب کنید</string>
+    <string name="rating_cta_choose">ارسال امتیاز</string>
     <string name="rating_cta_store">امتیاز در Google Play</string>
     <string name="rating_cta_feedback">بگویید چه چیزی را درست کنیم</string>
     <string name="rating_note_positive">ممنونیم! امتیاز شما به دیگران کمک می‌کند Frame out را پیدا کنند.</string>
@@ -997,4 +998,14 @@
     <string name="update_fixes_body">برش، کیفیت نمایش، پایداری برنامه</string>
     <string name="update_later">بعداً</string>
     <string name="update_now">اکنون به‌روزرسانی کن</string>
+    <string name="viewer_show_in_project">نمایش در پروژه</string>
+    <string name="frame_saved_hint">فریم ذخیره‌شده</string>
+    <string name="ads_reward_title">با یک تبلیغ کوتاه باز کنید</string>
+    <string name="ads_reward_body">برای استفاده رایگان از این قابلیت چند دقیقه، یک تبلیغ کوتاه ببینید یا با Pro تبلیغات را برای همیشه حذف کنید.</string>
+    <string name="ads_reward_watch">دیدن تبلیغ</string>
+    <string name="ads_reward_pro">دریافت Pro</string>
+    <string name="ads_blocked_title">بارگیری تبلیغات ممکن نیست</string>
+    <string name="ads_blocked_body">Frame out به لطف تبلیغات رایگان می‌ماند. چیزی در این دستگاه یا شبکه آن‌ها را مسدود می‌کند. می‌توانید تبلیغات را مجاز کنید یا با Pro بدون تبلیغ از برنامه حمایت کنید.</string>
+    <string name="ads_blocked_close">حالا نه</string>
+    <string name="ads_privacy_options">گزینه‌های حریم خصوصی تبلیغات</string>
 </resources>

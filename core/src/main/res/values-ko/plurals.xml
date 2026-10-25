@@ -87,4 +87,13 @@
     <plurals name="saved_export_done_n">
         <item quantity="other">이미지 %1$d개를 내보냈습니다</item>
     </plurals>
+    <plurals name="onboarding_pick_burst">
+        <item quantity="other">연속 프레임 %1$d개</item>
+    </plurals>
+    <plurals name="onboarding_pick_excluded">
+        <item quantity="other">제외됨: 프레임 %1$d개</item>
+    </plurals>
+    <plurals name="rating_stat">
+        <item quantity="other">지금까지 저장 %1$d회 성공</item>
+    </plurals>
 </resources>

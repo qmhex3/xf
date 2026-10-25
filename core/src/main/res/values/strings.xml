@@ -133,7 +133,7 @@
     <string name="oem_steps_oppo">OPPO/Realme/OnePlus: Settings → Apps → Frame out → Battery usage → Allow background activity. Enable Autostart if shown.</string>
     <string name="oem_steps_vivo">Vivo/iQOO: Settings → Battery → Background power consumption management → Frame out → Allow. Also enable Autostart.</string>
     <string name="oem_steps_samsung">Samsung: Settings → Apps → Frame out → Battery → Allow background activity. Remove from Sleeping apps if listed.</string>
-    <string name="onboarding_oem_battery_link">Open battery settings</string>
+    <string name="onboarding_oem_battery_link">Open battery &amp; autostart settings</string>
     <string name="fit">Fit</string>
     <string name="fill">Fill</string>
     <string name="on">ON</string>
@@ -367,6 +367,10 @@
     <string name="save_empty">The saved image is empty. Try again.</string>
     <string name="capture_failed">Could not read this frame</string>
     <string name="open_saved">Open</string>
+    <string name="show_in_folder">Show in folder</string>
+    <string name="export_folder">Exports folder</string>
+    <string name="export_folder_hint">ZIP, PDF, CSV and other files</string>
+    <string name="save_folder_hint">Images, GIFs and videos</string>
     <string name="capture_size">Image size</string>
     <string name="value_size_original">Original</string>
     <string name="value_size_half">Half</string>
@@ -424,7 +428,7 @@
     <string name="onboarding_start">Start now</string>
     <string name="onboarding_hero_a">Capture the decisive moment</string>
     <string name="onboarding_hero_b">from any video</string>
-    <string name="onboarding_hero_sub">Take control of every frame and extract the highest quality with zero loss.</string>
+    <string name="onboarding_hero_sub">Take control of every frame and extract the highest quality available.</string>
     <string name="onboarding_step">Step %1$d of %2$d</string>
     <string name="onboarding_formats_a">Any video.</string>
     <string name="onboarding_formats_b">In any format.</string>
@@ -434,12 +438,10 @@
     <string name="onboarding_pick_b">automatically</string>
     <string name="onboarding_pick_sub">It skips blurry and duplicate frames, highlights the sharpest, warns you about closed eyes and sorts the content, all on your device.</string>
     <string name="onboarding_pick_analysis">Automatic burst analysis</string>
-    <string name="onboarding_pick_burst">%1$d consecutive frames</string>
     <string name="onboarding_pick_local">On-device AI</string>
     <string name="onboarding_tag_duplicate">Duplicate</string>
     <string name="onboarding_tag_blurry">Blurry</string>
     <string name="onboarding_pick_clarity">Clarity score:</string>
-    <string name="onboarding_pick_excluded">Excluded: %1$d frames</string>
     <string name="onboarding_ready_a">Ready to capture</string>
     <string name="onboarding_ready_b">your moment</string>
     <string name="onboarding_ready_sub">You can change these settings later in Settings.</string>
@@ -448,7 +450,7 @@
     <string name="onboarding_perm_notif">Notifications</string>
     <string name="onboarding_perm_notif_desc">To follow progress and control extraction easily.</string>
     <string name="onboarding_perm_battery">Unrestricted battery</string>
-    <string name="onboarding_perm_battery_desc">So long extractions can finish in the background.</string>
+    <string name="onboarding_perm_battery_desc">So long extractions can finish in the background. Open the list, find Frame out and choose Unrestricted.</string>
     <string name="onboarding_perm_enabled">Enabled</string>
     <string name="onboarding_captured">Captured</string>
     <string name="onboarding_ready_start">Extract your first video</string>
@@ -737,14 +739,13 @@
     <string name="edit_reset_rotate">Reset rotation and flip</string>
     <string name="rating_title">Enjoying Frame out?</string>
     <string name="rating_body">If it saves you time, a quick rating helps a lot. It takes 10 seconds.</string>
-    <string name="rating_stat">%1$d successful saves so far</string>
     <string name="rating_hint">Tap the stars</string>
     <string name="rating_label_1">Poor</string>
     <string name="rating_label_2">Could be better</string>
     <string name="rating_label_3">Good</string>
     <string name="rating_label_4">Great</string>
     <string name="rating_label_5">Love it!</string>
-    <string name="rating_cta_choose">Choose your rating</string>
+    <string name="rating_cta_choose">Submit rating</string>
     <string name="rating_cta_store">Rate on Google Play</string>
     <string name="rating_cta_feedback">Tell us what to fix</string>
     <string name="rating_note_positive">Thank you! Your rating helps others find Frame out.</string>
@@ -997,4 +998,14 @@
     <string name="update_fixes_body">Cropping, display quality, app stability</string>
     <string name="update_later">Later</string>
     <string name="update_now">Update now</string>
+    <string name="viewer_show_in_project">Show in project</string>
+    <string name="frame_saved_hint">Saved frame</string>
+    <string name="ads_reward_title">Unlock with a short ad</string>
+    <string name="ads_reward_body">Watch one short ad to use this feature free for a few minutes, or get Pro to remove ads for good.</string>
+    <string name="ads_reward_watch">Watch ad</string>
+    <string name="ads_reward_pro">Get Pro</string>
+    <string name="ads_blocked_title">Ads cannot load</string>
+    <string name="ads_blocked_body">Frame out stays free thanks to ads. Something on this device or network is blocking them. You can allow ads, or get Pro to support the app without them.</string>
+    <string name="ads_blocked_close">Not now</string>
+    <string name="ads_privacy_options">Ad privacy choices</string>
 </resources>

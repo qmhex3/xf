@@ -41,16 +41,17 @@ import com.frameout.designsystem.theme.FrameTheme
 private const val TOTAL_MS = 2250f
 private const val EXIT_START_MS = 1500f
 private const val MAX_STEP_MS = 40f
+private const val FAST_SPEED = 1.7f
 private const val TILE_FRACTION = 0.36f
 private const val CENTER_FRACTION = 0.46f
 
 @Composable
-fun BrandSplash(onFinished: () -> Unit) {
-    PreferredFrameTheme { BrandSplashContent(onFinished) }
+fun BrandSplash(fast: Boolean = false, onFinished: () -> Unit) {
+    PreferredFrameTheme { BrandSplashContent(fast, onFinished) }
 }
 
 @Composable
-private fun BrandSplashContent(onFinished: () -> Unit) {
+private fun BrandSplashContent(fast: Boolean, onFinished: () -> Unit) {
     val finish by rememberUpdatedState(onFinished)
     if (LocalSystemA11y.current.reduceMotion) {
         LaunchedEffect(Unit) { finish() }
@@ -59,7 +60,7 @@ private fun BrandSplashContent(onFinished: () -> Unit) {
     val clock = remember { mutableFloatStateOf(0f) }
     var skip by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
-        runSplashClock(clock) { skip }
+        runSplashClock(clock, if (fast) FAST_SPEED else 1f) { skip }
         finish()
     }
     BoxWithConstraints(
@@ -72,11 +73,11 @@ private fun BrandSplashContent(onFinished: () -> Unit) {
     }
 }
 
-private suspend fun runSplashClock(clock: MutableFloatState, skipRequested: () -> Boolean) {
+private suspend fun runSplashClock(clock: MutableFloatState, speed: Float, skipRequested: () -> Boolean) {
     var last = withFrameNanos { it }
     while (clock.floatValue < TOTAL_MS) {
         val now = withFrameNanos { it }
-        val step = ((now - last) / 1_000_000f).coerceIn(0f, MAX_STEP_MS)
+        val step = ((now - last) / 1_000_000f).coerceIn(0f, MAX_STEP_MS) * speed
         last = now
         val next = clock.floatValue + step
         clock.floatValue = if (skipRequested() && next < EXIT_START_MS) EXIT_START_MS else next

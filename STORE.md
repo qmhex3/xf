@@ -38,6 +38,19 @@ Checklist:
 4. Existing installs keep every feature for free for life (grandfathering is on by default). Build with `-PgrandfatherExisting=false` to turn it off.
 5. Test with a license-tester account and an internal testing track before production: buy, cancel, restore and the 14-day offline grace period.
 
+## Ads (optional, off by default)
+
+Ads are compiled in only with `-PadsEnabled=true`; the default build has no ad SDK and no ad code. Free users of the store build (`-PstoreBuild=true`) see them; Pro, grandfathered installs and non-store builds never do. Full beginner guide in Arabic: docs/ADS_SETUP_AR.md.
+
+```bash
+gradle :app:assembleDebug -PstoreBuild=true -PadsEnabled=true
+gradle :app:bundleRelease -PstoreBuild=true -PadsEnabled=true \
+  -PadmobAppId=ca-app-pub-XXXX~YYYY -PadmobBannerId=ca-app-pub-XXXX/AAAA \
+  -PadmobInterstitialId=ca-app-pub-XXXX/BBBB -PadmobRewardedId=ca-app-pub-XXXX/CCCC
+```
+
+Debug builds always use Google test ad units. Release builds with ads refuse to build with blank or test IDs. Add `-PadsDebugEea=true -PadsTestDevice=<hashed id>` to test the EEA consent form.
+
 ## Policy alignment
 
 - INTERNET only for optional image search (and Google Play Billing in the store build), contains ads (declare Ads = Yes in Play Console and complete Data safety for the ad SDK; add the ad provider's consent flow for EEA/UK)

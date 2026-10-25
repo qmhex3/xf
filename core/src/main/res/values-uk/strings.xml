@@ -133,7 +133,7 @@
     <string name="oem_steps_oppo">OPPO/Realme/OnePlus: Налаштування → Застосунки → Frame out → Використання батареї → Дозволити фонову активність. Увімкніть Автозапуск, якщо він є.</string>
     <string name="oem_steps_vivo">Vivo/iQOO: Налаштування → Батарея → Керування фоновим споживанням енергії → Frame out → Дозволити. Також увімкніть Автозапуск.</string>
     <string name="oem_steps_samsung">Samsung: Налаштування → Застосунки → Frame out → Батарея → Дозволити фонову активність. Видаліть зі списку «Сплячі застосунки», якщо він там є.</string>
-    <string name="onboarding_oem_battery_link">Відкрити налаштування батареї</string>
+    <string name="onboarding_oem_battery_link">Відкрити налаштування батареї та автозапуску</string>
     <string name="fit">Вмістити</string>
     <string name="fill">Заповнити</string>
     <string name="on">УВІМК.</string>
@@ -367,6 +367,10 @@
     <string name="save_empty">Збережене зображення порожнє. Спробуйте ще раз.</string>
     <string name="capture_failed">Не вдалося прочитати цей кадр</string>
     <string name="open_saved">Відкрити</string>
+    <string name="show_in_folder">Показати в папці</string>
+    <string name="export_folder">Папка експорту</string>
+    <string name="export_folder_hint">ZIP, PDF, CSV та інші файли</string>
+    <string name="save_folder_hint">Зображення, GIF та відео</string>
     <string name="capture_size">Розмір зображення</string>
     <string name="value_size_original">Оригінал</string>
     <string name="value_size_half">Половина</string>
@@ -424,7 +428,7 @@
     <string name="onboarding_start">Почати зараз</string>
     <string name="onboarding_hero_a">Упіймайте вирішальну мить</string>
     <string name="onboarding_hero_b">з будь-якого відео</string>
-    <string name="onboarding_hero_sub">Керуйте кожним кадром і видобувайте найвищу якість без жодних втрат.</string>
+    <string name="onboarding_hero_sub">Керуйте кожним кадром і видобувайте найвищу доступну якість.</string>
     <string name="onboarding_step">Крок %1$d з %2$d</string>
     <string name="onboarding_formats_a">Будь-яке відео.</string>
     <string name="onboarding_formats_b">У будь-якому форматі.</string>
@@ -434,12 +438,10 @@
     <string name="onboarding_pick_b">автоматично</string>
     <string name="onboarding_pick_sub">Застосунок пропускає розмиті й дубльовані кадри, виділяє найчіткіші, попереджає про заплющені очі та сортує вміст — усе на вашому пристрої.</string>
     <string name="onboarding_pick_analysis">Автоматичний аналіз серії</string>
-    <string name="onboarding_pick_burst">Послідовних кадрів: %1$d</string>
     <string name="onboarding_pick_local">ШІ на пристрої</string>
     <string name="onboarding_tag_duplicate">Дублікат</string>
     <string name="onboarding_tag_blurry">Розмитий</string>
     <string name="onboarding_pick_clarity">Оцінка чіткості:</string>
-    <string name="onboarding_pick_excluded">Виключено кадрів: %1$d</string>
     <string name="onboarding_ready_a">Готові захопити</string>
     <string name="onboarding_ready_b">свою мить</string>
     <string name="onboarding_ready_sub">Ці налаштування можна змінити пізніше в розділі «Налаштування».</string>
@@ -737,14 +739,13 @@
     <string name="edit_reset_rotate">Скинути поворот і віддзеркалення</string>
     <string name="rating_title">Подобається Frame out?</string>
     <string name="rating_body">Якщо він заощаджує ваш час, швидка оцінка дуже допоможе. Це займе 10 секунд.</string>
-    <string name="rating_stat">Успішних збережень досі: %1$d</string>
     <string name="rating_hint">Торкніться зірочок</string>
     <string name="rating_label_1">Погано</string>
     <string name="rating_label_2">Могло б бути краще</string>
     <string name="rating_label_3">Добре</string>
     <string name="rating_label_4">Чудово</string>
     <string name="rating_label_5">Обожнюю!</string>
-    <string name="rating_cta_choose">Виберіть оцінку</string>
+    <string name="rating_cta_choose">Надіслати оцінку</string>
     <string name="rating_cta_store">Оцінити в Google Play</string>
     <string name="rating_cta_feedback">Розкажіть, що виправити</string>
     <string name="rating_note_positive">Дякуємо! Ваша оцінка допомагає іншим знайти Frame out.</string>
@@ -997,4 +998,14 @@
     <string name="update_fixes_body">Обрізання, якість відображення, стабільність застосунку</string>
     <string name="update_later">Пізніше</string>
     <string name="update_now">Оновити зараз</string>
+    <string name="viewer_show_in_project">Показати в проєкті</string>
+    <string name="frame_saved_hint">Збережений кадр</string>
+    <string name="ads_reward_title">Розблокуйте короткою рекламою</string>
+    <string name="ads_reward_body">Перегляньте коротку рекламу, щоб безкоштовно користуватися цією функцією кілька хвилин, або оформіть Pro, щоб назавжди прибрати рекламу.</string>
+    <string name="ads_reward_watch">Дивитися рекламу</string>
+    <string name="ads_reward_pro">Отримати Pro</string>
+    <string name="ads_blocked_title">Не вдається завантажити рекламу</string>
+    <string name="ads_blocked_body">Frame out залишається безкоштовним завдяки рекламі. Щось на цьому пристрої або в мережі її блокує. Ви можете дозволити рекламу або оформити Pro, щоб підтримати застосунок без неї.</string>
+    <string name="ads_blocked_close">Не зараз</string>
+    <string name="ads_privacy_options">Параметри конфіденційності реклами</string>
 </resources>

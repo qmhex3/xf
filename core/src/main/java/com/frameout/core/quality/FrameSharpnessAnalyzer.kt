@@ -10,12 +10,13 @@ object FrameSharpnessAnalyzer {
 
     suspend fun scoreProject(dao: FrameDao, projectId: Long): List<ScoredFrame> {
         val profiles = ArrayList<MotionEstimate.Profile?>()
+        val blocks = BlockLedger.Lookup()
         val scored = FrameScan.mapThumbnails(dao, projectId) { frame, bitmap ->
             val luma = Sharpness.lumaOf(bitmap)
             val focus = FocusScore.detail(luma, bitmap.width, bitmap.height)
             profiles += MotionEstimate.profile(luma, bitmap.width, bitmap.height)
             ScoredFrame(
-                frame.id, frame.index, focus.score, ptsUs = frame.ptsUs,
+                frame.id, frame.index, focus.score * blocks.factor(frame.thumbnailPath, frame.index), ptsUs = frame.ptsUs, isKeyframe = frame.isKeyframe,
                 sig = FrameSignature.of(luma, bitmap.width, bitmap.height),
                 noise = FrameSignature.cellNoise(focus.noise, bitmap.width, bitmap.height)
             )

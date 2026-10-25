@@ -116,4 +116,16 @@
         <item quantity="one">1 इमेज एक्सपोर्ट हुई</item>
         <item quantity="other">%1$d इमेज एक्सपोर्ट हुईं</item>
     </plurals>
+    <plurals name="onboarding_pick_burst">
+        <item quantity="one">लगातार %1$d फ़्रेम</item>
+        <item quantity="other">लगातार %1$d फ़्रेम</item>
+    </plurals>
+    <plurals name="onboarding_pick_excluded">
+        <item quantity="one">बाहर रखे गए: %1$d फ़्रेम</item>
+        <item quantity="other">बाहर रखे गए: %1$d फ़्रेम</item>
+    </plurals>
+    <plurals name="rating_stat">
+        <item quantity="one">अब तक %1$d सफल सेव</item>
+        <item quantity="other">अब तक %1$d सफल सेव</item>
+    </plurals>
 </resources>

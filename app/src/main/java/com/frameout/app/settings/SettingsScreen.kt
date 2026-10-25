@@ -60,11 +60,12 @@ fun SettingsScreen(onBack: () -> Unit, onAbout: () -> Unit = {}, onLibrary: () -
     val datePolicy by prefs.datePolicy.collectAsState()
     val extract by prefs.extractMode.collectAsState()
     val folder by prefs.saveFolderUri.collectAsState()
-    PreferredFrameTheme { SettingsContent(context, prefs, onBack, onAbout, onLibrary, onAddVideo, SettingsValues(theme, lang, format, autoSave, datePolicy, extract, folder)) }
+    val exportFolder by prefs.exportFolderUri.collectAsState()
+    PreferredFrameTheme { SettingsContent(context, prefs, onBack, onAbout, onLibrary, onAddVideo, SettingsValues(theme, lang, format, autoSave, datePolicy, extract, folder, exportFolder)) }
 }
 
 internal data class SettingsValues(
-    val theme: String, val lang: String, val format: String, val autoSave: Boolean, val datePolicy: String, val extract: String, val folder: String
+    val theme: String, val lang: String, val format: String, val autoSave: Boolean, val datePolicy: String, val extract: String, val folder: String, val exportFolder: String
 )
 
 @Composable
@@ -72,7 +73,9 @@ private fun SettingsContent(context: Context, prefs: AppPrefs, onBack: () -> Uni
     val colors = FrameTheme.colors
     var sheet by remember { mutableStateOf<SettingsSheet?>(null) }
     val pickFolder = rememberFolderPicker(prefs)
+    val pickExportFolder = rememberFolderPicker(prefs) { prefs.setExportFolderUri(it) }
     val folderText by produceState(FrameStrings.defaultFolder(), v.folder) { value = withContext(Dispatchers.IO) { folderValue(context, v.folder) } }
+    val exportFolderText by produceState(FrameStrings.defaultFolder(), v.exportFolder) { value = withContext(Dispatchers.IO) { folderValue(context, v.exportFolder) } }
     Box(Modifier.fillMaxSize().background(colors.background).frameAmbientGlow()) {
         Column(
             Modifier
@@ -84,8 +87,9 @@ private fun SettingsContent(context: Context, prefs: AppPrefs, onBack: () -> Uni
         ) {
             SettingsHeader(onBack)
             ProSettings()
+            AdSettings()
             AppearanceSettings(prefs, v.theme, v.lang) { sheet = SettingsSheet.Language }
-            ExportSettings(prefs, folderText, v, { sheet = SettingsSheet.Format }) { sheet = SettingsSheet.Folder }
+            ExportSettings(prefs, folderText, exportFolderText, v, { sheet = SettingsSheet.Format }, { sheet = SettingsSheet.Folder }) { sheet = SettingsSheet.ExportFolder }
             ExtractionSettings(prefs, v.extract, { sheet = SettingsSheet.Mode }) { sheet = SettingsSheet.Content }
             SettingsSection(FrameStrings.diagnostics()) { SettingsCard { DiagnosticsSettings(context) } }
             Column(Modifier.padding(top = 12.dp)) {
@@ -96,7 +100,7 @@ private fun SettingsContent(context: Context, prefs: AppPrefs, onBack: () -> Uni
             Spacer(Modifier.height(120.dp))
         }
         SettingsDock(onLibrary, onAddVideo)
-        SettingsSheets(sheet, prefs, context, v, pickFolder, onClose = { sheet = null })
+        SettingsSheets(sheet, prefs, context, v, pickFolder, pickExportFolder, onClose = { sheet = null })
     }
 }
 
@@ -153,7 +157,7 @@ private fun AppearanceSettings(prefs: AppPrefs, theme: String, lang: String, onL
 }
 
 @Composable
-private fun ExportSettings(prefs: AppPrefs, folderText: String, v: SettingsValues, onFormat: () -> Unit, onFolder: () -> Unit) {
+private fun ExportSettings(prefs: AppPrefs, folderText: String, exportFolderText: String, v: SettingsValues, onFormat: () -> Unit, onFolder: () -> Unit, onExportFolder: () -> Unit) {
     val keepLocation by prefs.keepLocation.collectAsState()
     SettingsSection(FrameStrings.export()) {
         SettingsCard {
@@ -161,7 +165,9 @@ private fun ExportSettings(prefs: AppPrefs, folderText: String, v: SettingsValue
             SettingsDivider()
             QualitySettings(prefs, v.format)
             SettingsDivider()
-            NavRow(FrameIconsExtra.Folder, FrameStrings.saveFolder(), value = folderText, onClick = onFolder)
+            NavRow(FrameIconsExtra.Folder, FrameStrings.saveFolder(), hint = FrameStrings.saveFolderHint(), value = folderText, onClick = onFolder)
+            SettingsDivider()
+            NavRow(FrameIconsExtra.Folder, FrameStrings.exportFolder(), hint = FrameStrings.exportFolderHint(), value = exportFolderText, onClick = onExportFolder)
             SettingsDivider()
             ToggleRow(FrameIcons.Save, FrameStrings.autoSave(), FrameStrings.autoSaveHint(), v.autoSave) { prefs.setAutoSave(it) }
             SettingsDivider()

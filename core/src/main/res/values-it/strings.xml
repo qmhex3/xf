@@ -133,7 +133,7 @@
     <string name="oem_steps_oppo">OPPO/Realme/OnePlus: Impostazioni → App → Frame out → Utilizzo batteria → Consenti attività in background. Attiva l’Avvio automatico se compare.</string>
     <string name="oem_steps_vivo">Vivo/iQOO: Impostazioni → Batteria → Gestione consumo in background → Frame out → Consenti. Attiva anche l’Avvio automatico.</string>
     <string name="oem_steps_samsung">Samsung: Impostazioni → App → Frame out → Batteria → Consenti attività in background. Rimuovila da App in stop se presente.</string>
-    <string name="onboarding_oem_battery_link">Apri le impostazioni della batteria</string>
+    <string name="onboarding_oem_battery_link">Apri impostazioni batteria e avvio automatico</string>
     <string name="fit">Adatta</string>
     <string name="fill">Riempi</string>
     <string name="on">ON</string>
@@ -367,6 +367,10 @@
     <string name="save_empty">L’immagine salvata è vuota. Riprova.</string>
     <string name="capture_failed">Impossibile leggere questo fotogramma</string>
     <string name="open_saved">Apri</string>
+    <string name="show_in_folder">Mostra nella cartella</string>
+    <string name="export_folder">Cartella di esportazione</string>
+    <string name="export_folder_hint">ZIP, PDF, CSV e altri file</string>
+    <string name="save_folder_hint">Immagini, GIF e video</string>
     <string name="capture_size">Dimensione dell’immagine</string>
     <string name="value_size_original">Originale</string>
     <string name="value_size_half">Metà</string>
@@ -424,7 +428,7 @@
     <string name="onboarding_start">Inizia ora</string>
     <string name="onboarding_hero_a">Cattura il momento decisivo</string>
     <string name="onboarding_hero_b">da qualsiasi video</string>
-    <string name="onboarding_hero_sub">Prendi il controllo di ogni fotogramma ed estrai la massima qualità senza alcuna perdita.</string>
+    <string name="onboarding_hero_sub">Prendi il controllo di ogni fotogramma ed estrai la massima qualità disponibile.</string>
     <string name="onboarding_step">Passo %1$d di %2$d</string>
     <string name="onboarding_formats_a">Qualsiasi video.</string>
     <string name="onboarding_formats_b">In qualsiasi formato.</string>
@@ -434,12 +438,10 @@
     <string name="onboarding_pick_b">in automatico</string>
     <string name="onboarding_pick_sub">Salta i fotogrammi sfocati e duplicati, evidenzia i più nitidi, ti avvisa degli occhi chiusi e ordina i contenuti, tutto sul tuo dispositivo.</string>
     <string name="onboarding_pick_analysis">Analisi automatica delle raffiche</string>
-    <string name="onboarding_pick_burst">%1$d fotogrammi consecutivi</string>
     <string name="onboarding_pick_local">IA sul dispositivo</string>
     <string name="onboarding_tag_duplicate">Duplicato</string>
     <string name="onboarding_tag_blurry">Sfocato</string>
     <string name="onboarding_pick_clarity">Punteggio di nitidezza:</string>
-    <string name="onboarding_pick_excluded">Esclusi: %1$d fotogrammi</string>
     <string name="onboarding_ready_a">Pronto a catturare</string>
     <string name="onboarding_ready_b">il tuo momento</string>
     <string name="onboarding_ready_sub">Potrai cambiare queste impostazioni più tardi in Impostazioni.</string>
@@ -737,14 +739,13 @@
     <string name="edit_reset_rotate">Reimposta rotazione e riflessione</string>
     <string name="rating_title">Ti piace Frame out?</string>
     <string name="rating_body">Se ti fa risparmiare tempo, una rapida valutazione aiuta molto. Ci vogliono 10 secondi.</string>
-    <string name="rating_stat">%1$d salvataggi riusciti finora</string>
     <string name="rating_hint">Tocca le stelle</string>
     <string name="rating_label_1">Scarso</string>
     <string name="rating_label_2">Potrebbe andare meglio</string>
     <string name="rating_label_3">Buono</string>
     <string name="rating_label_4">Ottimo</string>
     <string name="rating_label_5">Lo adoro!</string>
-    <string name="rating_cta_choose">Scegli la tua valutazione</string>
+    <string name="rating_cta_choose">Invia valutazione</string>
     <string name="rating_cta_store">Valuta su Google Play</string>
     <string name="rating_cta_feedback">Dicci cosa sistemare</string>
     <string name="rating_note_positive">Grazie! La tua valutazione aiuta gli altri a trovare Frame out.</string>
@@ -997,4 +998,14 @@
     <string name="update_fixes_body">Ritaglio, qualità di visualizzazione, stabilità dell’app</string>
     <string name="update_later">Più tardi</string>
     <string name="update_now">Aggiorna ora</string>
+    <string name="viewer_show_in_project">Mostra nel progetto</string>
+    <string name="frame_saved_hint">Fotogramma salvato</string>
+    <string name="ads_reward_title">Sblocca con un breve annuncio</string>
+    <string name="ads_reward_body">Guarda un breve annuncio per usare gratis questa funzione per qualche minuto, oppure passa a Pro per rimuovere gli annunci per sempre.</string>
+    <string name="ads_reward_watch">Guarda l\'annuncio</string>
+    <string name="ads_reward_pro">Passa a Pro</string>
+    <string name="ads_blocked_title">Impossibile caricare gli annunci</string>
+    <string name="ads_blocked_body">Frame out resta gratuito grazie agli annunci. Qualcosa su questo dispositivo o sulla rete li sta bloccando. Puoi consentirli oppure passare a Pro per sostenere l\'app senza annunci.</string>
+    <string name="ads_blocked_close">Non ora</string>
+    <string name="ads_privacy_options">Opzioni privacy degli annunci</string>
 </resources>

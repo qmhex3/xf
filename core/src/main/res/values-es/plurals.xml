@@ -145,4 +145,19 @@
         <item quantity="many">%1$d de imágenes exportadas</item>
         <item quantity="other">%1$d imágenes exportadas</item>
     </plurals>
+    <plurals name="onboarding_pick_burst">
+        <item quantity="one">%1$d fotogramas consecutivos</item>
+        <item quantity="many">%1$d fotogramas consecutivos</item>
+        <item quantity="other">%1$d fotogramas consecutivos</item>
+    </plurals>
+    <plurals name="onboarding_pick_excluded">
+        <item quantity="one">Excluidos: %1$d fotogramas</item>
+        <item quantity="many">Excluidos: %1$d fotogramas</item>
+        <item quantity="other">Excluidos: %1$d fotogramas</item>
+    </plurals>
+    <plurals name="rating_stat">
+        <item quantity="one">%1$d guardados correctos hasta ahora</item>
+        <item quantity="many">%1$d guardados correctos hasta ahora</item>
+        <item quantity="other">%1$d guardados correctos hasta ahora</item>
+    </plurals>
 </resources>

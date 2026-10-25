@@ -145,4 +145,19 @@
         <item quantity="few">%1$d imagini exportate</item>
         <item quantity="other">%1$d de imagini exportate</item>
     </plurals>
+    <plurals name="onboarding_pick_burst">
+        <item quantity="one">%1$d cadre consecutive</item>
+        <item quantity="few">%1$d cadre consecutive</item>
+        <item quantity="other">%1$d cadre consecutive</item>
+    </plurals>
+    <plurals name="onboarding_pick_excluded">
+        <item quantity="one">Excluse: %1$d cadre</item>
+        <item quantity="few">Excluse: %1$d cadre</item>
+        <item quantity="other">Excluse: %1$d cadre</item>
+    </plurals>
+    <plurals name="rating_stat">
+        <item quantity="one">%1$d salvări reușite până acum</item>
+        <item quantity="few">%1$d salvări reușite până acum</item>
+        <item quantity="other">%1$d salvări reușite până acum</item>
+    </plurals>
 </resources>

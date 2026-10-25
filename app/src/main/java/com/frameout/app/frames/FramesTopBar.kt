@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -32,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
@@ -111,13 +113,14 @@ fun FramesTopBar(
                         color = colors.primary,
                         modifier = Modifier.liveMessage().semantics { contentDescription = ScrubStrings.selectedOfTotal(selected, count) }
                     )
+                    FrameCountLine(0)
                 } else {
                     FrameMarqueeText(
                         name,
                         style = FrameTheme.typography.title.copy(textDirection = TextDirection.Content),
                         modifier = Modifier.screenHeading().frameClickable { text = name; editing = true }
                     )
-                    if (count > 0) FrameText(FrameStrings.frameCount(count), style = FrameTheme.typography.bodySmall, color = colors.onSurfaceVariant, maxLines = 1)
+                    FrameCountLine(count)
                 }
             }
             if (selecting) onSelectAll?.let { HeaderButton(FrameIcons.SelectAll, FrameStrings.selectAll(), it) }
@@ -128,6 +131,18 @@ fun FramesTopBar(
             }
         }
     }
+}
+
+@Composable
+private fun FrameCountLine(count: Int) {
+    val shown = count > 0
+    FrameText(
+        FrameStrings.frameCount(count.coerceAtLeast(1)),
+        style = FrameTheme.typography.bodySmall,
+        color = FrameTheme.colors.onSurfaceVariant,
+        maxLines = 1,
+        modifier = if (shown) Modifier else Modifier.alpha(0f).clearAndSetSemantics { }
+    )
 }
 
 @Composable

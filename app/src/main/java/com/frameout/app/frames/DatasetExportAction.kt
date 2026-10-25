@@ -49,9 +49,9 @@ class DatasetExportAction(private val context: Context) {
         staged.mapIndexed { i, frame -> DatasetFrame(DatasetImages.usable(frame), picks[i].sharpness, picks[i].score, rejected = i >= keptCount) }
 
     private suspend fun save(projectId: Long, title: String, format: DatasetFormat, frames: List<DatasetFrame>, keptCount: Int): ExportOutcome {
-        val treeUri = app.container.prefs.saveFolderUri.value.ifBlank { null }
+        val treeUri = app.container.prefs.documentsTreeUri()
         if (!app.container.storage.hasDestinationRoom(treeUri, frames.sumOf { it.staged.file.length() })) return ExportOutcome(FrameStrings.noSpace())
-        val subfolder = app.container.projects.getById(projectId)?.saveSubfolder.orEmpty()
+        val subfolder = app.container.projects.getById(projectId)?.let { com.frameout.core.storage.AsciiName.folder(it.saveSubfolder, it.id) }.orEmpty()
         val now = System.currentTimeMillis()
         val name = "${FrameStrings.appName()}_${format.key}_$now.zip"
         val uri = saver.save(name, "application/zip", "Documents/${FrameStrings.appName()}", treeUri, subfolder) { out -> DatasetArchive.write(format, frames, title, now, out) }

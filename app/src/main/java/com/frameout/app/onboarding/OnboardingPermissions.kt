@@ -97,9 +97,9 @@ private fun PermissionRow(glyph: Glyph, title: String, description: String, enab
             FrameText(title, style = FrameTheme.typography.titleSmall.copy(fontSize = 14.sp, fontWeight = FontWeight.SemiBold))
             FrameText(
                 description,
-                style = FrameTheme.typography.bodySmall.copy(fontSize = 12.sp, lineHeight = 16.sp),
+                style = FrameTheme.typography.bodySmall.copy(fontSize = 13.sp, lineHeight = 18.sp),
                 color = colors.onSurfaceVariant,
-                maxLines = 2,
+                maxLines = 4,
                 overflow = TextOverflow.Ellipsis
             )
         }

@@ -22,7 +22,6 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun TransportRow(env: TrimEnv) {
     val step = { forward: Boolean, n: Int -> env.scope.launch { env.controller.stepFrame(forward, n) }; Unit }
-    val ui by env.controller.state.collectAsState()
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
         Box(Modifier.fillMaxWidth(), Alignment.Center) {
             Row(Modifier.fillMaxWidth(), Arrangement.spacedBy(28.dp, Alignment.CenterHorizontally), Alignment.CenterVertically) {
@@ -30,7 +29,6 @@ internal fun TransportRow(env: TrimEnv) {
                 PlayButton(env.player.isPlaying, FrameStrings.play(), FrameStrings.pause(), env.controller::toggle)
                 TransportKey(FrameStrings.stepForward(), onStep = { step(true, it) }) { TransportIcon(FrameIconsExtra.StepForward) }
             }
-            if (ui.hasAudio && !ui.animated) MuteKey(ui.muted, env.controller, Modifier.align(Alignment.CenterStart))
         }
     }
 }

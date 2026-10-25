@@ -27,6 +27,8 @@ tesseract = "4.8.0"
 heifwriter = "1.2.0-alpha02"
 securityCrypto = "1.1.0"
 revenueCat = "10.28.1"
+admob = "25.5.0"
+ump = "4.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -40,6 +42,8 @@ androidx-room-paging = { group = "androidx.room3", name = "room3-paging", versio
 androidx-room-compiler = { group = "androidx.room3", name = "room3-compiler", version.ref = "room" }
 androidx-security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "securityCrypto" }
 revenuecat-purchases = { group = "com.revenuecat.purchases", name = "purchases", version.ref = "revenueCat" }
+admob = { group = "com.google.android.gms", name = "play-services-ads", version.ref = "admob" }
+ump = { group = "com.google.android.ump", name = "user-messaging-platform", version.ref = "ump" }
 revenuecat-purchases-ui = { group = "com.revenuecat.purchases", name = "purchases-ui", version.ref = "revenueCat" }
 androidx-heifwriter = { group = "androidx.heifwriter", name = "heifwriter", version.ref = "heifwriter" }
 androidx-work-runtime = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work" }

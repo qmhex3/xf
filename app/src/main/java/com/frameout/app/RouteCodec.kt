@@ -19,7 +19,7 @@ object RouteCodec {
         AppRoute.Picker -> "picker"
         is AppRoute.Trim -> join("trim", escape(route.uri.toString()))
         is AppRoute.Extracting -> join("extracting", route.projectId)
-        is AppRoute.Frames -> join("frames", route.projectId)
+        is AppRoute.Frames -> if (route.focusFrameId != null) join("frames", route.projectId, route.focusFrameId) else join("frames", route.projectId)
         is AppRoute.Viewer -> if (route.savedId != null) join("viewer", route.projectId, route.frameId, route.savedId) else join("viewer", route.projectId, route.frameId)
         is AppRoute.Collage -> ids(route.frameIds)?.let { join("collage", route.projectId, it) } ?: join("frames", route.projectId)
         is AppRoute.Compare -> ids(route.frameIds)?.let { join("compare", route.projectId, it) } ?: join("frames", route.projectId)
@@ -41,7 +41,7 @@ object RouteCodec {
         "picker" -> AppRoute.Picker
         "trim" -> AppRoute.Trim(Uri.parse(unescape(p[1])))
         "extracting" -> AppRoute.Extracting(p[1].toLong())
-        "frames" -> AppRoute.Frames(p[1].toLong())
+        "frames" -> AppRoute.Frames(p[1].toLong(), p.getOrNull(2)?.toLongOrNull())
         "viewer" -> AppRoute.Viewer(p[1].toLong(), p[2].toLong(), p.getOrNull(3)?.toLongOrNull())
         "savedviewer" -> AppRoute.SavedViewer(p[1].toLong())
         "collage" -> AppRoute.Collage(p[1].toLong(), parseIds(p[2]))

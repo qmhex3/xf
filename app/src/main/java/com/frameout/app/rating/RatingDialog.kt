@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -29,6 +31,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -62,21 +66,27 @@ fun RatingDialog(
 }
 
 @Composable
-private fun cardModifier(progress: () -> Float): Modifier = Modifier
-    .padding(horizontal = 24.dp)
-    .widthIn(max = 400.dp)
-    .fillMaxWidth()
-    .graphicsLayer {
-        val p = progress()
-        scaleX = 0.88f + 0.12f * p
-        scaleY = 0.88f + 0.12f * p
-        alpha = p.coerceIn(0f, 1f)
-    }
-    .clip(CardShape)
-    .background(frameCardBrush())
-    .frameAmbientGlow()
-    .border(1.dp, frameCardEdge(), CardShape)
-    .padding(horizontal = 24.dp, vertical = 28.dp)
+private fun cardModifier(progress: () -> Float): Modifier {
+    val colors = FrameTheme.colors
+    val base = lerp(colors.background.copy(alpha = 1f), colors.container.copy(alpha = 1f), 0.9f)
+    val edge = if (colors.neutral) frameCardEdge() else frameCardEdge(colors.accentA, 0.42f)
+    return Modifier
+        .padding(horizontal = 24.dp)
+        .widthIn(max = 400.dp)
+        .fillMaxWidth()
+        .graphicsLayer {
+            val p = progress()
+            scaleX = 0.88f + 0.12f * p
+            scaleY = 0.88f + 0.12f * p
+            alpha = p.coerceIn(0f, 1f)
+        }
+        .clip(CardShape)
+        .background(base)
+        .background(frameCardBrush())
+        .frameAmbientGlow()
+        .border(1.dp, edge, CardShape)
+        .padding(start = 24.dp, end = 24.dp, top = 28.dp, bottom = 12.dp)
+}
 
 @Composable
 private fun RatingCard(lifetimeSuccesses: Int, onRate: (Int) -> Unit, onLater: () -> Unit, onNever: () -> Unit) {
@@ -99,10 +109,10 @@ private fun RatingCard(lifetimeSuccesses: Int, onRate: (Int) -> Unit, onLater: (
                     rating = value
                 }
             },
-            modifier = Modifier.padding(top = 20.dp)
+            modifier = Modifier.padding(top = 24.dp)
         )
         RatingFeedback(rating)
-        RatingButton(rating, onClick = { if (rating > 0) onRate(rating) }, modifier = Modifier.padding(top = 10.dp))
+        RatingButton(rating, onClick = { if (rating > 0) onRate(rating) }, modifier = Modifier.padding(top = 12.dp))
         RatingFooter(onLater, onNever)
     }
 }
@@ -113,17 +123,17 @@ private fun RatingHeader(lifetimeSuccesses: Int) {
         RatingStrings.title(),
         style = FrameTheme.typography.title,
         textAlign = TextAlign.Center,
-        modifier = Modifier.padding(top = 18.dp)
+        modifier = Modifier.padding(top = 14.dp)
     )
     FrameText(
         RatingStrings.body(),
-        style = FrameTheme.typography.bodySmall,
+        style = FrameTheme.typography.bodySmall.copy(lineBreak = LineBreak.Paragraph),
         color = FrameTheme.colors.onSurfaceVariant,
         textAlign = TextAlign.Center,
-        modifier = Modifier.padding(top = 6.dp, start = 4.dp, end = 4.dp)
+        modifier = Modifier.padding(top = 8.dp, start = 4.dp, end = 4.dp)
     )
     if (lifetimeSuccesses >= RatingPolicy.MIN_SUCCESSES) {
-        SuccessChip(RatingStrings.stat(lifetimeSuccesses), Modifier.padding(top = 14.dp))
+        SuccessChip(RatingStrings.stat(lifetimeSuccesses), Modifier.padding(top = 16.dp))
     }
 }
 
@@ -133,7 +143,7 @@ private fun RatingFeedback(rating: Int) {
     AnimatedContent(
         targetState = rating,
         transitionSpec = { fadeIn(tween(160)) togetherWith fadeOut(tween(100)) },
-        modifier = Modifier.padding(top = 10.dp),
+        modifier = Modifier.padding(top = 12.dp),
         label = "rating-label"
     ) { stars ->
         FrameText(
@@ -143,7 +153,7 @@ private fun RatingFeedback(rating: Int) {
             textAlign = TextAlign.Center
         )
     }
-    Box(Modifier.heightIn(min = 40.dp).padding(top = 6.dp), Alignment.Center) {
+    Box(Modifier.heightIn(min = 36.dp).padding(top = 4.dp), Alignment.Center) {
         AnimatedContent(
             targetState = bucketOf(rating),
             transitionSpec = { fadeIn(tween(180)) togetherWith fadeOut(tween(100)) },
@@ -151,7 +161,7 @@ private fun RatingFeedback(rating: Int) {
         ) { bucket ->
             FrameText(
                 noteFor(bucket),
-                style = FrameTheme.typography.bodySmall,
+                style = FrameTheme.typography.bodySmall.copy(lineBreak = LineBreak.Paragraph),
                 color = colors.onSurfaceVariant,
                 textAlign = TextAlign.Center
             )
@@ -171,10 +181,11 @@ private fun RatingFooter(onLater: () -> Unit, onNever: () -> Unit) {
     val colors = FrameTheme.colors
     Row(
         Modifier.fillMaxWidth().padding(top = 8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically
     ) {
         TextAction(RatingStrings.later(), colors.onSurface, onLater)
+        Box(Modifier.width(1.dp).height(14.dp).background(colors.outline.copy(alpha = 0.6f)))
         TextAction(RatingStrings.never(), colors.onSurfaceVariant, onNever)
     }
 }

@@ -74,7 +74,7 @@ internal fun rememberReadyPermissions(onAllowNotifications: () -> Unit): ReadyPe
         oem = oem,
         requestMedia = { mediaLauncher.launch(PermissionHelper.mediaPermissions()) },
         requestNotifications = { onAllowNotifications(); refresh++ },
-        requestBattery = { OemSettings.openAutostartOrBattery(context, oem) },
-        openBatteryList = { OemSettings.openBatteryList(context) }
+        requestBattery = { OemSettings.openBatteryList(context) },
+        openBatteryList = { OemSettings.openAutostartOrBattery(context, oem) }
     )
 }

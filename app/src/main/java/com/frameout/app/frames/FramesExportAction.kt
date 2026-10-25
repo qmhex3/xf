@@ -53,10 +53,10 @@ class FramesExportAction(private val context: Context) {
         if (frames.isEmpty()) return ExportOutcome(FrameStrings.nothingSaved())
         val ordered = frames.sortedBy { it.ptsUs }
         val paths = materialize(ordered)
-        if (!hasRoom(paths.sumOf { path -> path?.let { File(it).length() } ?: 0L })) return ExportOutcome(FrameStrings.noSpace())
+        if (!hasDocRoom(paths.sumOf { path -> path?.let { File(it).length() } ?: 0L })) return ExportOutcome(FrameStrings.noSpace())
         val captions = ordered.map { formatTimestamp(it.ptsUs / 1000L) }
         val name = "${FrameStrings.appName()}_${System.currentTimeMillis()}.pdf"
-        val uri = saver.save(name, "application/pdf", "Documents/${FrameStrings.appName()}", treeUri(), subfolderOf(ordered)) { out -> ContactSheetPdf.write(paths, captions, title, out) }
+        val uri = saver.save(name, "application/pdf", "Documents/${FrameStrings.appName()}", docTreeUri(), docSubfolderOf(ordered)) { out -> ContactSheetPdf.write(paths, captions, title, out) }
         return result(uri, "application/pdf")
     }
 
@@ -148,9 +148,9 @@ class FramesExportAction(private val context: Context) {
         val staged = runCatching { exporter.stageForArchive(ordered) }.logged("FramesExportAction").getOrDefault(emptyList())
         try {
             if (staged.isEmpty()) return ExportOutcome(FrameStrings.saveFailed())
-            if (!hasRoom(staged.sumOf { it.file.length() })) return ExportOutcome(FrameStrings.noSpace())
+            if (!hasDocRoom(staged.sumOf { it.file.length() })) return ExportOutcome(FrameStrings.noSpace())
             val name = "${FrameStrings.appName()}_${System.currentTimeMillis()}.zip"
-            val uri = saver.save(name, "application/zip", "Documents/${FrameStrings.appName()}", treeUri(), subfolderOf(ordered)) { out -> FramesZip.write(staged, title, out) }
+            val uri = saver.save(name, "application/zip", "Documents/${FrameStrings.appName()}", docTreeUri(), docSubfolderOf(ordered)) { out -> FramesZip.write(staged, title, out) }
             return result(uri, "application/zip")
         } finally {
             exporter.clearArchiveStage(staged)
@@ -190,7 +190,7 @@ class FramesExportAction(private val context: Context) {
         val rows = ordered.mapIndexed { i, f -> FrameRow(i + 1, f.index, f.id, f.ptsUs, f.isKeyframe, f.isFavorite, source) }
         val bytes = FramesTable.csv(rows).toByteArray(Charsets.UTF_8)
         val name = "${FrameStrings.appName()}_${System.currentTimeMillis()}.csv"
-        val uri = saver.save(name, FramesTable.MIME, "Documents/${FrameStrings.appName()}", treeUri(), subfolderOf(ordered)) { out -> out.write(bytes) }
+        val uri = saver.save(name, FramesTable.MIME, "Documents/${FrameStrings.appName()}", docTreeUri(), docSubfolderOf(ordered)) { out -> out.write(bytes) }
         return result(uri, FramesTable.MIME)
     }
 
@@ -200,12 +200,12 @@ class FramesExportAction(private val context: Context) {
         val staged = runCatching { exporter.stageForArchive(ordered) }.logged("FramesExportAction").getOrDefault(emptyList())
         try {
             if (staged.isEmpty()) return ExportOutcome(FrameStrings.saveFailed())
-            if (!hasRoom(staged.sumOf { it.file.length() })) return ExportOutcome(FrameStrings.noSpace())
+            if (!hasDocRoom(staged.sumOf { it.file.length() })) return ExportOutcome(FrameStrings.noSpace())
             val hashed = withContext(Dispatchers.IO) { staged.map { EvidenceFrame(it, EvidencePackage.sha256(it.file)) } }
             val source = sourceEvidence(ordered.first())
             val createdAt = System.currentTimeMillis()
             val name = "${FrameStrings.appName()}_evidence_$createdAt.zip"
-            val uri = saver.save(name, "application/zip", "Documents/${FrameStrings.appName()}", treeUri(), subfolderOf(ordered)) { out -> EvidencePackage.write(hashed, title, source, createdAt, BuildConfig.VERSION_NAME, out) }
+            val uri = saver.save(name, "application/zip", "Documents/${FrameStrings.appName()}", docTreeUri(), docSubfolderOf(ordered)) { out -> EvidencePackage.write(hashed, title, source, createdAt, BuildConfig.VERSION_NAME, out) }
             return result(uri, "application/zip")
         } finally {
             exporter.clearArchiveStage(staged)
@@ -229,14 +229,17 @@ class FramesExportAction(private val context: Context) {
         val ordered = app.container.frames.getByIdsChunked(ids).sortedBy { it.ptsUs }
         val paths = materialize(ordered)
         if (paths.none { it != null }) return ExportOutcome(FrameStrings.saveFailed())
-        if (!hasRoom(paths.sumOf { path -> path?.let { File(it).length() } ?: 0L })) return ExportOutcome(FrameStrings.noSpace())
+        if (!hasDocRoom(paths.sumOf { path -> path?.let { File(it).length() } ?: 0L })) return ExportOutcome(FrameStrings.noSpace())
         val name = "${FrameStrings.appName()}_slides_${System.currentTimeMillis()}.pdf"
-        val uri = saver.save(name, "application/pdf", "Documents/${FrameStrings.appName()}", treeUri(), subfolderOf(ordered)) { out -> SlidesPdf.write(paths, out) }
+        val uri = saver.save(name, "application/pdf", "Documents/${FrameStrings.appName()}", docTreeUri(), docSubfolderOf(ordered)) { out -> SlidesPdf.write(paths, out) }
         return result(uri, "application/pdf")
     }
 
     private suspend fun materialize(frames: List<FrameEntity>): List<String?> =
         CollageMaterializer(context, app.container.projects, app.container.frameEdits).materialize(frames)
+
+    private suspend fun docSubfolderOf(frames: List<FrameEntity>): String =
+        frames.firstOrNull()?.let { app.container.projects.getById(it.projectId) }?.let { com.frameout.core.storage.AsciiName.folder(it.saveSubfolder, it.id) }.orEmpty()
 
     private suspend fun subfolderOf(frames: List<FrameEntity>): String =
         frames.firstOrNull()?.let { app.container.projects.getById(it.projectId)?.saveSubfolder }.orEmpty()
@@ -244,6 +247,10 @@ class FramesExportAction(private val context: Context) {
     private fun hasRoom(bytes: Long): Boolean = app.container.storage.hasDestinationRoom(treeUri(), bytes)
 
     private fun treeUri(): String? = app.container.prefs.saveFolderUri.value.ifBlank { null }
+
+    private fun docTreeUri(): String? = app.container.prefs.documentsTreeUri()
+
+    private fun hasDocRoom(bytes: Long): Boolean = app.container.storage.hasDestinationRoom(docTreeUri(), bytes)
 
     private fun result(uri: android.net.Uri?, mime: String): ExportOutcome {
         if (uri != null) com.frameout.core.rating.Rating.success() else com.frameout.core.rating.Rating.failure()

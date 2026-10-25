@@ -44,7 +44,8 @@ fun FramesGrid(
     onOpenFrame: (Long) -> Unit,
     timeMsAt: suspend (Int) -> Long?,
     onScrubbing: (Boolean) -> Unit,
-    clearance: Dp = 100.dp
+    clearance: Dp = 100.dp,
+    highlightId: Long? = null
 ) {
     val pages = remember(projectId, state.filter, state.tagFilter, state.sharpestVersion) { vm.pagingFlow() }.collectAsLazyPagingItems()
     val waitIdle = remember(gridState) {
@@ -65,7 +66,7 @@ fun FramesGrid(
                     val index = selectedPositions[frame.id]
                     val tagged = state.filter == FrameFilter.Tagged
                     val focus = if (tagged) produceState<NormBox?>(null, frame.id, state.tagFilter) { value = vm.albumFocus(frame.id, state.tagFilter) }.value else null
-                    FrameCell(frame, index != null, index, state.fit, { if (selected.isNotEmpty() || state.isDeletedView) vm.toggleSelect(frame.id) else onOpenFrame(frame.id) }, { vm.toggleSelect(frame.id) }, { vm.toggleFavorite(frame.id, frame.isFavorite) }, waitIdle, edits[frame.id], focus, Modifier.fxAppear(frame.id, seen, i % 8))
+                    FrameCell(frame, index != null, index, state.fit, { if (selected.isNotEmpty() || state.isDeletedView) vm.toggleSelect(frame.id) else onOpenFrame(frame.id) }, { vm.toggleSelect(frame.id) }, { vm.toggleFavorite(frame.id, frame.isFavorite) }, waitIdle, edits[frame.id], focus, Modifier.fxAppear(frame.id, seen, i % 8), hint = frame.id == highlightId)
                 }
             }
         }

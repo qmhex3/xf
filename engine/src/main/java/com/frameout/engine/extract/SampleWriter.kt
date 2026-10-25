@@ -3,6 +3,7 @@ package com.frameout.engine.extract
 import com.frameout.core.util.SmoothScale
 import android.graphics.Bitmap
 import com.frameout.core.db.FrameEntity
+import com.frameout.core.quality.BlockProbe
 import com.frameout.core.storage.StorageManager
 import com.frameout.core.storage.ThumbSpec
 import com.frameout.engine.index.SampleInfo
@@ -21,6 +22,7 @@ internal class SampleWriter(private val storage: StorageManager) {
                 if (thumb !== bitmap) thumb.recycle()
             }
             val fullPath = if (request.autoSave) storage.writeFrame(request.projectId, sample.index, bitmap, request.saveFormat, request.jpegQuality) else null
+            BlockProbe.record(storage.projectDir(request.projectId), sample.index, bitmap)
             AnalysisCopy.write(storage, request, sample.index, bitmap)
             committed = true
             return SampleResult(FrameEntity(projectId = request.projectId, index = sample.index, ptsUs = pts, isKeyframe = sample.isKeyframe, thumbnailPath = thumbPath, fullPath = fullPath), pts, histogram)

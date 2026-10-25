@@ -27,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import kotlinx.coroutines.flow.first
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -45,7 +46,7 @@ import com.frameout.designsystem.theme.frameAmbientGlow
 
 @OptIn(FlowPreview::class)
 @Composable
-fun FramesScreen(projectId: Long, onBack: () -> Unit, onCollage: (List<Long>) -> Unit = {}, onOpenFrame: (Long) -> Unit = {}, onCompare: (List<Long>) -> Unit = {}, vm: FramesViewModel = viewModel(), fab: (@Composable () -> Unit)? = null, fabLabel: String? = null, navItems: List<com.frameout.designsystem.dock.DockItem> = emptyList()) {
+fun FramesScreen(projectId: Long, onBack: () -> Unit, onCollage: (List<Long>) -> Unit = {}, onOpenFrame: (Long) -> Unit = {}, onCompare: (List<Long>) -> Unit = {}, vm: FramesViewModel = viewModel(), fab: (@Composable () -> Unit)? = null, fabLabel: String? = null, navItems: List<com.frameout.designsystem.dock.DockItem> = emptyList(), focusFrameId: Long? = null) {
     val state by vm.state.collectAsState()
     val deleteConsent = androidx.activity.compose.rememberLauncherForActivityResult(androidx.activity.result.contract.ActivityResultContracts.StartIntentSenderForResult()) { vm.onGalleryDeleteResult(it.resultCode == android.app.Activity.RESULT_OK) }
     LaunchedEffect(state.pendingGalleryDelete) {
@@ -113,8 +114,22 @@ fun FramesScreen(projectId: Long, onBack: () -> Unit, onCollage: (List<Long>) ->
         }
     }
     val hasFrames = state.frameCount > 0
+    var hintId by remember(projectId, focusFrameId) { mutableStateOf(focusFrameId) }
+    LaunchedEffect(projectId, focusFrameId, hasFrames, state.filter) {
+        val target = focusFrameId ?: return@LaunchedEffect
+        if (!hasFrames) return@LaunchedEffect
+        if (state.filter != FrameFilter.All) { vm.setFilter(FrameFilter.All); return@LaunchedEffect }
+        val position = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+            container.frames.getActiveById(target)?.let { container.frames.countActiveBefore(it.projectId, it.index) }
+        }
+        if (position == null) { hintId = null; return@LaunchedEffect }
+        kotlinx.coroutines.withTimeoutOrNull(4000) { snapshotFlow { gridState.layoutInfo.totalItemsCount }.first { it > position } }
+        gridState.scrollToItem((position - columns).coerceAtLeast(0))
+        kotlinx.coroutines.delay(5000)
+        hintId = null
+    }
     LaunchedEffect(projectId, hasFrames, state.filter) {
-        if (hasFrames && state.filter == FrameFilter.All) {
+        if (hasFrames && state.filter == FrameFilter.All && focusFrameId == null) {
             gridState.scrollToItem(prefs.gridIndex(projectId), prefs.gridOffset(projectId))
         }
     }
@@ -146,7 +161,7 @@ fun FramesScreen(projectId: Long, onBack: () -> Unit, onCollage: (List<Long>) ->
                             inTrash = state.isDeletedView,
                             trashCount = state.deletedCount
                         )
-                        if (!(extracting && state.frameCount == 0 && state.filter == FrameFilter.All)) FramesTabs(state.filter, state.allCount, state.favoriteCount, state.sharpestCount, state.tagCounts.size, vm::setFilter)
+                        FramesTabsSlot(!(extracting && state.frameCount == 0 && state.filter == FrameFilter.All), state.filter, state.allCount, state.favoriteCount, state.sharpestCount, state.tagCounts.size, vm::setFilter)
                         if (state.filter == FrameFilter.Tagged) FramesAlbumBar(state, { vm.setFilter(FrameFilter.Albums) }, vm::toggleTag, vm::openTags)
                     }
                 }
@@ -154,7 +169,7 @@ fun FramesScreen(projectId: Long, onBack: () -> Unit, onCollage: (List<Long>) ->
                 else if (state.loading) CenterMsg(FrameStrings.loading())
                 else if (state.isAlbumsView) FramesAlbums(state, vm::albumCover, vm::openAlbum, vm::rescanTags, clearance = dockClearance(fab != null), columns = albumColumns, onColumns = { albumColumns = it })
                 else if (state.frameCount == 0) FramesEmptyState(state.filter, extracting = fab != null, onClearFilter = vm::clearTags)
-                else FramesGrid(projectId, state, vm, gridState, columns, { columns = it; prefs.setGridColumns(it) }, onOpenFrame, timeMsAt, { scrubbing = it }, clearance = dockClearance(fab != null))
+                else FramesGrid(projectId, state, vm, gridState, columns, { columns = it; prefs.setGridColumns(it) }, onOpenFrame, timeMsAt, { scrubbing = it }, clearance = dockClearance(fab != null), highlightId = hintId)
             }
             Box(Modifier.fillMaxSize()) {
                 FramesToolbar(state.selected.size, state.isDeletedView, if (state.isDeletedView) vm::permanentDeleteSelected else vm::softDeleteSelected, vm::restoreSelected, vm::toggleFavoriteSelected, vm::applyRotate90, vm::applyFlipH, vm::applyFlipV, vm::selectAll, vm::clearSelection, { vm.framesForSelection { onCollage(it.map { f -> f.id }) } }, vm::saveSelected, { vm.shareIntent { context.startActivity(it.asChooserWithoutSelf(context, FrameStrings.share())) } }, vm::reassembleVideo, { exportSelected(vm, exporter, scope, true) }, { exportSelected(vm, exporter, scope, false) }, { exportZip(vm, exporter, scope) }, { exportCsv(vm, exporter, scope) }, { exportEvidence(vm, exporter, scope) }, vm::openCropAll, { compareSelected(vm, onCompare) }, vm::undoSelected, vm::redoSelected, dockCollapsed, state.selected.size == 1, { searchOpen = true }, if (state.isDeletedView) vm::emptyTrash else null, fab = fab, fabLabel = fabLabel, navItems = navItems, extracting = extracting, onContactSheet = { if (com.frameout.app.billing.ProCheck.pass(com.frameout.core.pro.ProFeature.AdvancedExport)) contactOpen = true })

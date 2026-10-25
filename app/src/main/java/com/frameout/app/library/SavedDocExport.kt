@@ -47,12 +47,12 @@ internal class SavedDocExport(
         val staged = stage(items.chronological(), progress)
         try {
             if (staged.isEmpty()) return fail(total, SavedStrings.exportNoneReadable())
-            if (!hasRoom(maxOf(staged.sumOf { it.file.length() }, staged.size * PDF_CELL_BYTES))) return fail(total, FrameStrings.noSpace())
+            if (!hasDocRoom(maxOf(staged.sumOf { it.file.length() }, staged.size * PDF_CELL_BYTES))) return fail(total, FrameStrings.noSpace())
             val name = "${FrameStrings.appName()}_${System.currentTimeMillis()}.pdf"
             val paths = staged.map { it.file.absolutePath }
             val captions = staged.map { it.item.displayName }
             val title = FrameStrings.appName()
-            val uri = saver.save(name, "application/pdf", "Documents/${FrameStrings.appName()}", treeUri()) { out -> ContactSheetPdf.write(paths, captions, title, out) }
+            val uri = saver.save(name, "application/pdf", "Documents/${FrameStrings.appName()}", docTreeUri()) { out -> ContactSheetPdf.write(paths, captions, title, out) }
             return outcome(uri, "application/pdf", staged.size, total)
         } finally {
             staged.forEach { it.file.delete() }
@@ -181,6 +181,10 @@ internal class SavedDocExport(
     private fun hasRoom(bytes: Long): Boolean = container.storage.hasDestinationRoom(treeUri(), bytes)
 
     private fun treeUri(): String? = container.prefs.saveFolderUri.value.ifBlank { null }
+
+    private fun docTreeUri(): String? = container.prefs.documentsTreeUri()
+
+    private fun hasDocRoom(bytes: Long): Boolean = container.storage.hasDestinationRoom(docTreeUri(), bytes)
 
     private companion object {
         const val PROBE_ITEMS = 5

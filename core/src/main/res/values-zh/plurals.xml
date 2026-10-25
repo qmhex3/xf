@@ -87,4 +87,13 @@
     <plurals name="saved_export_done_n">
         <item quantity="other">已导出 %1$d 张图片</item>
     </plurals>
+    <plurals name="onboarding_pick_burst">
+        <item quantity="other">连续 %1$d 帧</item>
+    </plurals>
+    <plurals name="onboarding_pick_excluded">
+        <item quantity="other">已排除：%1$d 帧</item>
+    </plurals>
+    <plurals name="rating_stat">
+        <item quantity="other">目前已成功保存 %1$d 次</item>
+    </plurals>
 </resources>

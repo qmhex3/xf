@@ -174,4 +174,22 @@
         <item quantity="many">Експортовано %1$d зображень</item>
         <item quantity="other">Експортовано %1$d зображення</item>
     </plurals>
+    <plurals name="onboarding_pick_burst">
+        <item quantity="one">Послідовних кадрів: %1$d</item>
+        <item quantity="few">Послідовних кадрів: %1$d</item>
+        <item quantity="many">Послідовних кадрів: %1$d</item>
+        <item quantity="other">Послідовних кадрів: %1$d</item>
+    </plurals>
+    <plurals name="onboarding_pick_excluded">
+        <item quantity="one">Виключено кадрів: %1$d</item>
+        <item quantity="few">Виключено кадрів: %1$d</item>
+        <item quantity="many">Виключено кадрів: %1$d</item>
+        <item quantity="other">Виключено кадрів: %1$d</item>
+    </plurals>
+    <plurals name="rating_stat">
+        <item quantity="one">Успішних збережень досі: %1$d</item>
+        <item quantity="few">Успішних збережень досі: %1$d</item>
+        <item quantity="many">Успішних збережень досі: %1$d</item>
+        <item quantity="other">Успішних збережень досі: %1$d</item>
+    </plurals>
 </resources>

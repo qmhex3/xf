@@ -69,7 +69,8 @@ internal fun ViewerChrome(
     onPrevious: (Int) -> Unit,
     onNext: (Int) -> Unit,
     arrows: ArrowWake,
-    tools: ViewerToolEditor
+    tools: ViewerToolEditor,
+    onShowInProject: () -> Unit = {}
 ) {
     val frame = state.current
     val sideRail = rememberFrameAdaptive().sideEditor
@@ -86,10 +87,8 @@ internal fun ViewerChrome(
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                     ChromePill {
                         FrameText(if (state.total > 0) "${state.position} / ${state.total}" else "#${frame.index + 1}", style = FrameTheme.typography.mono.copy(shadow = androidx.compose.ui.graphics.Shadow(ViewerInk.accent.copy(alpha = 0.65f), androidx.compose.ui.geometry.Offset.Zero, 10f)), color = ViewerInk.accent)
-                        if (!state.savedMode) {
-                            Box(Modifier.size(width = 1.dp, height = 14.dp).background(ViewerInk.text.copy(alpha = 0.28f)))
-                            FrameText(formatPts(frame.ptsUs), style = FrameTheme.typography.mono, color = ViewerInk.text)
-                        }
+                        Box(Modifier.size(width = 1.dp, height = 14.dp).background(ViewerInk.text.copy(alpha = 0.28f)))
+                        FrameText(formatPts(frame.ptsUs), style = FrameTheme.typography.mono, color = ViewerInk.text)
                     }
                 }
                 val showDetections = state.detections.isNotEmpty()
@@ -156,7 +155,9 @@ internal fun ViewerChrome(
             onEdit = { onEdit(EditTool.Adjust) },
             playing = state.playing,
             onPlay = onPlay,
-            showPlay = !state.savedMode
+            showPlay = !state.savedMode,
+            showGoTo = state.savedMode,
+            onGoTo = onShowInProject
         ) else ViewerBottomBar(
             playing = state.playing,
             onPlay = onPlay,
@@ -166,7 +167,9 @@ internal fun ViewerChrome(
             onDelete = onDelete,
             onEdit = { onEdit(EditTool.Adjust) },
             modifier = Modifier.align(Alignment.BottomCenter),
-            showPlay = !state.savedMode
+            showPlay = !state.savedMode,
+            showGoTo = state.savedMode,
+            onGoTo = onShowInProject
         )
     }
 }

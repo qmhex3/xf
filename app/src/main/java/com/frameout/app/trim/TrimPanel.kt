@@ -267,13 +267,10 @@ private fun PanelGrabber(fold: PanelFold) {
 
 @Composable
 private fun PanelHeader(env: TrimEnv) {
+    val ui by env.controller.state.collectAsState()
     Row(Modifier.fillMaxWidth(), Arrangement.spacedBy(12.dp), Alignment.CenterVertically) {
-        FrameText(
-            TrimStrings.length(formatTimestamp(env.clamped.spanMs())),
-            style = FrameTheme.typography.titleSmall.copy(textDirection = TextDirection.Content),
-            maxLines = 1,
-            modifier = Modifier.weight(1f)
-        )
+        if (ui.hasAudio && !ui.animated) MuteKey(ui.muted, env.controller)
+        Spacer(Modifier.weight(1f))
         SnapshotButton(env)
     }
 }

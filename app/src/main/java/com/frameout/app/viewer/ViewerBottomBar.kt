@@ -42,7 +42,9 @@ internal fun ViewerBottomBar(
     onDelete: () -> Unit,
     onEdit: () -> Unit,
     modifier: Modifier = Modifier,
-    showPlay: Boolean = true
+    showPlay: Boolean = true,
+    showGoTo: Boolean = false,
+    onGoTo: () -> Unit = {}
 ) {
     val colors = FrameTheme.colors
     Row(
@@ -57,6 +59,7 @@ internal fun ViewerBottomBar(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 if (showPlay) BarButton(if (playing) FrameStrings.pause() else FrameStrings.play(), if (playing) FrameIcons.PauseFilled else FrameIcons.PlayFilled, ViewerInk.accent, tonal = true, onClick = onPlay)
+                if (showGoTo) BarButton(FrameStrings.showInProject(), FrameIconsExtra.GoToFrame, ViewerInk.accent, tonal = true, onClick = onGoTo)
                 BarButton(FrameStrings.save(), FrameIcons.Save, ViewerInk.text, onClick = onSave)
                 BarButton(FrameStrings.share(), FrameIcons.Share, ViewerInk.text, onClick = onShare)
                 BarButton(SearchStrings.actionShort(), FrameIcons.Search, ViewerInk.text, onClick = onSearch)

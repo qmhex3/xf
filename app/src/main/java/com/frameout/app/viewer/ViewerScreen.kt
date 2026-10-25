@@ -43,6 +43,7 @@ fun ViewerScreen(
     frameId: Long,
     onClose: () -> Unit,
     savedId: Long? = null,
+    onShowInProject: (projectId: Long, frameId: Long) -> Unit = { _, _ -> },
     vm: ViewerViewModel = viewModel()
 ) {
     val state by vm.state.collectAsState()
@@ -163,7 +164,8 @@ fun ViewerScreen(
                     onPrevious = { steps -> vm.goTo(-steps) },
                     onNext = { steps -> vm.goTo(steps) },
                     arrows = arrows,
-                    tools = vm.tools
+                    tools = vm.tools,
+                    onShowInProject = { state.current?.let { onShowInProject(it.projectId, it.id) } }
                 )
             }
             if (state.toolBusy) {

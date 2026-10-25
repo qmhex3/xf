@@ -46,9 +46,10 @@ internal fun CaptureStatusState.toIsland(context: Context): IslandToastState = i
     busy = busy,
     icon = savedKind()?.icon,
     saved = savedKind() != null,
-    actions = saved?.let { saved ->
+    actions = saved?.takeUnless { error || busy }?.let { saved ->
         listOf(
-            IslandAction(FrameStrings.openSaved(), FrameIconsExtra.Album, primary = true) { saved.open(context) },
+            if (saved.opensInViewer()) IslandAction(FrameStrings.openSaved(), FrameIconsExtra.Album, primary = true) { saved.open(context) }
+            else IslandAction(FrameStrings.showInFolder(), FrameIconsExtra.Folder, primary = true) { saved.showInFolder(context) },
             IslandAction(FrameStrings.share(), FrameIcons.Share) { saved.share(context) }
         )
     }.orEmpty()
@@ -58,7 +59,7 @@ internal const val ACTION_EXTRA_MS = 3000L
 
 internal fun SavedCapture.open(context: Context) {
     val view = Intent(Intent.ACTION_VIEW).setDataAndType(uri, mime).addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-    launch(context, view)
+    if (!tryLaunch(context, view)) showInFolder(context)
 }
 
 internal fun SavedCapture.share(context: Context) {

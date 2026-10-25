@@ -31,7 +31,7 @@ object DatasetSelector {
         val ordered = frames.sortedWith(compareBy({ it.ptsUs }, { it.index }))
         val reference = reference(ordered)
         val floor = reference * options.blurLevel.floorShare
-        val best = windows(ordered, options.intervalUs.coerceAtLeast(1L)).map { window -> window.maxBy { it.effective } }
+        val best = windows(ordered, options.intervalUs.coerceAtLeast(1L)).map { window -> KeyframeTie.best(window) }
         val (sharp, blurry) = best.partition { it.effective > 0.0 && it.effective >= floor }
         val kept = if (options.dropDuplicates) withoutRepeats(sharp) else sharp
         return DatasetResult(kept.map { pick(it, reference) }, blurry.map { pick(it, reference) })

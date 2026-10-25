@@ -116,4 +116,16 @@
         <item quantity="one">۱ تصویر صادر شد</item>
         <item quantity="other">%1$d تصویر صادر شد</item>
     </plurals>
+    <plurals name="onboarding_pick_burst">
+        <item quantity="one">%1$d فریم پیاپی</item>
+        <item quantity="other">%1$d فریم پیاپی</item>
+    </plurals>
+    <plurals name="onboarding_pick_excluded">
+        <item quantity="one">حذف‌شده: %1$d فریم</item>
+        <item quantity="other">حذف‌شده: %1$d فریم</item>
+    </plurals>
+    <plurals name="rating_stat">
+        <item quantity="one">تا اینجا %1$d ذخیرهٔ موفق</item>
+        <item quantity="other">تا اینجا %1$d ذخیرهٔ موفق</item>
+    </plurals>
 </resources>

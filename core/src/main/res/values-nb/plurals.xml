@@ -116,4 +116,16 @@
         <item quantity="one">Eksporterte 1 bilde</item>
         <item quantity="other">Eksporterte %1$d bilder</item>
     </plurals>
+    <plurals name="onboarding_pick_burst">
+        <item quantity="one">%1$d bilder på rad</item>
+        <item quantity="other">%1$d bilder på rad</item>
+    </plurals>
+    <plurals name="onboarding_pick_excluded">
+        <item quantity="one">Utelatt: %1$d bilder</item>
+        <item quantity="other">Utelatt: %1$d bilder</item>
+    </plurals>
+    <plurals name="rating_stat">
+        <item quantity="one">%1$d vellykkede lagringer så langt</item>
+        <item quantity="other">%1$d vellykkede lagringer så langt</item>
+    </plurals>
 </resources>

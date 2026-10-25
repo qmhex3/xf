@@ -116,4 +116,16 @@
         <item quantity="one">1 تصویر ایکسپورٹ ہوئی</item>
         <item quantity="other">%1$d تصاویر ایکسپورٹ ہوئیں</item>
     </plurals>
+    <plurals name="onboarding_pick_burst">
+        <item quantity="one">%1$d متواتر فریمز</item>
+        <item quantity="other">%1$d متواتر فریمز</item>
+    </plurals>
+    <plurals name="onboarding_pick_excluded">
+        <item quantity="one">خارج: %1$d فریمز</item>
+        <item quantity="other">خارج: %1$d فریمز</item>
+    </plurals>
+    <plurals name="rating_stat">
+        <item quantity="one">اب تک %1$d کامیاب محفوظ شدہ فریمز</item>
+        <item quantity="other">اب تک %1$d کامیاب محفوظ شدہ فریمز</item>
+    </plurals>
 </resources>

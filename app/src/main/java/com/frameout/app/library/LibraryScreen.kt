@@ -144,6 +144,7 @@ fun LibraryScreen(
                     headerActions = HeaderActions(onClear = clearOrCancel, onSelectAll = { vm.toggleSelectAll() }),
                     onImport = { picker.launch(arrayOf("*/*")) }
                 )
+                com.frameout.app.ads.AdBannerSlot()
                 LibraryBody(
                     state = state,
                     visibleProjects = visibleProjects,

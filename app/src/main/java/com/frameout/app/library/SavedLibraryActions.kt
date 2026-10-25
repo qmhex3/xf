@@ -152,7 +152,7 @@ internal class SavedLibraryActions(
         if (items.isEmpty()) return ExportOutcomeTally(0, total, null)
         val name = "${FrameStrings.appName()}_${System.currentTimeMillis()}.zip"
         var written = 0
-        val uri = saver.save(name, "application/zip", "Documents/${FrameStrings.appName()}", container.prefs.saveFolderUri.value.ifBlank { null }) { out ->
+        val uri = saver.save(name, "application/zip", "Documents/${FrameStrings.appName()}", container.prefs.documentsTreeUri()) { out ->
             written = writeZip(items, out, progress)
         }
         return ExportOutcomeTally(if (uri == null) 0 else written, total, uri?.let { SavedCapture(it, "application/zip") })
