@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="estimate">
+        <item quantity="one">≈ %1$d fotograma · ~%2$s MB</item>
+        <item quantity="many">≈ %1$d de fotogramas · ~%2$s MB</item>
+        <item quantity="other">≈ %1$d fotogramas · ~%2$s MB</item>
+    </plurals>
+    <plurals name="plan_frames">
+        <item quantity="one">%1$d fotograma</item>
+        <item quantity="many">%1$d de fotogramas</item>
+        <item quantity="other">%1$d fotogramas</item>
+    </plurals>
+    <plurals name="reduced_quality">
+        <item quantity="one">Un fotograma se guardó con resolución reducida porque el decodificador del dispositivo no pudo devolverlo en tamaño completo.</item>
+        <item quantity="many">%1$d de fotogramas se guardaron con resolución reducida porque el decodificador del dispositivo no pudo devolverlos en tamaño completo.</item>
+        <item quantity="other">%1$d fotogramas se guardaron con resolución reducida porque el decodificador del dispositivo no pudo devolverlos en tamaño completo.</item>
+    </plurals>
+    <plurals name="reduced_quality_to">
+        <item quantity="one">Un fotograma se guardó a %4$d×%5$d en lugar de los %2$d×%3$d del origen para ajustarse a la memoria del dispositivo.</item>
+        <item quantity="many">%1$d de fotogramas se guardaron a %4$d×%5$d en lugar de los %2$d×%3$d del origen para ajustarse a la memoria del dispositivo.</item>
+        <item quantity="other">%1$d fotogramas se guardaron a %4$d×%5$d en lugar de los %2$d×%3$d del origen para ajustarse a la memoria del dispositivo.</item>
+    </plurals>
+    <plurals name="frame_count">
+        <item quantity="one">%1$d fotograma</item>
+        <item quantity="many">%1$d de fotogramas</item>
+        <item quantity="other">%1$d fotogramas</item>
+    </plurals>
+    <plurals name="content_frames">
+        <item quantity="one">%1$d fotograma</item>
+        <item quantity="many">%1$d de fotogramas</item>
+        <item quantity="other">%1$d fotogramas</item>
+    </plurals>
+    <plurals name="important_picked">
+        <item quantity="one">Se seleccionó el momento clave</item>
+        <item quantity="many">Se seleccionaron %1$d de momentos clave</item>
+        <item quantity="other">Se seleccionaron %1$d momentos clave</item>
+    </plurals>
+    <plurals name="sharpest_picked">
+        <item quantity="one">Se seleccionó el fotograma más nítido</item>
+        <item quantity="many">Se seleccionaron los %1$d de fotogramas más nítidos</item>
+        <item quantity="other">Se seleccionaron los %1$d fotogramas más nítidos</item>
+    </plurals>
+    <plurals name="duplicates_picked">
+        <item quantity="one">Se seleccionó %1$d fotograma duplicado</item>
+        <item quantity="many">Se seleccionaron %1$d de fotogramas duplicados</item>
+        <item quantity="other">Se seleccionaron %1$d fotogramas duplicados</item>
+    </plurals>
+    <plurals name="integrity_dup">
+        <item quantity="one">%1$d fotograma comparte la misma marca de tiempo.</item>
+        <item quantity="many">%1$d de fotogramas comparten la misma marca de tiempo.</item>
+        <item quantity="other">%1$d fotogramas comparten la misma marca de tiempo.</item>
+    </plurals>
+    <plurals name="crop_all_hint">
+        <item quantity="one">La misma área para %1$d fotograma</item>
+        <item quantity="many">La misma área para %1$d de fotogramas</item>
+        <item quantity="other">La misma área para %1$d fotogramas</item>
+    </plurals>
+    <plurals name="crop_all_applied">
+        <item quantity="one">Recorte aplicado a %1$d fotograma</item>
+        <item quantity="many">Recorte aplicado a %1$d de fotogramas</item>
+        <item quantity="other">Recorte aplicado a %1$d fotogramas</item>
+    </plurals>
+    <plurals name="jump_back">
+        <item quantity="one">Retroceder %1$d fotograma</item>
+        <item quantity="many">Retroceder %1$d de fotogramas</item>
+        <item quantity="other">Retroceder %1$d fotogramas</item>
+    </plurals>
+    <plurals name="jump_forward">
+        <item quantity="one">Avanzar %1$d fotograma</item>
+        <item quantity="many">Avanzar %1$d de fotogramas</item>
+        <item quantity="other">Avanzar %1$d fotogramas</item>
+    </plurals>
+    <plurals name="jump_size">
+        <item quantity="one">Tamaño del salto: %1$d fotograma (toca para cambiar)</item>
+        <item quantity="many">Tamaño del salto: %1$d de fotogramas (toca para cambiar)</item>
+        <item quantity="other">Tamaño del salto: %1$d fotogramas (toca para cambiar)</item>
+    </plurals>
+    <plurals name="queue_unsaved">
+        <item quantity="one">%1$d fotograma en cola no está guardado. Pulsa atrás otra vez para salir sin guardar.</item>
+        <item quantity="many">%1$d de fotogramas en cola no están guardados. Pulsa atrás otra vez para salir sin guardar.</item>
+        <item quantity="other">%1$d fotogramas en cola no están guardados. Pulsa atrás otra vez para salir sin guardar.</item>
+    </plurals>
+    <plurals name="share_limited">
+        <item quantity="one">Se compartirá solo el primer fotograma</item>
+        <item quantity="many">Se compartirán solo los primeros %1$d de fotogramas</item>
+        <item quantity="other">Se compartirán solo los primeros %1$d fotogramas</item>
+    </plurals>
+    <plurals name="frames_deleted">
+        <item quantity="one">%1$d fotograma movido a Eliminados</item>
+        <item quantity="many">%1$d de fotogramas movidos a Eliminados</item>
+        <item quantity="other">%1$d fotogramas movidos a Eliminados</item>
+    </plurals>
+    <plurals name="batch_videos">
+        <item quantity="one">%1$d video</item>
+        <item quantity="many">%1$d de videos</item>
+        <item quantity="other">%1$d videos</item>
+    </plurals>
+    <plurals name="projects_deleted">
+        <item quantity="one">Proyecto eliminado</item>
+        <item quantity="many">%1$d de proyectos eliminados</item>
+        <item quantity="other">%1$d proyectos eliminados</item>
+    </plurals>
+    <plurals name="projects_restored">
+        <item quantity="one">Proyecto restaurado</item>
+        <item quantity="many">%1$d de proyectos restaurados</item>
+        <item quantity="other">%1$d proyectos restaurados</item>
+    </plurals>
+    <plurals name="saved_deleted_n">
+        <item quantity="one">Imagen eliminada</item>
+        <item quantity="many">%1$d de imágenes eliminadas</item>
+        <item quantity="other">%1$d imágenes eliminadas</item>
+    </plurals>
+    <plurals name="saved_restored_n">
+        <item quantity="one">Imagen restaurada</item>
+        <item quantity="many">%1$d de imágenes restauradas</item>
+        <item quantity="other">%1$d imágenes restauradas</item>
+    </plurals>
+    <plurals name="saved_pruned_n">
+        <item quantity="one">Se quitó 1 elemento guardado porque su archivo ya no está en el dispositivo</item>
+        <item quantity="many">Se quitaron %1$d de elementos guardados porque sus archivos ya no están en el dispositivo</item>
+        <item quantity="other">Se quitaron %1$d elementos guardados porque sus archivos ya no están en el dispositivo</item>
+    </plurals>
+    <plurals name="confirm_delete_projects_n">
+        <item quantity="one">¿Eliminar este proyecto?</item>
+        <item quantity="many">¿Eliminar %1$d de proyectos?</item>
+        <item quantity="other">¿Eliminar %1$d proyectos?</item>
+    </plurals>
+    <plurals name="confirm_delete_saved_n">
+        <item quantity="one">¿Eliminar esta imagen guardada?</item>
+        <item quantity="many">¿Eliminar %1$d de imágenes guardadas?</item>
+        <item quantity="other">¿Eliminar %1$d imágenes guardadas?</item>
+    </plurals>
+    <plurals name="backup_saved_many_n">
+        <item quantity="one">Proyecto exportado a la carpeta elegida</item>
+        <item quantity="many">%1$d de proyectos exportados a la carpeta elegida</item>
+        <item quantity="other">%1$d proyectos exportados a la carpeta elegida</item>
+    </plurals>
+    <plurals name="export_done_many_n">
+        <item quantity="one">Proyecto exportado</item>
+        <item quantity="many">%1$d de proyectos exportados</item>
+        <item quantity="other">%1$d proyectos exportados</item>
+    </plurals>
+    <plurals name="saved_export_done_n">
+        <item quantity="one">1 imagen exportada</item>
+        <item quantity="many">%1$d de imágenes exportadas</item>
+        <item quantity="other">%1$d imágenes exportadas</item>
+    </plurals>
+</resources>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Frame out</string>
+    <string name="shortcut_capture_short">Frame aufnehmen</string>
+    <string name="shortcut_capture_long">Frame aus dem letzten Video aufnehmen</string>
+    <string name="tile_capture_label">Frame aufnehmen</string>
+    <string name="incoming_copy_failed">Der Zugriff auf ein geteiltes Video konnte nicht gesichert werden. Öffne es stattdessen über die Galerie oder gib Speicher frei und teile es erneut.</string>
+    <string name="incoming_unsupported">Dieser Dateityp kann nicht geöffnet werden. Teile stattdessen ein Video, GIF oder Bild.</string>
+</resources>

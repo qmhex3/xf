@@ -1,6 +1,10 @@
 package com.frameout.app.trim
 
+import android.app.Activity
+import android.content.pm.ActivityInfo
+import android.os.Build
 import android.view.LayoutInflater
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.Image
 import androidx.media3.common.util.UnstableApi
 import androidx.compose.foundation.layout.size
@@ -14,6 +18,7 @@ import com.frameout.designsystem.icons.FrameIconsExtra
 import androidx.compose.foundation.background
 import com.frameout.designsystem.theme.frameControl
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.key
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -99,6 +104,11 @@ fun PlayerSurface(
     }
     val ui by controller.state.collectAsState()
     val clipFrame by controller.frame.collectAsState()
+    val still by controller.still.collectAsState()
+    val hdrSource by controller.hdrSource.collectAsState()
+    val nativeHdr = hdrSource && controller.hdrNativeSurface
+    val activity = LocalActivity.current
+    LaunchedEffect(controller, activity) { controller.setWindowShowsHdr(windowShowsHdr(activity)) }
     val appPrefs = (LocalContext.current.applicationContext as FrameOutApp).container.prefs
     LaunchedEffect(controller) { controller.setMuted(appPrefs.playerMuted.value) }
     val ratio = if (aspect > 0f) aspect.coerceIn(0.4f, 3f) else 16f / 9f
@@ -119,7 +129,7 @@ fun PlayerSurface(
                     }
                 }
         ) {
-            PlayerLayers(controller, ui, clipFrame, zoom, showMute, animateReset)
+            PlayerLayers(controller, ui, clipFrame, still, if (nativeHdr) ZoomState() else zoom, nativeHdr, showMute, animateReset)
             overlay()
         }
     }
@@ -127,7 +137,7 @@ fun PlayerSurface(
 
 @androidx.annotation.OptIn(markerClass = [UnstableApi::class])
 @Composable
-private fun BoxScope.PlayerLayers(controller: PlayerController, ui: PlayerUiState, clipFrame: android.graphics.Bitmap?, zoom: ZoomState, showMute: Boolean, onResetZoom: () -> Unit) {
+private fun BoxScope.PlayerLayers(controller: PlayerController, ui: PlayerUiState, clipFrame: android.graphics.Bitmap?, still: android.graphics.Bitmap?, zoom: ZoomState, nativeHdr: Boolean, showMute: Boolean, onResetZoom: () -> Unit) {
     val zoomLayer: androidx.compose.ui.graphics.GraphicsLayerScope.() -> Unit = {
         scaleX = zoom.scale
         scaleY = zoom.scale
@@ -140,15 +150,24 @@ private fun BoxScope.PlayerLayers(controller: PlayerController, ui: PlayerUiStat
             Image(image, contentDescription = null, modifier = Modifier.fillMaxSize().graphicsLayer(block = zoomLayer), contentScale = ContentScale.Fit)
         }
     } else {
-        AndroidView(
-            factory = { ctx ->
-                (LayoutInflater.from(ctx).inflate(R.layout.player_texture, null) as PlayerView).apply {
-                    player = controller.attach()
-                    setShowBuffering(PlayerView.SHOW_BUFFERING_NEVER)
-                }
-            },
-            modifier = Modifier.fillMaxSize().graphicsLayer(block = zoomLayer)
-        )
+        key(nativeHdr) {
+            AndroidView(
+                factory = { ctx ->
+                    val layout = if (nativeHdr) R.layout.player_surface else R.layout.player_texture
+                    (LayoutInflater.from(ctx).inflate(layout, null) as PlayerView).apply {
+                        player = controller.attach()
+                        setShowBuffering(PlayerView.SHOW_BUFFERING_NEVER)
+                    }
+                },
+                modifier = Modifier.fillMaxSize().graphicsLayer(block = zoomLayer)
+            )
+        }
+    }
+    if (!ui.animated) {
+        still?.let { bitmap ->
+            val image = remember(bitmap) { bitmap.asImageBitmap() }
+            Image(image, contentDescription = null, modifier = Modifier.fillMaxSize().graphicsLayer(block = zoomLayer), contentScale = ContentScale.Fit)
+        }
     }
     if (ui.buffering && !ui.animated) com.frameout.designsystem.components.FrameSpinner(Modifier.align(Alignment.Center), size = 40.dp)
     AnimatedVisibility(
@@ -186,6 +205,9 @@ internal fun MuteKey(muted: Boolean, controller: PlayerController, modifier: Mod
 }
 
 private const val RESET_MS = 280
+
+private fun windowShowsHdr(activity: Activity?): Boolean =
+    Build.VERSION.SDK_INT >= 26 && activity?.window?.colorMode == ActivityInfo.COLOR_MODE_HDR
 
 private suspend fun androidx.compose.ui.input.pointer.AwaitPointerEventScope.pinchZoomGesture(
     current: () -> ZoomState,

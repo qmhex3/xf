@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Frame out</string>
+    <string name="shortcut_capture_short">Captează un cadru</string>
+    <string name="shortcut_capture_long">Captează un cadru din ultimul videoclip</string>
+    <string name="tile_capture_label">Captează un cadru</string>
+    <string name="incoming_copy_failed">Nu s-a putut salva accesul la videoclipul partajat. Deschide-l din galerie sau eliberează spațiu și partajează-l din nou.</string>
+    <string name="incoming_unsupported">Acest tip de fișier nu poate fi deschis. Partajează în schimb un videoclip, un GIF sau o imagine.</string>
+</resources>

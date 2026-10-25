@@ -8,7 +8,7 @@ T=$ROOT/engine/src/test/java/com/frameout/engine
 OUT=$(mktemp -d)
 "$1/kotlinc" -nowarn -cp "$2:$3" -d "$OUT" "$ROOT"/scripts/color_verify/android_stubs/*.kt \
   $D/Av1Color.kt $D/Vp9Color.kt $D/MkvColour.kt $D/VuiColor.kt $D/ColorHints.kt $D/ColorParams.kt $D/PeakNits.kt \
-  $D/ColorVariants.kt $D/CalibrationRule.kt $D/GainCodec.kt $D/HdrTables.kt $D/HdrToneMapper.kt $D/GamutConvert.kt $D/Dither.kt $D/Mp4Orientation.kt \
-  $T/Av1ColorTest.kt $T/ContainerColourTest.kt $T/HdrDesaturationTest.kt $T/VuiColorTest.kt $T/HdrToneMapperTest.kt $T/HdrPeakTest.kt $T/ColorCalibrationTest.kt
+  $D/ColorVariants.kt $D/CalibrationRule.kt $D/GainCodec.kt $D/HdrTables.kt $D/HdrToneMapper.kt $D/GamutConvert.kt $D/Dither.kt $D/Mp4Orientation.kt $ROOT/engine/src/main/java/com/frameout/engine/player/HdrPreviewPolicy.kt \
+  $T/Av1ColorTest.kt $T/ContainerColourTest.kt $T/HdrDesaturationTest.kt $T/VuiColorTest.kt $T/HdrToneMapperTest.kt $T/HdrPeakTest.kt $T/HdrHighlightRoomTest.kt $T/HdrPreviewPolicyTest.kt $T/ColorCalibrationTest.kt
 java -cp "$OUT:$2:$3:$4" org.junit.runner.JUnitCore com.frameout.engine.Av1ColorTest com.frameout.engine.ContainerColourTest \
-  com.frameout.engine.HdrDesaturationTest com.frameout.engine.VuiColorTest com.frameout.engine.HdrToneMapperTest com.frameout.engine.HdrPeakTest com.frameout.engine.ColorCalibrationTest
+  com.frameout.engine.HdrDesaturationTest com.frameout.engine.VuiColorTest com.frameout.engine.HdrToneMapperTest com.frameout.engine.HdrPeakTest com.frameout.engine.HdrHighlightRoomTest com.frameout.engine.HdrPreviewPolicyTest com.frameout.engine.ColorCalibrationTest

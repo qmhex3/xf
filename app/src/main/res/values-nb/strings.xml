@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Frame out</string>
+    <string name="shortcut_capture_short">Ta bilde</string>
+    <string name="shortcut_capture_long">Ta et bilde fra den siste videoen</string>
+    <string name="tile_capture_label">Ta bilde</string>
+    <string name="incoming_copy_failed">Kunne ikke beholde tilgangen til en delt video. Åpne den fra galleriet i stedet, eller frigjør lagringsplass og del den på nytt.</string>
+    <string name="incoming_unsupported">Denne filtypen kan ikke åpnes. Del en video, GIF eller et bilde i stedet.</string>
+</resources>

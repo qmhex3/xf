@@ -163,7 +163,6 @@ fun PickerScreen(onContinue: (List<Uri>) -> Unit, onClose: () -> Unit, vm: Picke
     val partial = PermissionHelper.isPartialMediaAccess(context)
     val selected = state.selected.values.toList()
     val flight = remember { PickerFlight() }
-    val undo = rememberPickerUndo()
     PreferredFrameTheme {
         CompositionLocalProvider(LocalPickerFlight provides flight) {
             Box(Modifier.fillMaxSize().background(FrameTheme.colors.background).frameAmbientGlow()) {
@@ -177,12 +176,11 @@ fun PickerScreen(onContinue: (List<Uri>) -> Unit, onClose: () -> Unit, vm: Picke
                     { safLauncher.launch(PICK_MIME_TYPES) }, if (partial) permission.requestAccess else null,
                     Modifier.align(Alignment.TopCenter)
                 )
-                PickerTray(selected, vm, undo, {
+                PickerTray(selected, vm, {
                     val picked = state.selected.keys.map(Uri::parse)
                     vm.clearSelection()
                     onContinue(picked)
                 }, Modifier.align(Alignment.BottomCenter))
-                PickerUndoToast(undo, vm::restoreItem, Modifier.align(Alignment.TopCenter))
                 PickerFlightLayer(flight, state.selected.keys)
             }
         }

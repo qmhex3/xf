@@ -8,11 +8,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.Stable
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
 private const val TOP_SLACK_PX = 8
 private const val SETTLE_MS = 650L
+private val TOP_BAR_TRAVEL = 28.dp
 
 @Composable
 fun rememberScrollSettled(grid: LazyGridState): Boolean {
@@ -30,18 +37,36 @@ fun rememberScrollSettled(grid: LazyGridState): Boolean {
     return settled
 }
 
-@Composable
-fun rememberTopBarVisible(grid: LazyGridState, pinned: Boolean, settled: Boolean): Boolean {
-    var visible by remember { mutableStateOf(true) }
-    LaunchedEffect(grid) {
-        var lastIndex = grid.firstVisibleItemIndex
-        var lastOffset = grid.firstVisibleItemScrollOffset
-        snapshotFlow { grid.firstVisibleItemIndex to grid.firstVisibleItemScrollOffset }.collect { (index, offset) ->
-            val forward = index > lastIndex || (index == lastIndex && offset > lastOffset)
-            visible = (index == 0 && offset < TOP_SLACK_PX) || !forward
-            lastIndex = index
-            lastOffset = offset
+@Stable
+class TopBarScroll internal constructor(private val grid: LazyGridState, private val thresholdPx: Float) {
+    var shown by mutableStateOf(true)
+        private set
+    private var travel = 0f
+
+    val connection = object : NestedScrollConnection {
+        override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+            val dy = available.y
+            if (dy == 0f) return Offset.Zero
+            if (travel != 0f && (travel > 0f) != (dy > 0f)) travel = 0f
+            travel += dy
+            val atTop = grid.firstVisibleItemIndex == 0 && grid.firstVisibleItemScrollOffset < TOP_SLACK_PX
+            when {
+                atTop && dy > 0f -> shown = true
+                travel <= -thresholdPx -> shown = false
+                travel >= thresholdPx -> shown = true
+            }
+            return Offset.Zero
         }
     }
-    return visible || pinned || settled
+
+    fun visible(pinned: Boolean, settled: Boolean): Boolean {
+        val atTop = grid.firstVisibleItemIndex == 0 && grid.firstVisibleItemScrollOffset < TOP_SLACK_PX
+        return shown || atTop || pinned || (settled && grid.canScrollForward)
+    }
+}
+
+@Composable
+fun rememberTopBarScroll(grid: LazyGridState): TopBarScroll {
+    val threshold = with(LocalDensity.current) { TOP_BAR_TRAVEL.toPx() }
+    return remember(grid, threshold) { TopBarScroll(grid, threshold) }
 }

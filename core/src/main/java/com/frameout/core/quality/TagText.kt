@@ -25,10 +25,18 @@ class TagText(
             "fa" -> TagTextFa.text
             "ur" -> TagTextUr.text
             "fr" -> TagTextFr.text
+            "pt" -> TagTextPt.text
             "ko" -> TagTextKo.text
             "ja" -> TagTextJa.text
             "zh" -> TagTextZh.text
             "hi" -> TagTextHi.text
+            "de" -> TagTextDe.text
+            "ro" -> TagTextRo.text
+            "es" -> TagTextEs.text
+            "uk" -> TagTextUk.text
+            "it" -> TagTextIt.text
+            "nb" -> TagTextNb.text
+            "ms" -> TagTextMs.text
             else -> null
         }
     }

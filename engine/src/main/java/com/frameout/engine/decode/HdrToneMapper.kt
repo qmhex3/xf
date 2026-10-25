@@ -9,8 +9,8 @@ internal class HdrToneMapper(private val params: ColorParams, desaturation: Floa
     private val ootf = HdrTables.ootf
     private val peak = if (hlg) HdrTables.HLG_PEAK else params.peakNits
     private val white = (peak / HdrTables.REF_WHITE).coerceAtLeast(2f)
-    private val headroom = 1f - KNEE
-    private val span = (white - KNEE) / headroom
+    private val headroom = 1f - HdrTables.TONE_KNEE
+    private val span = (white - HdrTables.TONE_KNEE) / headroom
     private val out = FloatArray(3)
     private val desatTable = FloatArray(HdrTables.DESAT_STEPS + 1) { desaturation * (it / HdrTables.DESAT_STEPS.toFloat()).pow(HdrTables.DESAT_EXPONENT) }
 
@@ -51,15 +51,15 @@ internal class HdrToneMapper(private val params: ColorParams, desaturation: Floa
     }
 
     fun toneLuma(y: Float): Float {
-        if (y <= KNEE) return y.coerceAtLeast(0f)
-        val u = (y - KNEE) / headroom
-        val mapped = KNEE + headroom * u * (1f + u / (span * span)) / (1f + u)
+        if (y <= HdrTables.TONE_KNEE) return y.coerceAtLeast(0f)
+        val u = (y - HdrTables.TONE_KNEE) / headroom
+        val mapped = HdrTables.TONE_KNEE + headroom * u * (1f + u / (span * span)) / (1f + u)
         return mapped.coerceAtMost(1f)
     }
 
     fun desaturation(y: Float): Float {
-        if (y <= KNEE) return 0f
-        val t = ((y - KNEE) / (white - KNEE)).coerceIn(0f, 1f)
+        if (y <= HdrTables.DESAT_KNEE) return 0f
+        val t = ((y - HdrTables.DESAT_KNEE) / (white - HdrTables.DESAT_KNEE)).coerceIn(0f, 1f)
         return desatTable[(t * HdrTables.DESAT_STEPS + 0.5f).toInt()]
     }
 
@@ -116,7 +116,6 @@ internal class HdrToneMapper(private val params: ColorParams, desaturation: Floa
     private fun encode(linear: Float, t: Float): Int = (HdrTables.srgb[HdrTables.index(linear)] + t).toInt().coerceAtMost(255)
 
     private companion object {
-        const val KNEE = 0.75f
         const val CHROMA_KEEP = 0.75f
         const val EPS = 1f / 64f
         const val MIN_LUMA = 1e-6f

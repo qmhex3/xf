@@ -8,6 +8,8 @@ import kotlin.math.pow
 internal object HdrTables {
     const val REF_WHITE = 203f
     const val HLG_PEAK = 1000f
+    const val TONE_KNEE = 0.55f
+    const val DESAT_KNEE = 0.75f
     const val SIZE = 4096
     const val DESAT_STRENGTH = 0.6f
     const val DESAT_EXPONENT = 1.5f

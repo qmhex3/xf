@@ -35,7 +35,12 @@ enum class ImageFormat(val key: String, val ext: String, val mime: String, val l
         }
         (this == Jpg || this == JpgHdr) && needsFlatten(bitmap) -> flattened(bitmap)?.let { compress(it, quality, out, exif).also { _ -> it.recycle() } } ?: false
         this == Jpg && Jpeg444.supports(bitmap) -> GainmapOps.keeping(bitmap, hdr) { Jpeg444.encode(bitmap, effectiveQuality(quality), out) }
-        else -> GainmapOps.keeping(bitmap, hdr) { bitmap.compress(compressFormat(Build.VERSION.SDK_INT), effectiveQuality(quality), out) }
+        else -> {
+            val q = effectiveQuality(quality)
+            val sdk = Build.VERSION.SDK_INT
+            val effort = if (webpIsLossless(q, sdk)) WEBP_LOSSLESS_EFFORT else q
+            GainmapOps.keeping(bitmap, hdr) { bitmap.compress(compressFormat(sdk, q), effort, out) }
+        }
     }
 
     private fun needsFlatten(bitmap: Bitmap): Boolean =
@@ -50,10 +55,13 @@ enum class ImageFormat(val key: String, val ext: String, val mime: String, val l
     }
 
     @Suppress("DEPRECATION")
-    private fun compressFormat(sdk: Int): Bitmap.CompressFormat = when (this) {
+    private fun compressFormat(sdk: Int, quality: Int = 100): Bitmap.CompressFormat = when (this) {
         Jpg, JpgHdr -> Bitmap.CompressFormat.JPEG
         Png -> Bitmap.CompressFormat.PNG
-        WebpLossy -> if (sdk >= 30) Bitmap.CompressFormat.WEBP_LOSSY else Bitmap.CompressFormat.WEBP
+        WebpLossy -> when {
+            sdk >= 30 -> if (webpIsLossless(quality, sdk)) Bitmap.CompressFormat.WEBP_LOSSLESS else Bitmap.CompressFormat.WEBP_LOSSY
+            else -> Bitmap.CompressFormat.WEBP
+        }
         PngHdr16 -> error("Encoded by Png16Writer")
         Heic, Avif -> error("Encoded by ModernEncoder")
     }
@@ -64,6 +72,9 @@ enum class ImageFormat(val key: String, val ext: String, val mime: String, val l
         fun availableKeys(sdk: Int = Build.VERSION.SDK_INT): List<String> = entries.filter { it.isAvailable(sdk) }.map { it.key }
 
         private const val LEGACY_WEBP_LOSSLESS = "webp_lossless"
+        private const val WEBP_LOSSLESS_EFFORT = 75
+
+        internal fun webpIsLossless(quality: Int, sdk: Int): Boolean = quality >= 100 && sdk >= 29
 
         fun fromKey(key: String?): ImageFormat =
             if (key == LEGACY_WEBP_LOSSLESS) WebpLossy else entries.firstOrNull { it.key == key } ?: Jpg

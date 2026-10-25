@@ -25,12 +25,13 @@ def bayer():
         nx[:n,:n]=m*4; nx[:n,n:]=m*4+2; nx[n:,:n]=m*4+3; nx[n:,n:]=m*4+1
         m=nx; n=s
     return (m+0.5)/64.0
-def tone_luma(y,white,knee=0.75):
+TONE_KNEE=0.55; DESAT_KNEE=0.75; CHROMA_KEEP=0.75
+def tone_luma(y,white,knee=TONE_KNEE):
     head=1-knee; span=(white-knee)/head
     u=(y-knee)/head
     mapped=knee+head*u*(1+u/(span*span))/(1+u)
     return np.where(y<=knee,np.maximum(y,0),np.minimum(mapped,1.0))
-def desat_weight(y,white,strength,exponent,knee=0.75):
+def desat_weight(y,white,strength,exponent,knee=DESAT_KNEE):
     if strength<=0: return np.zeros_like(y)
     t=np.clip((y-knee)/(white-knee),0,1)
     steps=1024
@@ -58,8 +59,9 @@ def tonemap(rgb16,hlg,prim,peak,strength=0.0,exponent=1.5):
     t=np.where(low<0,np.where(y-low>1e-6,y/np.maximum(y-low,1e-9),0.0),1.0)
     c=y+(c-y)*t
     high=c.max(-1,keepdims=True)
-    t=np.where(high>1,(1-y)/np.maximum(high-y,1e-9),1.0)
-    c=y+(c-y)*t
+    t=(1-y)/np.maximum(high-y,1e-9)
+    fitted=(1-CHROMA_KEEP)*(y+(c-y)*t)+CHROMA_KEEP*(c/np.maximum(high,1e-9))
+    c=np.where(high>1,fitted,c)
     th=bayer()
     thr=np.tile(th,(h//8+1,w//8+1))[:h,:w][...,None]
     out=np.minimum((SRGB[idx(c)]+thr).astype(np.int64),255)

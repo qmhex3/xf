@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="estimate">
+        <item quantity="one">≈ %1$d quadro · ~%2$s MB</item>
+        <item quantity="many">≈ %1$d quadros · ~%2$s MB</item>
+        <item quantity="other">≈ %1$d quadros · ~%2$s MB</item>
+    </plurals>
+    <plurals name="plan_frames">
+        <item quantity="one">%1$d quadro</item>
+        <item quantity="many">%1$d quadros</item>
+        <item quantity="other">%1$d quadros</item>
+    </plurals>
+    <plurals name="reduced_quality">
+        <item quantity="one">%1$d quadro foi salvo em resolução reduzida porque o decodificador do dispositivo não conseguiu retorná-lo em tamanho original.</item>
+        <item quantity="many">%1$d quadros foram salvos em resolução reduzida porque o decodificador do dispositivo não conseguiu retorná-los em tamanho original.</item>
+        <item quantity="other">%1$d quadros foram salvos em resolução reduzida porque o decodificador do dispositivo não conseguiu retorná-los em tamanho original.</item>
+    </plurals>
+    <plurals name="reduced_quality_to">
+        <item quantity="one">%1$d quadro foi salvo em %4$d×%5$d em vez de %2$d×%3$d da origem, para caber na memória do dispositivo.</item>
+        <item quantity="many">%1$d quadros foram salvos em %4$d×%5$d em vez de %2$d×%3$d da origem, para caber na memória do dispositivo.</item>
+        <item quantity="other">%1$d quadros foram salvos em %4$d×%5$d em vez de %2$d×%3$d da origem, para caber na memória do dispositivo.</item>
+    </plurals>
+    <plurals name="frame_count">
+        <item quantity="one">%1$d quadro</item>
+        <item quantity="many">%1$d quadros</item>
+        <item quantity="other">%1$d quadros</item>
+    </plurals>
+    <plurals name="content_frames">
+        <item quantity="one">%1$d quadro</item>
+        <item quantity="many">%1$d quadros</item>
+        <item quantity="other">%1$d quadros</item>
+    </plurals>
+    <plurals name="important_picked">
+        <item quantity="one">%1$d momento-chave selecionado</item>
+        <item quantity="many">%1$d momentos-chave selecionados</item>
+        <item quantity="other">%1$d momentos-chave selecionados</item>
+    </plurals>
+    <plurals name="sharpest_picked">
+        <item quantity="one">%1$d quadro mais nítido selecionado</item>
+        <item quantity="many">%1$d quadros mais nítidos selecionados</item>
+        <item quantity="other">%1$d quadros mais nítidos selecionados</item>
+    </plurals>
+    <plurals name="duplicates_picked">
+        <item quantity="one">%1$d quadro duplicado selecionado</item>
+        <item quantity="many">%1$d quadros duplicados selecionados</item>
+        <item quantity="other">%1$d quadros duplicados selecionados</item>
+    </plurals>
+    <plurals name="integrity_dup">
+        <item quantity="one">%1$d quadro tem o mesmo carimbo de data/hora.</item>
+        <item quantity="many">%1$d quadros têm o mesmo carimbo de data/hora.</item>
+        <item quantity="other">%1$d quadros têm o mesmo carimbo de data/hora.</item>
+    </plurals>
+    <plurals name="crop_all_hint">
+        <item quantity="one">Mesma área para %1$d quadro</item>
+        <item quantity="many">Mesma área para %1$d quadros</item>
+        <item quantity="other">Mesma área para %1$d quadros</item>
+    </plurals>
+    <plurals name="crop_all_applied">
+        <item quantity="one">Corte aplicado a %1$d quadro</item>
+        <item quantity="many">Corte aplicado a %1$d quadros</item>
+        <item quantity="other">Corte aplicado a %1$d quadros</item>
+    </plurals>
+    <plurals name="jump_back">
+        <item quantity="one">Voltar %1$d quadro</item>
+        <item quantity="many">Voltar %1$d quadros</item>
+        <item quantity="other">Voltar %1$d quadros</item>
+    </plurals>
+    <plurals name="jump_forward">
+        <item quantity="one">Avançar %1$d quadro</item>
+        <item quantity="many">Avançar %1$d quadros</item>
+        <item quantity="other">Avançar %1$d quadros</item>
+    </plurals>
+    <plurals name="jump_size">
+        <item quantity="one">Tamanho do salto: %1$d quadro (toque para alterar)</item>
+        <item quantity="many">Tamanho do salto: %1$d quadros (toque para alterar)</item>
+        <item quantity="other">Tamanho do salto: %1$d quadros (toque para alterar)</item>
+    </plurals>
+    <plurals name="queue_unsaved">
+        <item quantity="one">%1$d quadro na fila não foi salvo. Toque em Voltar novamente para sair sem salvar.</item>
+        <item quantity="many">%1$d quadros na fila não foram salvos. Toque em Voltar novamente para sair sem salvar.</item>
+        <item quantity="other">%1$d quadros na fila não foram salvos. Toque em Voltar novamente para sair sem salvar.</item>
+    </plurals>
+    <plurals name="share_limited">
+        <item quantity="one">Compartilhando somente o primeiro quadro</item>
+        <item quantity="many">Compartilhando somente os primeiros %1$d quadros</item>
+        <item quantity="other">Compartilhando somente os primeiros %1$d quadros</item>
+    </plurals>
+    <plurals name="frames_deleted">
+        <item quantity="one">%1$d quadro movido para Excluídos</item>
+        <item quantity="many">%1$d quadros movidos para Excluídos</item>
+        <item quantity="other">%1$d quadros movidos para Excluídos</item>
+    </plurals>
+    <plurals name="batch_videos">
+        <item quantity="one">%1$d vídeo</item>
+        <item quantity="many">%1$d vídeos</item>
+        <item quantity="other">%1$d vídeos</item>
+    </plurals>
+    <plurals name="projects_deleted">
+        <item quantity="one">Projeto excluído</item>
+        <item quantity="many">%1$d projetos excluídos</item>
+        <item quantity="other">%1$d projetos excluídos</item>
+    </plurals>
+    <plurals name="projects_restored">
+        <item quantity="one">Projeto restaurado</item>
+        <item quantity="many">%1$d projetos restaurados</item>
+        <item quantity="other">%1$d projetos restaurados</item>
+    </plurals>
+    <plurals name="saved_deleted_n">
+        <item quantity="one">Imagem excluída</item>
+        <item quantity="many">%1$d imagens excluídas</item>
+        <item quantity="other">%1$d imagens excluídas</item>
+    </plurals>
+    <plurals name="saved_restored_n">
+        <item quantity="one">Imagem restaurada</item>
+        <item quantity="many">%1$d imagens restauradas</item>
+        <item quantity="other">%1$d imagens restauradas</item>
+    </plurals>
+    <plurals name="saved_pruned_n">
+        <item quantity="one">1 item salvo removido porque o arquivo dele não está mais no dispositivo</item>
+        <item quantity="many">%1$d itens salvos removidos porque os arquivos deles não estão mais no dispositivo</item>
+        <item quantity="other">%1$d itens salvos removidos porque os arquivos deles não estão mais no dispositivo</item>
+    </plurals>
+    <plurals name="confirm_delete_projects_n">
+        <item quantity="one">Excluir este projeto?</item>
+        <item quantity="many">Excluir %1$d projetos?</item>
+        <item quantity="other">Excluir %1$d projetos?</item>
+    </plurals>
+    <plurals name="confirm_delete_saved_n">
+        <item quantity="one">Excluir esta imagem salva?</item>
+        <item quantity="many">Excluir %1$d imagens salvas?</item>
+        <item quantity="other">Excluir %1$d imagens salvas?</item>
+    </plurals>
+    <plurals name="backup_saved_many_n">
+        <item quantity="one">Projeto exportado para a pasta escolhida</item>
+        <item quantity="many">%1$d projetos exportados para a pasta escolhida</item>
+        <item quantity="other">%1$d projetos exportados para a pasta escolhida</item>
+    </plurals>
+    <plurals name="export_done_many_n">
+        <item quantity="one">Projeto exportado</item>
+        <item quantity="many">%1$d projetos exportados</item>
+        <item quantity="other">%1$d projetos exportados</item>
+    </plurals>
+    <plurals name="saved_export_done_n">
+        <item quantity="one">1 imagem exportada</item>
+        <item quantity="many">%1$d imagens exportadas</item>
+        <item quantity="other">%1$d imagens exportadas</item>
+    </plurals>
+</resources>

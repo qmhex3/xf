@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="estimate">
+        <item quantity="one">≈ %1$d кадр · ~%2$s МБ</item>
+        <item quantity="few">≈ %1$d кадри · ~%2$s МБ</item>
+        <item quantity="many">≈ %1$d кадрів · ~%2$s МБ</item>
+        <item quantity="other">≈ %1$d кадра · ~%2$s МБ</item>
+    </plurals>
+    <plurals name="plan_frames">
+        <item quantity="one">%1$d кадр</item>
+        <item quantity="few">%1$d кадри</item>
+        <item quantity="many">%1$d кадрів</item>
+        <item quantity="other">%1$d кадра</item>
+    </plurals>
+    <plurals name="reduced_quality">
+        <item quantity="one">%1$d кадр збережено в зниженій роздільності, бо декодер пристрою не зміг повернути його в повному розмірі.</item>
+        <item quantity="few">%1$d кадри збережено в зниженій роздільності, бо декодер пристрою не зміг повернути їх у повному розмірі.</item>
+        <item quantity="many">%1$d кадрів збережено в зниженій роздільності, бо декодер пристрою не зміг повернути їх у повному розмірі.</item>
+        <item quantity="other">%1$d кадра збережено в зниженій роздільності, бо декодер пристрою не зміг повернути їх у повному розмірі.</item>
+    </plurals>
+    <plurals name="reduced_quality_to">
+        <item quantity="one">%1$d кадр збережено в %4$d×%5$d замість вихідних %2$d×%3$d, щоб вмістити його в пам’ять пристрою.</item>
+        <item quantity="few">%1$d кадри збережено в %4$d×%5$d замість вихідних %2$d×%3$d, щоб вмістити їх у пам’ять пристрою.</item>
+        <item quantity="many">%1$d кадрів збережено в %4$d×%5$d замість вихідних %2$d×%3$d, щоб вмістити їх у пам’ять пристрою.</item>
+        <item quantity="other">%1$d кадра збережено в %4$d×%5$d замість вихідних %2$d×%3$d, щоб вмістити їх у пам’ять пристрою.</item>
+    </plurals>
+    <plurals name="frame_count">
+        <item quantity="one">%1$d кадр</item>
+        <item quantity="few">%1$d кадри</item>
+        <item quantity="many">%1$d кадрів</item>
+        <item quantity="other">%1$d кадра</item>
+    </plurals>
+    <plurals name="content_frames">
+        <item quantity="one">%1$d кадр</item>
+        <item quantity="few">%1$d кадри</item>
+        <item quantity="many">%1$d кадрів</item>
+        <item quantity="other">%1$d кадра</item>
+    </plurals>
+    <plurals name="important_picked">
+        <item quantity="one">Вибрано %1$d ключовий момент</item>
+        <item quantity="few">Вибрано ключових моментів: %1$d</item>
+        <item quantity="many">Вибрано ключових моментів: %1$d</item>
+        <item quantity="other">Вибрано ключових моментів: %1$d</item>
+    </plurals>
+    <plurals name="sharpest_picked">
+        <item quantity="one">Вибрано %1$d найчіткіший кадр</item>
+        <item quantity="few">Вибрано найчіткіших кадрів: %1$d</item>
+        <item quantity="many">Вибрано найчіткіших кадрів: %1$d</item>
+        <item quantity="other">Вибрано найчіткіших кадрів: %1$d</item>
+    </plurals>
+    <plurals name="duplicates_picked">
+        <item quantity="one">Вибрано %1$d дублікат кадру</item>
+        <item quantity="few">Вибрано дублікатів кадрів: %1$d</item>
+        <item quantity="many">Вибрано дублікатів кадрів: %1$d</item>
+        <item quantity="other">Вибрано дублікатів кадрів: %1$d</item>
+    </plurals>
+    <plurals name="integrity_dup">
+        <item quantity="one">%1$d кадр має ту саму позначку часу.</item>
+        <item quantity="few">%1$d кадри мають ту саму позначку часу.</item>
+        <item quantity="many">%1$d кадрів мають ту саму позначку часу.</item>
+        <item quantity="other">%1$d кадра мають ту саму позначку часу.</item>
+    </plurals>
+    <plurals name="crop_all_hint">
+        <item quantity="one">Та сама ділянка для %1$d кадру</item>
+        <item quantity="few">Та сама ділянка для %1$d кадрів</item>
+        <item quantity="many">Та сама ділянка для %1$d кадрів</item>
+        <item quantity="other">Та сама ділянка для %1$d кадру</item>
+    </plurals>
+    <plurals name="crop_all_applied">
+        <item quantity="one">Обрізання застосовано до %1$d кадру</item>
+        <item quantity="few">Обрізання застосовано до %1$d кадрів</item>
+        <item quantity="many">Обрізання застосовано до %1$d кадрів</item>
+        <item quantity="other">Обрізання застосовано до %1$d кадру</item>
+    </plurals>
+    <plurals name="jump_back">
+        <item quantity="one">Назад на %1$d кадр</item>
+        <item quantity="few">Назад на %1$d кадри</item>
+        <item quantity="many">Назад на %1$d кадрів</item>
+        <item quantity="other">Назад на %1$d кадра</item>
+    </plurals>
+    <plurals name="jump_forward">
+        <item quantity="one">Вперед на %1$d кадр</item>
+        <item quantity="few">Вперед на %1$d кадри</item>
+        <item quantity="many">Вперед на %1$d кадрів</item>
+        <item quantity="other">Вперед на %1$d кадра</item>
+    </plurals>
+    <plurals name="jump_size">
+        <item quantity="one">Розмір кроку: %1$d кадр (торкніться, щоб змінити)</item>
+        <item quantity="few">Розмір кроку: %1$d кадри (торкніться, щоб змінити)</item>
+        <item quantity="many">Розмір кроку: %1$d кадрів (торкніться, щоб змінити)</item>
+        <item quantity="other">Розмір кроку: %1$d кадра (торкніться, щоб змінити)</item>
+    </plurals>
+    <plurals name="queue_unsaved">
+        <item quantity="one">Не збережено %1$d кадр із черги. Натисніть «Назад» ще раз, щоб вийти без збереження.</item>
+        <item quantity="few">Не збережено %1$d кадри з черги. Натисніть «Назад» ще раз, щоб вийти без збереження.</item>
+        <item quantity="many">Не збережено %1$d кадрів із черги. Натисніть «Назад» ще раз, щоб вийти без збереження.</item>
+        <item quantity="other">Не збережено %1$d кадра з черги. Натисніть «Назад» ще раз, щоб вийти без збереження.</item>
+    </plurals>
+    <plurals name="share_limited">
+        <item quantity="one">Надсилається лише перший %1$d кадр</item>
+        <item quantity="few">Надсилаються лише перші %1$d кадри</item>
+        <item quantity="many">Надсилаються лише перші %1$d кадрів</item>
+        <item quantity="other">Надсилаються лише перші %1$d кадра</item>
+    </plurals>
+    <plurals name="frames_deleted">
+        <item quantity="one">%1$d кадр переміщено до «Видалених»</item>
+        <item quantity="few">%1$d кадри переміщено до «Видалених»</item>
+        <item quantity="many">%1$d кадрів переміщено до «Видалених»</item>
+        <item quantity="other">%1$d кадра переміщено до «Видалених»</item>
+    </plurals>
+    <plurals name="batch_videos">
+        <item quantity="one">%1$d відео</item>
+        <item quantity="few">%1$d відео</item>
+        <item quantity="many">%1$d відео</item>
+        <item quantity="other">%1$d відео</item>
+    </plurals>
+    <plurals name="projects_deleted">
+        <item quantity="one">Видалено %1$d проєкт</item>
+        <item quantity="few">Видалено проєктів: %1$d</item>
+        <item quantity="many">Видалено проєктів: %1$d</item>
+        <item quantity="other">Видалено проєктів: %1$d</item>
+    </plurals>
+    <plurals name="projects_restored">
+        <item quantity="one">Відновлено %1$d проєкт</item>
+        <item quantity="few">Відновлено проєктів: %1$d</item>
+        <item quantity="many">Відновлено проєктів: %1$d</item>
+        <item quantity="other">Відновлено проєктів: %1$d</item>
+    </plurals>
+    <plurals name="saved_deleted_n">
+        <item quantity="one">Видалено %1$d зображення</item>
+        <item quantity="few">Видалено %1$d зображення</item>
+        <item quantity="many">Видалено %1$d зображень</item>
+        <item quantity="other">Видалено %1$d зображення</item>
+    </plurals>
+    <plurals name="saved_restored_n">
+        <item quantity="one">Відновлено %1$d зображення</item>
+        <item quantity="few">Відновлено %1$d зображення</item>
+        <item quantity="many">Відновлено %1$d зображень</item>
+        <item quantity="other">Відновлено %1$d зображення</item>
+    </plurals>
+    <plurals name="saved_pruned_n">
+        <item quantity="one">Вилучено %1$d збережений елемент: його файла більше немає на пристрої</item>
+        <item quantity="few">Вилучено %1$d збережені елементи: їхніх файлів більше немає на пристрої</item>
+        <item quantity="many">Вилучено %1$d збережених елементів: їхніх файлів більше немає на пристрої</item>
+        <item quantity="other">Вилучено %1$d збереженого елемента: їхніх файлів більше немає на пристрої</item>
+    </plurals>
+    <plurals name="confirm_delete_projects_n">
+        <item quantity="one">Видалити %1$d проєкт?</item>
+        <item quantity="few">Видалити %1$d проєкти?</item>
+        <item quantity="many">Видалити %1$d проєктів?</item>
+        <item quantity="other">Видалити %1$d проєкту?</item>
+    </plurals>
+    <plurals name="confirm_delete_saved_n">
+        <item quantity="one">Видалити %1$d збережене зображення?</item>
+        <item quantity="few">Видалити %1$d збережені зображення?</item>
+        <item quantity="many">Видалити %1$d збережених зображень?</item>
+        <item quantity="other">Видалити %1$d збереженого зображення?</item>
+    </plurals>
+    <plurals name="backup_saved_many_n">
+        <item quantity="one">%1$d проєкт експортовано до вибраної папки</item>
+        <item quantity="few">%1$d проєкти експортовано до вибраної папки</item>
+        <item quantity="many">%1$d проєктів експортовано до вибраної папки</item>
+        <item quantity="other">%1$d проєкту експортовано до вибраної папки</item>
+    </plurals>
+    <plurals name="export_done_many_n">
+        <item quantity="one">Експортовано %1$d проєкт</item>
+        <item quantity="few">Експортовано %1$d проєкти</item>
+        <item quantity="many">Експортовано %1$d проєктів</item>
+        <item quantity="other">Експортовано %1$d проєкту</item>
+    </plurals>
+    <plurals name="saved_export_done_n">
+        <item quantity="one">Експортовано %1$d зображення</item>
+        <item quantity="few">Експортовано %1$d зображення</item>
+        <item quantity="many">Експортовано %1$d зображень</item>
+        <item quantity="other">Експортовано %1$d зображення</item>
+    </plurals>
+</resources>

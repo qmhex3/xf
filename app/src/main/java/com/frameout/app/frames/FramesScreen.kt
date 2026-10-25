@@ -29,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -69,7 +70,8 @@ fun FramesScreen(projectId: Long, onBack: () -> Unit, onCollage: (List<Long>) ->
     var searchOpen by remember { mutableStateOf(false) }
     var contactOpen by remember { mutableStateOf(false) }
     var datasetOpen by remember { mutableStateOf(false) }
-    val barVisible = rememberTopBarVisible(gridState, state.selectionMode || extracting, scrollSettled) && (state.selectionMode || !scrubbing)
+    val topBarScroll = rememberTopBarScroll(gridState)
+    val barVisible = topBarScroll.visible(state.selectionMode || extracting, scrollSettled) && (state.selectionMode || !scrubbing)
     val timeMsAt = remember(projectId, state.filter, state.tagFilter, state.sharpestVersion) {
         val tags = state.tagFilter.toList()
         val tagged = state.filter == FrameFilter.Tagged
@@ -131,7 +133,7 @@ fun FramesScreen(projectId: Long, onBack: () -> Unit, onCollage: (List<Long>) ->
     PreferredFrameTheme {
         val colors = FrameTheme.colors
         Box(Modifier.fillMaxSize().background(colors.background).frameAmbientGlow()) {
-            Column(Modifier.fillMaxSize()) {
+            Column(Modifier.fillMaxSize().nestedScroll(topBarScroll.connection)) {
                 AnimatedVisibility(barVisible, enter = frameBarEnter(), exit = frameBarExit()) {
                     Column {
                         FramesTopBar(

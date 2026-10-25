@@ -7,8 +7,16 @@
     <locale android:name="fa" />
     <locale android:name="ur" />
     <locale android:name="fr" />
+    <locale android:name="pt" />
     <locale android:name="hi" />
     <locale android:name="ko" />
     <locale android:name="ja" />
     <locale android:name="zh" />
+    <locale android:name="de" />
+    <locale android:name="ro" />
+    <locale android:name="es" />
+    <locale android:name="uk" />
+    <locale android:name="it" />
+    <locale android:name="nb" />
+    <locale android:name="ms" />
 </locale-config>

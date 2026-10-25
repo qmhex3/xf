@@ -37,6 +37,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.frameout.app.trim.ContentOptionsSheet
 import com.frameout.app.trim.ExtractOptions
 import com.frameout.app.trim.PlanChangeButton
 import com.frameout.app.trim.PlanFilmStrip
@@ -124,7 +125,7 @@ internal fun BatchPrepare(
         }
         val contentMode = com.frameout.engine.extract.ExtractModeCodec.decode(stored) as? com.frameout.engine.extract.ExtractMode.Content
         if (contentOpen && contentMode != null) {
-            com.frameout.app.trim.ContentOptionsSheet(options, prefs, contentMode) { contentOpen = false }
+            ContentOptionsSheet(options, prefs, contentMode) { contentOpen = false }
         } else {
             TrimSheetHost(options, TrimStrings.optionsTitle(), { options = false }) {
                 ExtractOptions(

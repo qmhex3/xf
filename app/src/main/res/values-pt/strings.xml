@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Frame out</string>
+    <string name="shortcut_capture_short">Capturar quadro</string>
+    <string name="shortcut_capture_long">Capturar um quadro do último vídeo</string>
+    <string name="tile_capture_label">Capturar quadro</string>
+    <string name="incoming_copy_failed">Não foi possível manter o acesso a um vídeo compartilhado. Abra-o pela galeria ou libere espaço de armazenamento e compartilhe novamente.</string>
+    <string name="incoming_unsupported">Este tipo de arquivo não pode ser aberto. Compartilhe um vídeo, GIF ou imagem.</string>
+</resources>

@@ -109,4 +109,12 @@ class ImageFormatTest {
         assertEquals(ImageFormat.WebpLossy, ImageFormat.resolve("webp_lossless", true, 34, allowed = free))
         assertEquals(ImageFormat.Jpg, ImageFormat.resolve("jpg_hdr", true, 34, allowed = free))
     }
+
+    @Test
+    fun webpAtFullQualityIsLosslessFromAndroid10() {
+        assertEquals(true, ImageFormat.webpIsLossless(100, 29))
+        assertEquals(true, ImageFormat.webpIsLossless(100, 34))
+        assertEquals(false, ImageFormat.webpIsLossless(99, 34))
+        assertEquals(false, ImageFormat.webpIsLossless(100, 28))
+    }
 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Frame out</string>
+    <string name="shortcut_capture_short">Захопити кадр</string>
+    <string name="shortcut_capture_long">Захопити кадр з останнього відео</string>
+    <string name="tile_capture_label">Захопити кадр</string>
+    <string name="incoming_copy_failed">Не вдалося зберегти доступ до відео, яким поділилися. Відкрийте його з галереї або звільніть місце й поділіться ним знову.</string>
+    <string name="incoming_unsupported">Цей тип файлу не можна відкрити. Натомість поділіться відео, GIF або зображенням.</string>
+</resources>

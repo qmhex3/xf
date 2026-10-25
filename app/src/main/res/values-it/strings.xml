@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Frame out</string>
+    <string name="shortcut_capture_short">Cattura fotogramma</string>
+    <string name="shortcut_capture_long">Cattura un fotogramma dall’ultimo video</string>
+    <string name="tile_capture_label">Cattura fotogramma</string>
+    <string name="incoming_copy_failed">Non è stato possibile mantenere l’accesso a un video condiviso. Aprilo dalla galleria oppure libera spazio di archiviazione e condividilo di nuovo.</string>
+    <string name="incoming_unsupported">Questo tipo di file non può essere aperto. Condividi un video, una GIF o un’immagine.</string>
+</resources>

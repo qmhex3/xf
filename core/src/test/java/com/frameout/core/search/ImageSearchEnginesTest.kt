@@ -39,6 +39,6 @@ class ImageSearchEnginesTest {
 
     @Test
     fun descriptionsAreLocalised() {
-        ImageSearchEngines.all.forEach { assertTrue(it.desc(true) != it.desc(false)) }
+        ImageSearchEngines.all.forEach { assertTrue(it.desc("ar") != it.desc("en")) }
     }
 }

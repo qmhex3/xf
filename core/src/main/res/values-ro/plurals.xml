@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="estimate">
+        <item quantity="one">≈ %1$d cadru · ~%2$s MB</item>
+        <item quantity="few">≈ %1$d cadre · ~%2$s MB</item>
+        <item quantity="other">≈ %1$d de cadre · ~%2$s MB</item>
+    </plurals>
+    <plurals name="plan_frames">
+        <item quantity="one">%1$d cadru</item>
+        <item quantity="few">%1$d cadre</item>
+        <item quantity="other">%1$d de cadre</item>
+    </plurals>
+    <plurals name="reduced_quality">
+        <item quantity="one">Un cadru a fost salvat la rezoluție redusă, deoarece decodorul dispozitivului nu l-a putut returna la dimensiunea completă.</item>
+        <item quantity="few">%1$d cadre au fost salvate la rezoluție redusă, deoarece decodorul dispozitivului nu le-a putut returna la dimensiunea completă.</item>
+        <item quantity="other">%1$d de cadre au fost salvate la rezoluție redusă, deoarece decodorul dispozitivului nu le-a putut returna la dimensiunea completă.</item>
+    </plurals>
+    <plurals name="reduced_quality_to">
+        <item quantity="one">Un cadru a fost salvat la %4$d×%5$d în loc de %2$d×%3$d (dimensiunea originală), pentru a încăpea în memoria dispozitivului.</item>
+        <item quantity="few">%1$d cadre au fost salvate la %4$d×%5$d în loc de %2$d×%3$d (dimensiunea originală), pentru a încăpea în memoria dispozitivului.</item>
+        <item quantity="other">%1$d de cadre au fost salvate la %4$d×%5$d în loc de %2$d×%3$d (dimensiunea originală), pentru a încăpea în memoria dispozitivului.</item>
+    </plurals>
+    <plurals name="frame_count">
+        <item quantity="one">%1$d cadru</item>
+        <item quantity="few">%1$d cadre</item>
+        <item quantity="other">%1$d de cadre</item>
+    </plurals>
+    <plurals name="content_frames">
+        <item quantity="one">%1$d cadru</item>
+        <item quantity="few">%1$d cadre</item>
+        <item quantity="other">%1$d de cadre</item>
+    </plurals>
+    <plurals name="important_picked">
+        <item quantity="one">Momentul cheie a fost selectat</item>
+        <item quantity="few">Au fost selectate %1$d momente cheie</item>
+        <item quantity="other">Au fost selectate %1$d de momente cheie</item>
+    </plurals>
+    <plurals name="sharpest_picked">
+        <item quantity="one">Cadrul cel mai clar a fost selectat</item>
+        <item quantity="few">Au fost selectate %1$d cele mai clare cadre</item>
+        <item quantity="other">Au fost selectate %1$d de cele mai clare cadre</item>
+    </plurals>
+    <plurals name="duplicates_picked">
+        <item quantity="one">A fost selectat %1$d cadru duplicat</item>
+        <item quantity="few">Au fost selectate %1$d cadre duplicate</item>
+        <item quantity="other">Au fost selectate %1$d de cadre duplicate</item>
+    </plurals>
+    <plurals name="integrity_dup">
+        <item quantity="one">%1$d cadru are aceeași marcă de timp.</item>
+        <item quantity="few">%1$d cadre au aceeași marcă de timp.</item>
+        <item quantity="other">%1$d de cadre au aceeași marcă de timp.</item>
+    </plurals>
+    <plurals name="crop_all_hint">
+        <item quantity="one">Aceeași zonă pentru %1$d cadru</item>
+        <item quantity="few">Aceeași zonă pentru %1$d cadre</item>
+        <item quantity="other">Aceeași zonă pentru %1$d de cadre</item>
+    </plurals>
+    <plurals name="crop_all_applied">
+        <item quantity="one">Decupare aplicată la %1$d cadru</item>
+        <item quantity="few">Decupare aplicată la %1$d cadre</item>
+        <item quantity="other">Decupare aplicată la %1$d de cadre</item>
+    </plurals>
+    <plurals name="jump_back">
+        <item quantity="one">Înapoi %1$d cadru</item>
+        <item quantity="few">Înapoi %1$d cadre</item>
+        <item quantity="other">Înapoi %1$d de cadre</item>
+    </plurals>
+    <plurals name="jump_forward">
+        <item quantity="one">Înainte %1$d cadru</item>
+        <item quantity="few">Înainte %1$d cadre</item>
+        <item quantity="other">Înainte %1$d de cadre</item>
+    </plurals>
+    <plurals name="jump_size">
+        <item quantity="one">Mărime salt: %1$d cadru (atinge pentru a schimba)</item>
+        <item quantity="few">Mărime salt: %1$d cadre (atinge pentru a schimba)</item>
+        <item quantity="other">Mărime salt: %1$d de cadre (atinge pentru a schimba)</item>
+    </plurals>
+    <plurals name="queue_unsaved">
+        <item quantity="one">%1$d cadru din coadă nu este salvat. Apasă din nou înapoi pentru a ieși fără salvare.</item>
+        <item quantity="few">%1$d cadre din coadă nu sunt salvate. Apasă din nou înapoi pentru a ieși fără salvare.</item>
+        <item quantity="other">%1$d de cadre din coadă nu sunt salvate. Apasă din nou înapoi pentru a ieși fără salvare.</item>
+    </plurals>
+    <plurals name="share_limited">
+        <item quantity="one">Se partajează doar primul cadru (%1$d)</item>
+        <item quantity="few">Se partajează doar primele %1$d cadre</item>
+        <item quantity="other">Se partajează doar primele %1$d de cadre</item>
+    </plurals>
+    <plurals name="frames_deleted">
+        <item quantity="one">%1$d cadru mutat în Șterse</item>
+        <item quantity="few">%1$d cadre mutate în Șterse</item>
+        <item quantity="other">%1$d de cadre mutate în Șterse</item>
+    </plurals>
+    <plurals name="batch_videos">
+        <item quantity="one">%1$d videoclip</item>
+        <item quantity="few">%1$d videoclipuri</item>
+        <item quantity="other">%1$d de videoclipuri</item>
+    </plurals>
+    <plurals name="projects_deleted">
+        <item quantity="one">Proiect șters</item>
+        <item quantity="few">%1$d proiecte șterse</item>
+        <item quantity="other">%1$d de proiecte șterse</item>
+    </plurals>
+    <plurals name="projects_restored">
+        <item quantity="one">Proiect restaurat</item>
+        <item quantity="few">%1$d proiecte restaurate</item>
+        <item quantity="other">%1$d de proiecte restaurate</item>
+    </plurals>
+    <plurals name="saved_deleted_n">
+        <item quantity="one">Imagine ștearsă</item>
+        <item quantity="few">%1$d imagini șterse</item>
+        <item quantity="other">%1$d de imagini șterse</item>
+    </plurals>
+    <plurals name="saved_restored_n">
+        <item quantity="one">Imagine restaurată</item>
+        <item quantity="few">%1$d imagini restaurate</item>
+        <item quantity="other">%1$d de imagini restaurate</item>
+    </plurals>
+    <plurals name="saved_pruned_n">
+        <item quantity="one">1 element salvat a fost eliminat, deoarece fișierul lui nu mai este pe dispozitiv</item>
+        <item quantity="few">%1$d elemente salvate au fost eliminate, deoarece fișierele lor nu mai sunt pe dispozitiv</item>
+        <item quantity="other">%1$d de elemente salvate au fost eliminate, deoarece fișierele lor nu mai sunt pe dispozitiv</item>
+    </plurals>
+    <plurals name="confirm_delete_projects_n">
+        <item quantity="one">Ștergi acest proiect?</item>
+        <item quantity="few">Ștergi %1$d proiecte?</item>
+        <item quantity="other">Ștergi %1$d de proiecte?</item>
+    </plurals>
+    <plurals name="confirm_delete_saved_n">
+        <item quantity="one">Ștergi această imagine salvată?</item>
+        <item quantity="few">Ștergi %1$d imagini salvate?</item>
+        <item quantity="other">Ștergi %1$d de imagini salvate?</item>
+    </plurals>
+    <plurals name="backup_saved_many_n">
+        <item quantity="one">Proiectul a fost exportat în folderul ales</item>
+        <item quantity="few">%1$d proiecte au fost exportate în folderul ales</item>
+        <item quantity="other">%1$d de proiecte au fost exportate în folderul ales</item>
+    </plurals>
+    <plurals name="export_done_many_n">
+        <item quantity="one">Proiect exportat</item>
+        <item quantity="few">%1$d proiecte exportate</item>
+        <item quantity="other">%1$d de proiecte exportate</item>
+    </plurals>
+    <plurals name="saved_export_done_n">
+        <item quantity="one">1 imagine exportată</item>
+        <item quantity="few">%1$d imagini exportate</item>
+        <item quantity="other">%1$d de imagini exportate</item>
+    </plurals>
+</resources>

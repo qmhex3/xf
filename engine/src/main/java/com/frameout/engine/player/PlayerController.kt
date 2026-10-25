@@ -25,6 +25,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import android.graphics.Bitmap
 import android.os.SystemClock
+import com.frameout.engine.decode.HdrDetector
+import kotlinx.coroutines.delay
 
 enum class PreviewNotice { None, StillOnly, Unavailable }
 
@@ -56,6 +58,12 @@ class PlayerController(private val context: Context) {
     private val _frame = MutableStateFlow<Bitmap?>(null)
     private var animated: AnimatedPlayback? = null
     private var openJob: Job? = null
+    private val _still = MutableStateFlow<Bitmap?>(null)
+    private var stillJob: Job? = null
+    @Volatile private var stillMs = NO_POSITION
+    @Volatile private var pendingStillMs = NO_POSITION
+    @Volatile private var sourceHdr = false
+    @Volatile private var windowHdr = false
     private var released = false
     private var fallbackTried = false
     @Volatile private var windowStartMs = -1L
@@ -64,6 +72,11 @@ class PlayerController(private val context: Context) {
     @Volatile private var scrubTargetMs = -1L
     @Volatile private var bufferingSinceMs = 0L
     val frame: StateFlow<Bitmap?> = _frame.asStateFlow()
+    val still: StateFlow<Bitmap?> = _still.asStateFlow()
+    private val _hdr = MutableStateFlow(false)
+    val hdrSource: StateFlow<Boolean> = _hdr.asStateFlow()
+    var hdrNativeSurface: Boolean = true
+    var hdrStillEnabled: Boolean = true
     val state: StateFlow<PlayerUiState> = _state.asStateFlow()
     val position: StateFlow<Long> = _position.asStateFlow()
     val playing: Boolean get() = animated?.playing ?: player.isPlaying
@@ -113,6 +126,9 @@ class PlayerController(private val context: Context) {
         animated?.close()
         animated = null
         _frame.value = null
+        sourceHdr = false
+        _hdr.value = false
+        dropStill()
         _state.value = _state.value.copy(animated = false, notice = PreviewNotice.None, hasAudio = false)
         grabber?.close()
         grabber = null
@@ -122,6 +138,7 @@ class PlayerController(private val context: Context) {
             val candidate = AnimatedPlayback.looksAnimated(app, uri)
             val still = if (candidate) AnimatedPlayback.open(app, uri, scope) { _frame.value = it } else null
             val clip = still ?: AnimatedPlayback.openVideo(app, uri, scope, false) { _frame.value = it }
+            val hdr = clip == null && withContext(Dispatchers.IO) { HdrDetector.isHdr(app, uri) }
             val hopeless = clip == null && ((candidate && AnimatedPlayback.isExoHopeless(app, uri)) || PreviewSupport.exoCannotPlay(app, uri))
             withContext(Dispatchers.Main) {
                 if (released || mediaUri != uri) {
@@ -129,6 +146,8 @@ class PlayerController(private val context: Context) {
                 } else if (clip != null) {
                     adopt(clip)
                 } else {
+                    sourceHdr = hdr
+                    _hdr.value = hdr
                     startExo(uri)
                 }
             }
@@ -137,6 +156,7 @@ class PlayerController(private val context: Context) {
 
     private fun adopt(clip: AnimatedPlayback) {
         animated = clip
+        dropStill()
         val notice = if (clip.stillOnly) PreviewNotice.StillOnly else PreviewNotice.None
         _state.value = _state.value.copy(animated = true, ready = true, isPlaying = false, durationMs = clip.durationMs, videoAspect = clip.aspect, notice = notice)
     }
@@ -193,6 +213,7 @@ class PlayerController(private val context: Context) {
     }
 
     fun play() {
+        dropStill()
         animated?.let {
             if (outsideWindow(_position.value)) seekTo(windowStartMs)
             it.play()
@@ -288,6 +309,7 @@ class PlayerController(private val context: Context) {
     @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
     fun scrub(active: Boolean) {
         scrubbing = active
+        if (active) dropStill()
         player.setScrubbingModeEnabled(active)
         player.setSeekParameters(if (active) SeekParameters.CLOSEST_SYNC else SeekParameters.EXACT)
         if (!active) {
@@ -326,10 +348,59 @@ class PlayerController(private val context: Context) {
             buffering = spinnerVisible(),
             ready = st == Player.STATE_READY || st == Player.STATE_BUFFERING || st == Player.STATE_ENDED
         )
+        syncStill()
+    }
+
+    fun setWindowShowsHdr(value: Boolean) {
+        windowHdr = value
+        if (value) dropStill()
+    }
+
+    private fun dropStill() {
+        stillJob?.cancel()
+        stillJob = null
+        pendingStillMs = NO_POSITION
+        stillMs = NO_POSITION
+        if (_still.value != null) _still.value = null
+    }
+
+    private fun syncStill() {
+        val s = _state.value
+        val wanted = HdrPreviewPolicy.wantsStill(hdrStillEnabled, sourceHdr, windowHdr, animated != null, s.isPlaying, scrubbing, s.ready)
+        if (!wanted) {
+            dropStill()
+            return
+        }
+        val at = _position.value
+        if (at == stillMs || at == pendingStillMs) return
+        requestStill(at)
+    }
+
+    private fun requestStill(at: Long) {
+        stillJob?.cancel()
+        if (_still.value != null) _still.value = null
+        stillMs = NO_POSITION
+        pendingStillMs = at
+        stillJob = scope.launch {
+            delay(HdrPreviewPolicy.DEBOUNCE_MS)
+            val bitmap = captureAt(at)?.let(::fitForPreview)
+            val s = _state.value
+            val current = !released && bitmap != null && pendingStillMs == at && _position.value == at && !s.isPlaying && !scrubbing
+            if (current) {
+                _still.value = bitmap
+                stillMs = at
+            }
+        }
+    }
+
+    private fun fitForPreview(bitmap: Bitmap): Bitmap {
+        val (w, h) = HdrPreviewPolicy.scaledSize(bitmap.width, bitmap.height)
+        return if (w == bitmap.width && h == bitmap.height) bitmap else Bitmap.createScaledBitmap(bitmap, w, h, true)
     }
 
     fun release() {
         released = true
+        dropStill()
         openJob?.cancel()
         animated?.close()
         animated = null
@@ -342,6 +413,7 @@ class PlayerController(private val context: Context) {
     }
 }
 
+private const val NO_POSITION = Long.MIN_VALUE
 private const val END_TOLERANCE_MS = WindowRules.END_TOLERANCE_MS
 private const val MIN_WINDOW_MS = 100L
 

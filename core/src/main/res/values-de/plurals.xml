@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="estimate">
+        <item quantity="one">≈ %1$d Frame · ~%2$s MB</item>
+        <item quantity="other">≈ %1$d Frames · ~%2$s MB</item>
+    </plurals>
+    <plurals name="plan_frames">
+        <item quantity="one">%1$d Frame</item>
+        <item quantity="other">%1$d Frames</item>
+    </plurals>
+    <plurals name="reduced_quality">
+        <item quantity="one">Ein Frame wurde mit reduzierter Auflösung gespeichert, weil der Decoder des Geräts ihn nicht in voller Größe liefern konnte.</item>
+        <item quantity="other">%1$d Frames wurden mit reduzierter Auflösung gespeichert, weil der Decoder des Geräts sie nicht in voller Größe liefern konnte.</item>
+    </plurals>
+    <plurals name="reduced_quality_to">
+        <item quantity="one">Ein Frame wurde mit %4$d×%5$d statt der Originalgröße %2$d×%3$d gespeichert, damit er in den Gerätespeicher passt.</item>
+        <item quantity="other">%1$d Frames wurden mit %4$d×%5$d statt der Originalgröße %2$d×%3$d gespeichert, damit sie in den Gerätespeicher passen.</item>
+    </plurals>
+    <plurals name="frame_count">
+        <item quantity="one">%1$d Frame</item>
+        <item quantity="other">%1$d Frames</item>
+    </plurals>
+    <plurals name="content_frames">
+        <item quantity="one">%1$d Frame</item>
+        <item quantity="other">%1$d Frames</item>
+    </plurals>
+    <plurals name="important_picked">
+        <item quantity="one">Schlüsselmoment ausgewählt</item>
+        <item quantity="other">%1$d Schlüsselmomente ausgewählt</item>
+    </plurals>
+    <plurals name="sharpest_picked">
+        <item quantity="one">Schärfsten Frame ausgewählt</item>
+        <item quantity="other">%1$d schärfste Frames ausgewählt</item>
+    </plurals>
+    <plurals name="duplicates_picked">
+        <item quantity="one">%1$d doppelten Frame ausgewählt</item>
+        <item quantity="other">%1$d doppelte Frames ausgewählt</item>
+    </plurals>
+    <plurals name="integrity_dup">
+        <item quantity="one">%1$d Frame hat denselben Zeitstempel.</item>
+        <item quantity="other">%1$d Frames haben denselben Zeitstempel.</item>
+    </plurals>
+    <plurals name="crop_all_hint">
+        <item quantity="one">Gleicher Bereich für %1$d Frame</item>
+        <item quantity="other">Gleicher Bereich für %1$d Frames</item>
+    </plurals>
+    <plurals name="crop_all_applied">
+        <item quantity="one">Zuschnitt auf %1$d Frame angewendet</item>
+        <item quantity="other">Zuschnitt auf %1$d Frames angewendet</item>
+    </plurals>
+    <plurals name="jump_back">
+        <item quantity="one">%1$d Frame zurück</item>
+        <item quantity="other">%1$d Frames zurück</item>
+    </plurals>
+    <plurals name="jump_forward">
+        <item quantity="one">%1$d Frame vor</item>
+        <item quantity="other">%1$d Frames vor</item>
+    </plurals>
+    <plurals name="jump_size">
+        <item quantity="one">Sprungweite: %1$d Frame (zum Ändern tippen)</item>
+        <item quantity="other">Sprungweite: %1$d Frames (zum Ändern tippen)</item>
+    </plurals>
+    <plurals name="queue_unsaved">
+        <item quantity="one">%1$d Frame in der Warteschlange ist nicht gespeichert. Drücke nochmal Zurück, um ohne Speichern zu verlassen.</item>
+        <item quantity="other">%1$d Frames in der Warteschlange sind nicht gespeichert. Drücke nochmal Zurück, um ohne Speichern zu verlassen.</item>
+    </plurals>
+    <plurals name="share_limited">
+        <item quantity="one">Nur der erste %1$d Frame wird geteilt</item>
+        <item quantity="other">Nur die ersten %1$d Frames werden geteilt</item>
+    </plurals>
+    <plurals name="frames_deleted">
+        <item quantity="one">%1$d Frame in „Gelöscht“ verschoben</item>
+        <item quantity="other">%1$d Frames in „Gelöscht“ verschoben</item>
+    </plurals>
+    <plurals name="batch_videos">
+        <item quantity="one">%1$d Video</item>
+        <item quantity="other">%1$d Videos</item>
+    </plurals>
+    <plurals name="projects_deleted">
+        <item quantity="one">Projekt gelöscht</item>
+        <item quantity="other">%1$d Projekte gelöscht</item>
+    </plurals>
+    <plurals name="projects_restored">
+        <item quantity="one">Projekt wiederhergestellt</item>
+        <item quantity="other">%1$d Projekte wiederhergestellt</item>
+    </plurals>
+    <plurals name="saved_deleted_n">
+        <item quantity="one">Bild gelöscht</item>
+        <item quantity="other">%1$d Bilder gelöscht</item>
+    </plurals>
+    <plurals name="saved_restored_n">
+        <item quantity="one">Bild wiederhergestellt</item>
+        <item quantity="other">%1$d Bilder wiederhergestellt</item>
+    </plurals>
+    <plurals name="saved_pruned_n">
+        <item quantity="one">1 gespeicherter Eintrag entfernt, weil seine Datei nicht mehr auf dem Gerät ist</item>
+        <item quantity="other">%1$d gespeicherte Einträge entfernt, weil ihre Dateien nicht mehr auf dem Gerät sind</item>
+    </plurals>
+    <plurals name="confirm_delete_projects_n">
+        <item quantity="one">Dieses Projekt löschen?</item>
+        <item quantity="other">%1$d Projekte löschen?</item>
+    </plurals>
+    <plurals name="confirm_delete_saved_n">
+        <item quantity="one">Dieses gespeicherte Bild löschen?</item>
+        <item quantity="other">%1$d gespeicherte Bilder löschen?</item>
+    </plurals>
+    <plurals name="backup_saved_many_n">
+        <item quantity="one">Projekt in den gewählten Ordner exportiert</item>
+        <item quantity="other">%1$d Projekte in den gewählten Ordner exportiert</item>
+    </plurals>
+    <plurals name="export_done_many_n">
+        <item quantity="one">Projekt exportiert</item>
+        <item quantity="other">%1$d Projekte exportiert</item>
+    </plurals>
+    <plurals name="saved_export_done_n">
+        <item quantity="one">1 Bild exportiert</item>
+        <item quantity="other">%1$d Bilder exportiert</item>
+    </plurals>
+</resources>

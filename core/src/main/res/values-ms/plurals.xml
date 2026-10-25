@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="estimate">
+        <item quantity="other">≈ %1$d bingkai · ~%2$s MB</item>
+    </plurals>
+    <plurals name="plan_frames">
+        <item quantity="other">%1$d bingkai</item>
+    </plurals>
+    <plurals name="reduced_quality">
+        <item quantity="other">%1$d bingkai disimpan pada resolusi dikurangkan kerana penyahkod peranti tidak dapat menghasilkannya dalam saiz penuh.</item>
+    </plurals>
+    <plurals name="reduced_quality_to">
+        <item quantity="other">%1$d bingkai disimpan pada %4$d×%5$d, bukannya %2$d×%3$d sumber, supaya muat dalam memori peranti.</item>
+    </plurals>
+    <plurals name="frame_count">
+        <item quantity="other">%1$d bingkai</item>
+    </plurals>
+    <plurals name="content_frames">
+        <item quantity="other">%1$d bingkai</item>
+    </plurals>
+    <plurals name="important_picked">
+        <item quantity="other">Memilih %1$d detik penting</item>
+    </plurals>
+    <plurals name="sharpest_picked">
+        <item quantity="other">Memilih %1$d bingkai paling tajam</item>
+    </plurals>
+    <plurals name="duplicates_picked">
+        <item quantity="other">Memilih %1$d bingkai pendua</item>
+    </plurals>
+    <plurals name="integrity_dup">
+        <item quantity="other">%1$d bingkai berkongsi cap masa yang sama.</item>
+    </plurals>
+    <plurals name="crop_all_hint">
+        <item quantity="other">Kawasan yang sama untuk %1$d bingkai</item>
+    </plurals>
+    <plurals name="crop_all_applied">
+        <item quantity="other">Pemotongan digunakan pada %1$d bingkai</item>
+    </plurals>
+    <plurals name="jump_back">
+        <item quantity="other">Undur %1$d bingkai</item>
+    </plurals>
+    <plurals name="jump_forward">
+        <item quantity="other">Maju %1$d bingkai</item>
+    </plurals>
+    <plurals name="jump_size">
+        <item quantity="other">Saiz lompatan: %1$d bingkai (ketik untuk menukar)</item>
+    </plurals>
+    <plurals name="queue_unsaved">
+        <item quantity="other">%1$d bingkai dalam baris gilir belum disimpan. Tekan kembali sekali lagi untuk keluar tanpa menyimpan.</item>
+    </plurals>
+    <plurals name="share_limited">
+        <item quantity="other">Hanya %1$d bingkai pertama dikongsi</item>
+    </plurals>
+    <plurals name="frames_deleted">
+        <item quantity="other">%1$d bingkai dialihkan ke Dipadam</item>
+    </plurals>
+    <plurals name="batch_videos">
+        <item quantity="other">%1$d video</item>
+    </plurals>
+    <plurals name="projects_deleted">
+        <item quantity="other">%1$d projek dipadam</item>
+    </plurals>
+    <plurals name="projects_restored">
+        <item quantity="other">%1$d projek dipulihkan</item>
+    </plurals>
+    <plurals name="saved_deleted_n">
+        <item quantity="other">%1$d imej dipadam</item>
+    </plurals>
+    <plurals name="saved_restored_n">
+        <item quantity="other">%1$d imej dipulihkan</item>
+    </plurals>
+    <plurals name="saved_pruned_n">
+        <item quantity="other">%1$d item disimpan dialih keluar kerana failnya tidak lagi berada pada peranti</item>
+    </plurals>
+    <plurals name="confirm_delete_projects_n">
+        <item quantity="other">Padam %1$d projek?</item>
+    </plurals>
+    <plurals name="confirm_delete_saved_n">
+        <item quantity="other">Padam %1$d imej disimpan?</item>
+    </plurals>
+    <plurals name="backup_saved_many_n">
+        <item quantity="other">%1$d projek dieksport ke folder yang dipilih</item>
+    </plurals>
+    <plurals name="export_done_many_n">
+        <item quantity="other">%1$d projek dieksport</item>
+    </plurals>
+    <plurals name="saved_export_done_n">
+        <item quantity="other">%1$d imej dieksport</item>
+    </plurals>
+</resources>

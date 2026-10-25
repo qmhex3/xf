@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Frame out</string>
+    <string name="shortcut_capture_short">Tangkap bingkai</string>
+    <string name="shortcut_capture_long">Tangkap bingkai daripada video terakhir</string>
+    <string name="tile_capture_label">Tangkap bingkai</string>
+    <string name="incoming_copy_failed">Tidak dapat mengekalkan akses kepada video yang dikongsi. Buka video itu dari galeri atau bebaskan ruang storan, kemudian kongsi semula.</string>
+    <string name="incoming_unsupported">Jenis fail ini tidak boleh dibuka. Sila kongsi video, GIF atau imej.</string>
+</resources>

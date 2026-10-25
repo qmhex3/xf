@@ -6,7 +6,9 @@
 namespace {
 constexpr float kReferenceWhiteNits = 203.0f;
 constexpr float kHlgPeakNits = 1000.0f;
-constexpr float kKnee = 0.75f;
+constexpr float kToneKnee = 0.55f;
+constexpr float kDesatKnee = 0.75f;
+constexpr float kChromaKeep = 0.75f;
 constexpr float kDesatStrength = 0.6f;
 constexpr float kDesatExponent = 1.5f;
 constexpr int kDesatSteps = 1024;
@@ -76,22 +78,22 @@ float luma(float r, float g, float b) {
 }
 
 float toneTarget(float source, float white) {
-    if (source <= kKnee) return std::max(source, 0.0f);
-    const float headroom = 1.0f - kKnee;
-    const float span = (white - kKnee) / headroom;
-    const float u = (source - kKnee) / headroom;
-    return std::min(kKnee + headroom * u * (1.0f + u / (span * span)) / (1.0f + u), 1.0f);
+    if (source <= kToneKnee) return std::max(source, 0.0f);
+    const float headroom = 1.0f - kToneKnee;
+    const float span = (white - kToneKnee) / headroom;
+    const float u = (source - kToneKnee) / headroom;
+    return std::min(kToneKnee + headroom * u * (1.0f + u / (span * span)) / (1.0f + u), 1.0f);
 }
 
 struct Desat {
     float table[kDesatSteps + 1];
     float scale;
-    Desat(float white) : scale(1.0f / (white - kKnee)) {
+    Desat(float white) : scale(1.0f / (white - kDesatKnee)) {
         for (int i = 0; i <= kDesatSteps; ++i) table[i] = kDesatStrength * std::pow(static_cast<float>(i) / kDesatSteps, kDesatExponent);
     }
     float weight(float source) const {
-        if (source <= kKnee) return 0.0f;
-        const float t = std::clamp((source - kKnee) * scale, 0.0f, 1.0f);
+        if (source <= kDesatKnee) return 0.0f;
+        const float t = std::clamp((source - kDesatKnee) * scale, 0.0f, 1.0f);
         return table[static_cast<int>(t * kDesatSteps + 0.5f)];
     }
 };
@@ -184,6 +186,18 @@ void fitGamut(float* c, float y) {
     if (high > 1.0f) blendToward(c, y, (1.0f - y) / (high - y));
 }
 
+void fitGamutHdr(float* c, float y) {
+    const float low = std::min({c[0], c[1], c[2]});
+    if (low < 0.0f) blendToward(c, y, (y - low) > kMinLuma ? y / (y - low) : 0.0f);
+    const float high = std::max({c[0], c[1], c[2]});
+    if (high <= 1.0f) return;
+    const float t = (1.0f - y) / (high - y);
+    for (int i = 0; i < 3; ++i) {
+        const float toGrey = y + (c[i] - y) * t;
+        c[i] = (1.0f - kChromaKeep) * toGrey + kChromaKeep * (c[i] / high);
+    }
+}
+
 inline int tableIndex(std::uint16_t v) {
     const int i = (static_cast<int>(v) + 8) >> 4;
     return i > kTable ? kTable : i;
@@ -221,7 +235,7 @@ float toneMapHdr16(const std::uint16_t* src, int width, int height, const HdrPar
             const float gray = target * weight;
             float c[3];
             toDisplay(params.primaries, r * keep + gray, g * keep + gray, b * keep + gray, c);
-            fitGamut(c, std::clamp(target, 0.0f, 1.0f));
+            fitGamutHdr(c, std::clamp(target, 0.0f, 1.0f));
             const float d = (kBayer[y & 7][x & 7] + 0.5f) / 64.0f - 0.5f;
             std::uint8_t* o = rgba8 + i * 4;
             o[0] = quantize(t, c[0], d);
@@ -263,14 +277,14 @@ void toneMapHdrToSdr(std::uint8_t* rgba, int width, int height, bool hlg, float 
                 r *= factor; g *= factor; b *= factor;
             }
             const float source = l.r * r + l.g * g + l.b * b;
-            const float target = source > kKnee ? toneTarget(source, white) : std::max(source, 0.0f);
+            const float target = source > kToneKnee ? toneTarget(source, white) : std::max(source, 0.0f);
             const float scale = source > kMinLuma ? target / source : 1.0f;
             const float weight = desat.weight(std::max({r, g, b}));
             const float keep = scale * (1.0f - weight);
             const float gray = target * weight;
             float c[3];
             toDisplay(primaries, r * keep + gray, g * keep + gray, b * keep + gray, c);
-            fitGamut(c, std::clamp(target, 0.0f, 1.0f));
+            fitGamutHdr(c, std::clamp(target, 0.0f, 1.0f));
             p[0] = encode(t, c[0], d);
             p[1] = encode(t, c[1], d);
             p[2] = encode(t, c[2], d);

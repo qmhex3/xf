@@ -75,6 +75,8 @@ private val GAP = 12.dp
 private val SIDE = 16.dp
 private const val FLING_VELOCITY = 600f
 private const val FOLD_CAMERA = 40f
+private const val OVERSHOOT_LIMIT = 0.6f
+private const val OVERSHOOT_DAMPING = 0.35f
 
 @Composable
 internal fun TrimPanel(env: TrimEnv, maxHeight: Dp, modifier: Modifier = Modifier, landscape: Boolean = false) {
@@ -117,7 +119,13 @@ private fun SheetPanel(env: TrimEnv, maxHeight: Dp, modifier: Modifier) {
     val scope = rememberCoroutineScope()
     val haptics = rememberFrameHaptics()
     val fold = remember { PanelFold(scope) { haptics.perform(FrameHaptic.Tap) } }
-    Column(modifier.heightIn(max = maxHeight).panelSurface(SheetShape).navigationBarsPadding()) {
+    Column(
+        modifier
+            .heightIn(max = maxHeight)
+            .graphicsLayer { translationY = (-fold.overshoot * fold.natural * 0.6f).coerceIn(-14.dp.toPx(), 28.dp.toPx()) }
+            .panelSurface(SheetShape)
+            .navigationBarsPadding()
+    ) {
         PanelGrabber(fold)
         Column(Modifier.padding(horizontal = SIDE)) {
             PanelHeader(env)
@@ -140,14 +148,30 @@ private class PanelFold(private val scope: CoroutineScope, private val onSettle:
     var fraction by mutableFloatStateOf(1f)
     var dragging by mutableStateOf(false)
     var natural = 0
+    var overshoot by mutableFloatStateOf(0f)
+    private var raw = 1f
     private var job: Job? = null
+    private var bounce: Job? = null
 
     fun drag(deltaY: Float) {
         job?.cancel()
-        fraction = (fraction - deltaY / natural.coerceAtLeast(1)).coerceIn(0f, 1f)
+        bounce?.cancel()
+        raw = (raw - deltaY / natural.coerceAtLeast(1)).coerceIn(-OVERSHOOT_LIMIT, 1f + OVERSHOOT_LIMIT)
+        fraction = raw.coerceIn(0f, 1f)
+        overshoot = (raw - fraction) * OVERSHOOT_DAMPING
+    }
+
+    private fun release() {
+        raw = fraction
+        if (overshoot == 0f) return
+        bounce?.cancel()
+        bounce = scope.launch {
+            animate(overshoot, 0f, animationSpec = spring(dampingRatio = 0.55f, stiffness = Spring.StiffnessMediumLow)) { value, _ -> overshoot = value }
+        }
     }
 
     fun settle(velocityY: Float) {
+        release()
         val target = when {
             velocityY > FLING_VELOCITY -> 0f
             velocityY < -FLING_VELOCITY -> 1f
@@ -163,7 +187,10 @@ private class PanelFold(private val scope: CoroutineScope, private val onSettle:
         job?.cancel()
         onSettle()
         job = scope.launch {
-            animate(fraction, target, animationSpec = spring(dampingRatio = 0.85f, stiffness = Spring.StiffnessMediumLow)) { value, _ -> fraction = value.coerceIn(0f, 1f) }
+            animate(fraction, target, animationSpec = spring(dampingRatio = 0.85f, stiffness = Spring.StiffnessMediumLow)) { value, _ ->
+                fraction = value.coerceIn(0f, 1f)
+                raw = fraction
+            }
         }
     }
 }

@@ -7,7 +7,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class StringResourcesTest {
-    private val locales = listOf("values-ar", "values-tr", "values-ru", "values-fa", "values-ur", "values-fr", "values-hi", "values-ko", "values-ja", "values-zh")
+    private val locales = listOf("values-ar", "values-tr", "values-ru", "values-fa", "values-ur", "values-fr", "values-pt", "values-hi", "values-ko", "values-ja", "values-zh", "values-de", "values-ro", "values-es", "values-uk", "values-it", "values-nb", "values-ms")
 
     private fun parse(dir: String, file: String) =
         DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(File("src/main/res/$dir/$file"))
@@ -63,6 +63,13 @@ class StringResourcesTest {
     }
 
     @Test
+    fun ukrainianPluralsCoverAllCategories() {
+        plurals("values-uk").forEach { (name, quantities) ->
+            assertEquals(name, listOf("one", "few", "many", "other"), quantities)
+        }
+    }
+
+    @Test
     fun persianPluralsHaveOneAndOther() {
         plurals("values-fa").forEach { (name, quantities) -> assertEquals(name, listOf("one", "other"), quantities) }
     }
@@ -78,6 +85,11 @@ class StringResourcesTest {
     }
 
     @Test
+    fun portuguesePluralsCoverOneManyOther() {
+        plurals("values-pt").forEach { (name, quantities) -> assertEquals(name, listOf("one", "many", "other"), quantities) }
+    }
+
+    @Test
     fun hindiPluralsHaveOneAndOther() {
         plurals("values-hi").forEach { (name, quantities) -> assertEquals(name, listOf("one", "other"), quantities) }
     }
@@ -85,6 +97,36 @@ class StringResourcesTest {
     @Test
     fun turkishPluralsHaveOneAndOther() {
         plurals("values-tr").forEach { (name, quantities) -> assertEquals(name, listOf("one", "other"), quantities) }
+    }
+
+    @Test
+    fun germanPluralsHaveOneAndOther() {
+        plurals("values-de").forEach { (name, quantities) -> assertEquals(name, listOf("one", "other"), quantities) }
+    }
+
+    @Test
+    fun romanianPluralsCoverOneFewOther() {
+        plurals("values-ro").forEach { (name, quantities) -> assertEquals(name, listOf("one", "few", "other"), quantities) }
+    }
+
+    @Test
+    fun spanishPluralsCoverOneManyOther() {
+        plurals("values-es").forEach { (name, quantities) -> assertEquals(name, listOf("one", "many", "other"), quantities) }
+    }
+
+    @Test
+    fun italianPluralsCoverOneManyOther() {
+        plurals("values-it").forEach { (name, quantities) -> assertEquals(name, listOf("one", "many", "other"), quantities) }
+    }
+
+    @Test
+    fun norwegianPluralsHaveOneAndOther() {
+        plurals("values-nb").forEach { (name, quantities) -> assertEquals(name, listOf("one", "other"), quantities) }
+    }
+
+    @Test
+    fun malayPluralsHaveOnlyOther() {
+        plurals("values-ms").forEach { (name, quantities) -> assertEquals(name, listOf("other"), quantities) }
     }
 
     @Test

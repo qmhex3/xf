@@ -47,10 +47,18 @@ object SettingStrings {
         "fa" -> "فارسی"
         "ur" -> "اردو"
         "fr" -> "Français"
+        "pt" -> "Português"
         "hi" -> "हिन्दी"
         "ko" -> "한국어"
         "ja" -> "日本語"
         "zh" -> "简体中文"
+        "de" -> "Deutsch"
+        "ro" -> "Română"
+        "es" -> "Español"
+        "uk" -> "Українська"
+        "it" -> "Italiano"
+        "nb" -> "Norsk bokmål"
+        "ms" -> "Bahasa Melayu"
         else -> size(key)
     }
     private fun size(key: String): String = when (key) {
