@@ -144,7 +144,7 @@ class ImageSearchActivity : ComponentActivity() {
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun configureWeb() {
-        applyBrowserSettings()
+        applyBrowserSettings(web)
         web.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView, newProgress: Int) = showProgress(newProgress)
 
@@ -233,29 +233,6 @@ class ImageSearchActivity : ComponentActivity() {
         (popup.parent as? ViewGroup)?.removeView(popup)
         popup.destroy()
         if (!popupOpen()) web.visibility = View.VISIBLE
-    }
-
-    @SuppressLint("SetJavaScriptEnabled")
-    private fun applyBrowserSettings() {
-        with(web.settings) {
-            javaScriptEnabled = true
-            domStorageEnabled = true
-            allowFileAccess = false
-            allowContentAccess = false
-            mixedContentMode = android.webkit.WebSettings.MIXED_CONTENT_NEVER_ALLOW
-            userAgentString = userAgentString.replace("; wv", "").replace(" Version/4.0", "")
-            javaScriptCanOpenWindowsAutomatically = true
-            setSupportMultipleWindows(true)
-            useWideViewPort = true
-            loadWithOverviewMode = true
-            setSupportZoom(true)
-            builtInZoomControls = true
-            displayZoomControls = false
-        }
-        CookieManager.getInstance().apply {
-            setAcceptCookie(true)
-            setAcceptThirdPartyCookies(web, true)
-        }
     }
 
     private fun startAuto() {

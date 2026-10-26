@@ -1,9 +1,5 @@
 package com.frameout.app.frames
 
-import com.frameout.core.quality.FrameSharpnessAnalyzer
-import java.io.File
-import com.frameout.app.deletionMessage
-import com.frameout.core.util.logged
 import android.app.Application
 import android.content.Intent
 import androidx.lifecycle.AndroidViewModel
@@ -13,22 +9,25 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.frameout.app.FrameOutApp
+import com.frameout.app.deletionMessage
 import com.frameout.core.db.FrameEntity
 import com.frameout.core.db.getByIdsChunked
 import com.frameout.core.db.permanentDeleteAtomic
 import com.frameout.core.db.setFavoriteAtomic
 import com.frameout.core.edit.FrameEdit
 import com.frameout.core.edit.toEdit
-import kotlinx.coroutines.flow.map
 import com.frameout.core.storage.FrameExporter
 import com.frameout.core.util.FrameStrings
+import com.frameout.core.util.logged
 import com.frameout.designsystem.icons.FrameIcons
 import com.frameout.designsystem.icons.FrameIconsExtra
+import java.io.File
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -37,12 +36,12 @@ private const val GALLERY_CONFIRM_THRESHOLD = 200
 internal const val GALLERY_UNDO_WINDOW_MS = 10000L
 
 class FramesViewModel(app: Application) : AndroidViewModel(app) {
-    private val container = (app as FrameOutApp).container
+    internal val container = (app as FrameOutApp).container
     private val exporter = FrameExporter(app, container.storage, container.savedImages, container.frameEdits, container.projects, container.videoIndex)
     private val queries = FramesQueries(container)
-    private val _state = MutableStateFlow(FramesState())
+    internal val _state = MutableStateFlow(FramesState())
     val state: StateFlow<FramesState> = _state.asStateFlow()
-    private var projectId = -1L
+    internal var projectId = -1L
 
     fun load(id: Long, heavy: Boolean = true) {
         projectId = id
@@ -129,20 +128,6 @@ class FramesViewModel(app: Application) : AndroidViewModel(app) {
         if (!com.frameout.app.billing.ProCheck.pass(com.frameout.core.pro.ProFeature.SmartExtract)) return
         _state.update { it.copy(filter = FrameFilter.Sharpest, tagFilter = emptySet(), selected = emptySet(), loading = true) }
         viewModelScope.launch { loadSharpest() }
-    }
-    private suspend fun loadSharpest() {
-        val total = container.frames.countAll(projectId)
-        if (!SharpestCache.isValid(getApplication<Application>(), projectId, total)) {
-            _state.update { it.copy(analyzing = true) }
-            val fresh = runCatching { FrameSharpnessAnalyzer.bestIds(container.frames, projectId) }
-            fresh.onSuccess {
-                container.sharpest.replace(projectId, it)
-                SharpestCache.mark(getApplication<Application>(), projectId, total)
-            }
-            fresh.onFailure { container.sharpest.replace(projectId, emptyList()) }
-        }
-        _state.update { it.copy(sharpestVersion = it.sharpestVersion + 1, analyzing = false) }
-        refresh(projectId)
     }
     fun pickImportant() { if (com.frameout.app.billing.ProCheck.pass(com.frameout.core.pro.ProFeature.SmartExtract)) analyze(FrameIconsExtra.Sparkle) { importantSelection(container.frames, container.frameTags, projectId) } }
     fun pickDuplicates() { if (com.frameout.app.billing.ProCheck.pass(com.frameout.core.pro.ProFeature.SmartExtract)) analyze(FrameIconsExtra.Duplicate) { duplicateSelection(container.frames, projectId) } }
@@ -270,7 +255,7 @@ class FramesViewModel(app: Application) : AndroidViewModel(app) {
     fun pagingFlow(): Flow<PagingData<FrameEntity>> = Pager(PagingConfig(60, prefetchDistance = 30, enablePlaceholders = true)) {
         queries.paging(projectId, _state.value)
     }.flow.cachedIn(viewModelScope)
-    private suspend fun refresh(id: Long, withIntegrity: Boolean = true) {
+    internal suspend fun refresh(id: Long, withIntegrity: Boolean = true) {
         val count = queries.count(id, _state.value)
         val project = container.projects.getById(id)
         val all = container.frames.countActive(id)

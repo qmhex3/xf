@@ -1,4 +1,5 @@
 package com.frameout.app.viewer
+
 import android.app.Application
 import android.content.Intent
 import android.graphics.Bitmap
@@ -15,9 +16,6 @@ import com.frameout.core.util.ThumbCache
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.job
-import kotlinx.coroutines.sync.Semaphore
-import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -25,15 +23,19 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
+
 class ViewerViewModel(app: Application) : AndroidViewModel(app) {
     internal val c = (app as FrameOutApp).container
     private val exporter = FrameExporter(app, c.storage, c.savedImages, c.frameEdits, c.projects, c.videoIndex)
     private val loader = FrameBitmapLoader(app)
-    private val editHistory = c.editHistory
+    internal val editHistory = c.editHistory
     internal val _state = MutableStateFlow(ViewerState())
-    private val player = ViewerPlayer(viewModelScope, _state, c.frames, { loadFrame(it, seamless = true) }, ::refreshNeighbors)
+    private val player = ViewerPlayer(viewModelScope, _state, c.frames, { loadFrame(it, seamless = true) }, { refreshNeighbors() })
     private val export = ViewerExport(viewModelScope, exporter, _state, app)
     internal val tools = ViewerToolEditor(viewModelScope, _state, loader, editHistory, { sourceUri }, { loadFrame(_state.value.current) }, ::stashFinal)
     val state: StateFlow<ViewerState> = _state.asStateFlow()
@@ -51,10 +53,10 @@ class ViewerViewModel(app: Application) : AndroidViewModel(app) {
     private val inFlight = HashMap<Long, Job>()
     private val decodeGate = Semaphore(2)
     private var windowJob: Job? = null
-    private var navJob: Job? = null
-    private var pendingSteps = 0
+    internal var navJob: Job? = null
+    internal var pendingSteps = 0
     internal var direction = 1
-    private val screenPx = app.resources.displayMetrics.let { minOf(it.widthPixels, it.heightPixels) }
+    internal val screenPx = app.resources.displayMetrics.let { minOf(it.widthPixels, it.heightPixels) }
     internal var replaceSavedId: Long? = null
     internal var replaceFrameId: Long? = null
     internal var savedIds: List<Long> = emptyList()
@@ -75,80 +77,6 @@ class ViewerViewModel(app: Application) : AndroidViewModel(app) {
     fun openTools(tool: EditTool = EditTool.Adjust) { stopPlay(); resetLiveText(); tools.open(tool) }
     fun togglePlay() { resetLiveText(); player.toggle() }
     fun stopPlay() = player.stop()
-    private fun refreshPosition(frame: FrameEntity) {
-        if (savedIds.isNotEmpty()) {
-            _state.update { if (it.current?.id == frame.id) it.copy(position = savedIndex + 1, total = savedIds.size) else it }
-            return
-        }
-        viewModelScope.launch {
-            val (before, total) = withContext(Dispatchers.IO) {
-                c.frames.countActiveBefore(frame.projectId, frame.index) to c.frames.countActive(frame.projectId)
-            }
-            _state.update { if (it.current?.id == frame.id) it.copy(position = before + 1, total = total) else it }
-        }
-    }
-    private suspend fun refreshNeighbors() {
-        val frame = _state.value.current ?: return
-        val neighbors = neighborsFor(frame)
-        if (_state.value.current?.id != frame.id || _state.value.playing) return
-        _state.update { it.withNeighbors(neighbors) }
-    }
-    private suspend fun neighborsFor(frame: FrameEntity): ViewerNeighbors {
-        if (savedIds.isEmpty()) return ViewerNeighbors.load(c.frames, editHistory, frame, screenPx)
-        val (previous, next) = withContext(Dispatchers.IO) { savedFrameFrom(savedIndex, -1)?.second to savedFrameFrom(savedIndex, 1)?.second }
-        return ViewerNeighbors.of(editHistory, previous, next, screenPx)
-    }
-
-    internal suspend fun savedFrameFrom(from: Int, dir: Int): Pair<Int, FrameEntity>? {
-        var i = from + dir
-        while (i in savedIds.indices) {
-            val frame = c.savedImages.getById(savedIds[i])?.sourceFrameId?.let { c.frames.getActiveById(it) }
-            if (frame != null) return i to frame
-            i += dir
-        }
-        return null
-    }
-
-    private suspend fun stepSaved(steps: Int) {
-        val dir = if (steps > 0) 1 else -1
-        var target: Pair<Int, FrameEntity>? = null
-        var from = savedIndex
-        repeat(kotlin.math.abs(steps)) {
-            val next = withContext(Dispatchers.IO) { savedFrameFrom(from, dir) } ?: return@repeat
-            target = next
-            from = next.first
-        }
-        val (index, frame) = target ?: return
-        savedIndex = index
-        replaceSavedId = savedIds[index]
-        replaceFrameId = frame.id
-        loadFrame(frame)
-    }
-
-    fun goTo(delta: Int) {
-        stopPlay()
-        if (delta == 0) return
-        pendingSteps += delta
-        if (navJob?.isActive == true) return
-        navJob = viewModelScope.launch {
-            while (pendingSteps != 0) {
-                val steps = pendingSteps
-                pendingSteps = 0
-                if (savedIds.isNotEmpty()) {
-                    direction = if (steps > 0) 1 else -1
-                    stepSaved(steps)
-                    continue
-                }
-                val base = _state.value.current ?: break
-                direction = if (steps > 0) 1 else -1
-                val target = withContext(Dispatchers.IO) {
-                    if (steps > 0) c.frames.nextActiveList(base.projectId, base.index, steps)
-                    else c.frames.previousActiveList(base.projectId, base.index, -steps)
-                }.lastOrNull()
-                if (target != null) loadFrame(target)
-            }
-        }
-    }
     private val live = ViewerLiveText(viewModelScope, _state, app) { stopPlay() }
     private fun resetLiveText() = live.reset()
     fun toggleLiveText() = live.toggle()
@@ -162,26 +90,6 @@ class ViewerViewModel(app: Application) : AndroidViewModel(app) {
     private fun stepHistory(op: suspend (Long) -> FrameEditEntity?) {
         val frame = _state.value.current ?: return
         viewModelScope.launch { op(frame.id)?.let { applyHistory(it) }; loadFrame(_state.value.current) }
-    }
-    fun softDelete() {
-        stopPlay()
-        if (_state.value.savedMode) { deleteSaved(); return }
-        val frame = _state.value.current ?: return
-        viewModelScope.launch {
-            c.editHistory.delete(frame.id)
-            _state.update { it.copy(deletedStack = it.deletedStack + frame.id) }
-            val next = c.frames.nextActive(frame.projectId, frame.index) ?: c.frames.previousActive(frame.projectId, frame.index)
-            loadFrame(next)
-        }
-    }
-    fun undoDelete() {
-        val id = _state.value.deletedStack.lastOrNull() ?: return
-        stopPlay()
-        viewModelScope.launch {
-            if (c.editHistory.undo(id) == null) c.editHistory.restore(id)
-            _state.update { it.copy(deletedStack = it.deletedStack.dropLast(1)) }
-            loadFrame(c.frames.getActiveById(id))
-        }
     }
     fun save() {
         val frame = _state.value.current ?: return

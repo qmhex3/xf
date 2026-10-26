@@ -1,32 +1,28 @@
 package com.frameout.engine.player
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
-import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
-import androidx.media3.common.Tracks
 import androidx.media3.common.Player
+import androidx.media3.common.Tracks
 import androidx.media3.common.VideoSize
-import androidx.media3.exoplayer.DefaultLoadControl
 import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.SeekParameters
+import com.frameout.engine.decode.HdrDetector
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import android.graphics.Bitmap
-import android.os.SystemClock
-import com.frameout.engine.decode.HdrDetector
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 enum class PreviewNotice { None, StillOnly, Unavailable }
 
@@ -44,33 +40,33 @@ data class PlayerUiState(
 )
 
 class PlayerController(private val context: Context) {
-    private val player: ExoPlayer = ExoPlayer.Builder(context.applicationContext, DefaultRenderersFactory(context.applicationContext).setEnableDecoderFallback(true))
+    internal val player: ExoPlayer = ExoPlayer.Builder(context.applicationContext, DefaultRenderersFactory(context.applicationContext).setEnableDecoderFallback(true))
         .setLoadControl(smoothLoadControl())
         .setAudioAttributes(AudioAttributes.Builder().setUsage(C.USAGE_MEDIA).setContentType(C.AUDIO_CONTENT_TYPE_MOVIE).build(), true)
         .setHandleAudioBecomingNoisy(true)
         .build()
-    private val _state = MutableStateFlow(PlayerUiState())
-    private val _position = MutableStateFlow(0L)
-    private var mediaUri: Uri? = null
-    private var grabber: FrameGrabber? = null
+    internal val _state = MutableStateFlow(PlayerUiState())
+    internal val _position = MutableStateFlow(0L)
+    internal var mediaUri: Uri? = null
+    internal var grabber: FrameGrabber? = null
     private val steps = StepQueue(::performStep)
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
-    private val _frame = MutableStateFlow<Bitmap?>(null)
-    private var animated: AnimatedPlayback? = null
+    internal val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    internal val _frame = MutableStateFlow<Bitmap?>(null)
+    internal var animated: AnimatedPlayback? = null
     private var openJob: Job? = null
-    private val _still = MutableStateFlow<Bitmap?>(null)
-    private var stillJob: Job? = null
-    @Volatile private var stillMs = NO_POSITION
-    @Volatile private var pendingStillMs = NO_POSITION
-    @Volatile private var sourceHdr = false
-    @Volatile private var windowHdr = false
-    private var released = false
-    private var fallbackTried = false
-    @Volatile private var windowStartMs = -1L
-    @Volatile private var windowEndMs = -1L
-    @Volatile private var scrubbing = false
+    internal val _still = MutableStateFlow<Bitmap?>(null)
+    internal var stillJob: Job? = null
+    @Volatile internal var stillMs = NO_POSITION
+    @Volatile internal var pendingStillMs = NO_POSITION
+    @Volatile internal var sourceHdr = false
+    @Volatile internal var windowHdr = false
+    internal var released = false
+    internal var fallbackTried = false
+    @Volatile internal var windowStartMs = -1L
+    @Volatile internal var windowEndMs = -1L
+    @Volatile internal var scrubbing = false
     @Volatile private var scrubTargetMs = -1L
-    @Volatile private var bufferingSinceMs = 0L
+    @Volatile internal var bufferingSinceMs = 0L
     val frame: StateFlow<Bitmap?> = _frame.asStateFlow()
     val still: StateFlow<Bitmap?> = _still.asStateFlow()
     private val _hdr = MutableStateFlow(false)
@@ -154,32 +150,6 @@ class PlayerController(private val context: Context) {
         }
     }
 
-    private fun adopt(clip: AnimatedPlayback) {
-        animated = clip
-        dropStill()
-        val notice = if (clip.stillOnly) PreviewNotice.StillOnly else PreviewNotice.None
-        _state.value = _state.value.copy(animated = true, ready = true, isPlaying = false, durationMs = clip.durationMs, videoAspect = clip.aspect, notice = notice)
-    }
-
-    private fun fallbackToFfmpeg() {
-        val uri = mediaUri ?: return
-        if (animated != null || fallbackTried) return
-        fallbackTried = true
-        scope.launch {
-            val clip = AnimatedPlayback.openVideo(context.applicationContext, uri, scope, true) { _frame.value = it }
-            withContext(Dispatchers.Main) {
-                if (released || mediaUri != uri || animated != null || clip == null) clip?.close() else { player.stop(); adopt(clip) }
-            }
-        }
-    }
-
-    private fun startExo(uri: Uri) {
-        grabber = FrameGrabber(context.applicationContext, uri)
-        player.setMediaItem(MediaItem.fromUri(uri))
-        player.prepare()
-        player.playWhenReady = false
-    }
-
     fun setWindow(startMs: Long, endMs: Long) {
         if (endMs - startMs < MIN_WINDOW_MS) {
             clearWindow()
@@ -194,23 +164,7 @@ class PlayerController(private val context: Context) {
         windowEndMs = -1L
     }
 
-    private val windowActive: Boolean get() = windowStartMs >= 0L && windowEndMs > windowStartMs
-
-    private fun outsideWindow(positionMs: Long): Boolean =
-        windowActive && WindowRules.isOutside(windowStartMs, windowEndMs, positionMs)
-
-    private fun enforceWindow() {
-        if (!windowActive || scrubbing) return
-        if (animated == null && player.playbackState == Player.STATE_ENDED && player.playWhenReady) {
-            player.seekTo(windowStartMs)
-            player.play()
-            refresh()
-            return
-        }
-        if (!playing) return
-        val now = _position.value
-        if (outsideWindow(now)) seekTo(windowStartMs)
-    }
+    internal val windowActive: Boolean get() = windowStartMs >= 0L && windowEndMs > windowStartMs
 
     fun play() {
         dropStill()
@@ -233,12 +187,6 @@ class PlayerController(private val context: Context) {
         if (wasPlaying) settleInWindow()
     }
 
-    private fun settleInWindow() {
-        if (!windowActive || scrubbing) return
-        val now = animated?.let { it.positionUs / 1000L } ?: player.currentPosition
-        WindowRules.settleAfterPause(windowStartMs, windowEndMs, now)?.let(::seekTo)
-    }
-
     fun repairPlayhead() {
         if (!windowActive || scrubbing || playing) return
         WindowRules.repairAfterRangeChange(windowStartMs, windowEndMs, _position.value)?.let(::seekTo)
@@ -258,12 +206,6 @@ class PlayerController(private val context: Context) {
     fun holdSpeed(speed: Float) = applySpeed(speed)
 
     fun releaseSpeed() = applySpeed(_state.value.speed)
-
-    private fun applySpeed(speed: Float) {
-        if (released) return
-        val clip = animated
-        if (clip != null) clip.setSpeed(speed) else player.setPlaybackSpeed(speed)
-    }
 
     fun toggle() {
         if (playing) pause() else play()
@@ -319,83 +261,15 @@ class PlayerController(private val context: Context) {
         }
     }
 
-    private fun noteBuffering(raw: Boolean) {
-        if (!raw) bufferingSinceMs = 0L
-        else if (bufferingSinceMs == 0L) bufferingSinceMs = SystemClock.elapsedRealtime()
-    }
-
-    private fun spinnerVisible(): Boolean =
-        !scrubbing && bufferingSinceMs != 0L && SystemClock.elapsedRealtime() - bufferingSinceMs >= SPINNER_DELAY_MS
-
     fun positionNow(): Long = _position.value
     fun poll() {
         refresh()
         enforceWindow()
     }
 
-    private fun refresh() {
-        animated?.let { clip ->
-            _position.value = (clip.positionUs / 1000L).coerceAtLeast(0L)
-            _state.value = _state.value.copy(isPlaying = clip.playing, durationMs = clip.durationMs, ready = true)
-            return
-        }
-        _position.value = player.currentPosition.coerceAtLeast(0)
-        val st = player.playbackState
-        noteBuffering(st == Player.STATE_BUFFERING)
-        _state.value = _state.value.copy(
-            isPlaying = player.isPlaying,
-            durationMs = player.duration.coerceAtLeast(0),
-            buffering = spinnerVisible(),
-            ready = st == Player.STATE_READY || st == Player.STATE_BUFFERING || st == Player.STATE_ENDED
-        )
-        syncStill()
-    }
-
     fun setWindowShowsHdr(value: Boolean) {
         windowHdr = value
         if (value) dropStill()
-    }
-
-    private fun dropStill() {
-        stillJob?.cancel()
-        stillJob = null
-        pendingStillMs = NO_POSITION
-        stillMs = NO_POSITION
-        if (_still.value != null) _still.value = null
-    }
-
-    private fun syncStill() {
-        val s = _state.value
-        val wanted = HdrPreviewPolicy.wantsStill(hdrStillEnabled, sourceHdr, windowHdr, animated != null, s.isPlaying, scrubbing, s.ready)
-        if (!wanted) {
-            dropStill()
-            return
-        }
-        val at = _position.value
-        if (at == stillMs || at == pendingStillMs) return
-        requestStill(at)
-    }
-
-    private fun requestStill(at: Long) {
-        stillJob?.cancel()
-        if (_still.value != null) _still.value = null
-        stillMs = NO_POSITION
-        pendingStillMs = at
-        stillJob = scope.launch {
-            delay(HdrPreviewPolicy.DEBOUNCE_MS)
-            val bitmap = captureAt(at)?.let(::fitForPreview)
-            val s = _state.value
-            val current = !released && bitmap != null && pendingStillMs == at && _position.value == at && !s.isPlaying && !scrubbing
-            if (current) {
-                _still.value = bitmap
-                stillMs = at
-            }
-        }
-    }
-
-    private fun fitForPreview(bitmap: Bitmap): Bitmap {
-        val (w, h) = HdrPreviewPolicy.scaledSize(bitmap.width, bitmap.height)
-        return if (w == bitmap.width && h == bitmap.height) bitmap else Bitmap.createScaledBitmap(bitmap, w, h, true)
     }
 
     fun release() {
@@ -412,15 +286,3 @@ class PlayerController(private val context: Context) {
         player.release()
     }
 }
-
-private const val NO_POSITION = Long.MIN_VALUE
-private const val END_TOLERANCE_MS = WindowRules.END_TOLERANCE_MS
-private const val MIN_WINDOW_MS = 100L
-
-private const val SPINNER_DELAY_MS = 900L
-
-private fun smoothLoadControl(): DefaultLoadControl = DefaultLoadControl.Builder()
-    .setBufferDurationsMs(15_000, 40_000, 250, 600)
-    .setBackBuffer(15_000, true)
-    .setPrioritizeTimeOverSizeThresholds(true)
-    .build()

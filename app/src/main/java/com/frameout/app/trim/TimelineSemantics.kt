@@ -14,7 +14,6 @@ import com.frameout.engine.timeline.TrimRange
 import com.frameout.engine.timeline.formatTimestamp
 
 private const val STEP_MS = 1000L
-private const val MIN_GAP_MS = 100L
 
 fun Modifier.timelineSemantics(durationMs: Long, positionMs: Long, range: TrimRange, onSeek: (Long) -> Unit, onRangeChange: (TrimRange) -> Unit): Modifier {
     val dur = durationMs.coerceAtLeast(1)
