@@ -39,7 +39,7 @@ data class PlayerUiState(
     val buffering: Boolean = false
 )
 
-class PlayerController(private val context: Context) {
+class PlayerController(internal val context: Context) {
     internal val player: ExoPlayer = ExoPlayer.Builder(context.applicationContext, DefaultRenderersFactory(context.applicationContext).setEnableDecoderFallback(true))
         .setLoadControl(smoothLoadControl())
         .setAudioAttributes(AudioAttributes.Builder().setUsage(C.USAGE_MEDIA).setContentType(C.AUDIO_CONTENT_TYPE_MOVIE).build(), true)
