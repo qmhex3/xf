@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="estimate">
+        <item quantity="one">≈ %1$d frame · ~%2$s MB</item>
+        <item quantity="other">≈ %1$d frames · ~%2$s MB</item>
+    </plurals>
+    <plurals name="plan_frames">
+        <item quantity="one">%1$d frame</item>
+        <item quantity="other">%1$d frames</item>
+    </plurals>
+    <plurals name="reduced_quality">
+        <item quantity="one">Eén frame is met verlaagde resolutie opgeslagen omdat de decoder van het apparaat het niet op volledige grootte kon teruggeven.</item>
+        <item quantity="other">%1$d frames zijn met verlaagde resolutie opgeslagen omdat de decoder van het apparaat ze niet op volledige grootte kon teruggeven.</item>
+    </plurals>
+    <plurals name="reduced_quality_to">
+        <item quantity="one">Eén frame is opgeslagen op %4$d×%5$d in plaats van de bronresolutie %2$d×%3$d, zodat het in het geheugen van het apparaat past.</item>
+        <item quantity="other">%1$d frames zijn opgeslagen op %4$d×%5$d in plaats van de bronresolutie %2$d×%3$d, zodat ze in het geheugen van het apparaat passen.</item>
+    </plurals>
+    <plurals name="frame_count">
+        <item quantity="one">%1$d frame</item>
+        <item quantity="other">%1$d frames</item>
+    </plurals>
+    <plurals name="content_frames">
+        <item quantity="one">%1$d frame</item>
+        <item quantity="other">%1$d frames</item>
+    </plurals>
+    <plurals name="important_picked">
+        <item quantity="one">Sleutelmoment geselecteerd</item>
+        <item quantity="other">%1$d sleutelmomenten geselecteerd</item>
+    </plurals>
+    <plurals name="sharpest_picked">
+        <item quantity="one">Scherpste frame geselecteerd</item>
+        <item quantity="other">%1$d scherpste frames geselecteerd</item>
+    </plurals>
+    <plurals name="duplicates_picked">
+        <item quantity="one">%1$d dubbel frame geselecteerd</item>
+        <item quantity="other">%1$d dubbele frames geselecteerd</item>
+    </plurals>
+    <plurals name="integrity_dup">
+        <item quantity="one">%1$d frame heeft dezelfde tijdstempel.</item>
+        <item quantity="other">%1$d frames hebben dezelfde tijdstempel.</item>
+    </plurals>
+    <plurals name="crop_all_hint">
+        <item quantity="one">Hetzelfde gebied voor %1$d frame</item>
+        <item quantity="other">Hetzelfde gebied voor %1$d frames</item>
+    </plurals>
+    <plurals name="crop_all_applied">
+        <item quantity="one">Bijsnijden toegepast op %1$d frame</item>
+        <item quantity="other">Bijsnijden toegepast op %1$d frames</item>
+    </plurals>
+    <plurals name="jump_back">
+        <item quantity="one">%1$d frame terug</item>
+        <item quantity="other">%1$d frames terug</item>
+    </plurals>
+    <plurals name="jump_forward">
+        <item quantity="one">%1$d frame vooruit</item>
+        <item quantity="other">%1$d frames vooruit</item>
+    </plurals>
+    <plurals name="jump_size">
+        <item quantity="one">Sprongstap: %1$d frame (tik om te wijzigen)</item>
+        <item quantity="other">Sprongstap: %1$d frames (tik om te wijzigen)</item>
+    </plurals>
+    <plurals name="queue_unsaved">
+        <item quantity="one">%1$d frame in de wachtrij is niet opgeslagen. Druk nogmaals op terug om te vertrekken zonder op te slaan.</item>
+        <item quantity="other">%1$d frames in de wachtrij zijn niet opgeslagen. Druk nogmaals op terug om te vertrekken zonder op te slaan.</item>
+    </plurals>
+    <plurals name="share_limited">
+        <item quantity="one">Alleen het eerste %1$d frame wordt gedeeld</item>
+        <item quantity="other">Alleen de eerste %1$d frames worden gedeeld</item>
+    </plurals>
+    <plurals name="frames_deleted">
+        <item quantity="one">%1$d frame naar Verwijderd verplaatst</item>
+        <item quantity="other">%1$d frames naar Verwijderd verplaatst</item>
+    </plurals>
+    <plurals name="batch_videos">
+        <item quantity="one">%1$d video</item>
+        <item quantity="other">%1$d video\'s</item>
+    </plurals>
+    <plurals name="projects_deleted">
+        <item quantity="one">Project verwijderd</item>
+        <item quantity="other">%1$d projecten verwijderd</item>
+    </plurals>
+    <plurals name="projects_restored">
+        <item quantity="one">Project hersteld</item>
+        <item quantity="other">%1$d projecten hersteld</item>
+    </plurals>
+    <plurals name="saved_deleted_n">
+        <item quantity="one">Afbeelding verwijderd</item>
+        <item quantity="other">%1$d afbeeldingen verwijderd</item>
+    </plurals>
+    <plurals name="saved_restored_n">
+        <item quantity="one">Afbeelding hersteld</item>
+        <item quantity="other">%1$d afbeeldingen hersteld</item>
+    </plurals>
+    <plurals name="saved_pruned_n">
+        <item quantity="one">1 opgeslagen item verwijderd omdat het bestand niet meer op het apparaat staat</item>
+        <item quantity="other">%1$d opgeslagen items verwijderd omdat hun bestanden niet meer op het apparaat staan</item>
+    </plurals>
+    <plurals name="confirm_delete_projects_n">
+        <item quantity="one">Dit project verwijderen?</item>
+        <item quantity="other">%1$d projecten verwijderen?</item>
+    </plurals>
+    <plurals name="confirm_delete_saved_n">
+        <item quantity="one">Deze opgeslagen afbeelding verwijderen?</item>
+        <item quantity="other">%1$d opgeslagen afbeeldingen verwijderen?</item>
+    </plurals>
+    <plurals name="backup_saved_many_n">
+        <item quantity="one">Project geëxporteerd naar de gekozen map</item>
+        <item quantity="other">%1$d projecten geëxporteerd naar de gekozen map</item>
+    </plurals>
+    <plurals name="export_done_many_n">
+        <item quantity="one">Project geëxporteerd</item>
+        <item quantity="other">%1$d projecten geëxporteerd</item>
+    </plurals>
+    <plurals name="saved_export_done_n">
+        <item quantity="one">1 afbeelding geëxporteerd</item>
+        <item quantity="other">%1$d afbeeldingen geëxporteerd</item>
+    </plurals>
+    <plurals name="onboarding_pick_burst">
+        <item quantity="one">%1$d opeenvolgend frame</item>
+        <item quantity="other">%1$d opeenvolgende frames</item>
+    </plurals>
+    <plurals name="onboarding_pick_excluded">
+        <item quantity="one">Uitgesloten: %1$d frame</item>
+        <item quantity="other">Uitgesloten: %1$d frames</item>
+    </plurals>
+    <plurals name="rating_stat">
+        <item quantity="one">%1$d geslaagde opslag tot nu toe</item>
+        <item quantity="other">%1$d geslaagde opslagen tot nu toe</item>
+    </plurals>
+</resources>

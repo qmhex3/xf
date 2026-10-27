@@ -10,7 +10,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class TagLanguagesTest {
-    private val translated = listOf("tr", "ru", "fa", "ur", "fr", "pt", "hi", "ko", "ja", "zh", "zh-TW", "de", "ro", "es", "uk", "it", "nb", "ms", "id", "bn", "th", "vi")
+    private val translated = listOf("tr", "ru", "fa", "ur", "fr", "pt", "hi", "ko", "ja", "zh", "zh-TW", "de", "ro", "es", "uk", "it", "nb", "ms", "id", "bn", "th", "vi", "nl", "pl")
 
     @Test
     fun appLangMapsSupportedAndFallsBack() {
@@ -28,6 +28,12 @@ class TagLanguagesTest {
         assertEquals("th", AppLang.of("th-TH"))
         assertEquals("th", AppLang.of("th"))
         assertEquals("vi", AppLang.of("vi-VN"))
+        assertEquals("nl", AppLang.of("nl-NL"))
+        assertEquals("nl", AppLang.of("nl_BE"))
+        assertEquals("nl", AppLang.of("NL"))
+        assertEquals("pl", AppLang.of("pl-PL"))
+        assertEquals("pl", AppLang.of("pl_PL"))
+        assertEquals("pl", AppLang.of("PL"))
         assertEquals("vi", AppLang.of("vi"))
         assertEquals("vi", AppLang.of("VI"))
         assertEquals("vi", AppLang.of("vi_VN"))
@@ -88,6 +94,8 @@ class TagLanguagesTest {
         assertEquals("Mobil", TagNames.display("l:Car", "id"))
         assertEquals("รถยนต์", TagNames.display("l:Car", "th"))
         assertEquals("Ô tô", TagNames.display("l:Car", "vi"))
+        assertEquals("Auto", TagNames.display("l:Car", "nl"))
+        assertEquals("Samochód", TagNames.display("l:Car", "pl"))
         assertEquals("Unknown thing", TagNames.display("l:Unknown thing", "ko"))
         assertEquals("Unknown thing", TagNames.display("l:Unknown thing", "zh"))
         assertEquals("Unknown thing", TagNames.display("l:Unknown thing", "hi"))
@@ -105,6 +113,8 @@ class TagLanguagesTest {
         assertEquals("Unknown thing", TagNames.display("l:Unknown thing", "id"))
         assertEquals("Unknown thing", TagNames.display("l:Unknown thing", "th"))
         assertEquals("Unknown thing", TagNames.display("l:Unknown thing", "vi"))
+        assertEquals("Unknown thing", TagNames.display("l:Unknown thing", "nl"))
+        assertEquals("Unknown thing", TagNames.display("l:Unknown thing", "pl"))
     }
 
     @Test

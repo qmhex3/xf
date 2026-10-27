@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Frame out</string>
+    <string name="shortcut_capture_short">Przechwyć klatkę</string>
+    <string name="shortcut_capture_long">Przechwyć klatkę z ostatniego wideo</string>
+    <string name="tile_capture_label">Przechwyć klatkę</string>
+    <string name="incoming_copy_failed">Nie udało się zachować dostępu do udostępnionego wideo. Otwórz je zamiast tego z galerii albo zwolnij miejsce w pamięci i udostępnij ponownie.</string>
+    <string name="incoming_unsupported">Tego typu pliku nie można otworzyć. Udostępnij zamiast tego wideo, GIF lub obraz.</string>
+</resources>

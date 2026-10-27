@@ -125,7 +125,7 @@ android {
     }
 
     androidResources {
-        localeFilters += listOf("en", "ar", "tr", "ru", "fa", "ur", "fr", "pt", "hi", "ko", "ja", "zh", "de", "ro", "es", "uk", "it", "nb", "ms", "id", "in", "bn", "th", "vi")
+        localeFilters += listOf("en", "ar", "tr", "ru", "fa", "ur", "fr", "pt", "hi", "ko", "ja", "zh", "de", "ro", "es", "uk", "it", "nb", "ms", "id", "in", "bn", "th", "vi", "nl", "pl")
     }
 
     buildFeatures {

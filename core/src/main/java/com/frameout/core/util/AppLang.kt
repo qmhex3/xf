@@ -3,7 +3,7 @@ package com.frameout.core.util
 import java.util.Locale
 
 object AppLang {
-    val supported: List<String> = listOf("ar", "en", "tr", "ru", "fa", "ur", "fr", "pt", "hi", "ko", "ja", "zh", "zh-TW", "de", "ro", "es", "uk", "it", "nb", "ms", "id", "bn", "th", "vi")
+    val supported: List<String> = listOf("ar", "en", "tr", "ru", "fa", "ur", "fr", "pt", "hi", "ko", "ja", "zh", "zh-TW", "de", "ro", "es", "uk", "it", "nb", "ms", "id", "bn", "th", "vi", "nl", "pl")
 
     private val traditionalRegions = setOf("tw", "hk", "mo")
 

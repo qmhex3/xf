@@ -64,6 +64,8 @@ object SettingStrings {
         "bn" -> "বাংলা"
         "th" -> "ไทย"
         "vi" -> "Tiếng Việt"
+        "nl" -> "Nederlands"
+        "pl" -> "Polski"
         else -> size(key)
     }
     private fun size(key: String): String = when (key) {

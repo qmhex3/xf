@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Frame out</string>
+    <string name="shortcut_capture_short">Frame vastleggen</string>
+    <string name="shortcut_capture_long">Leg een frame vast uit de laatste video</string>
+    <string name="tile_capture_label">Frame vastleggen</string>
+    <string name="incoming_copy_failed">De toegang tot een gedeelde video kon niet worden behouden. Open hem in plaats daarvan vanuit de galerij, of maak opslagruimte vrij en deel opnieuw.</string>
+    <string name="incoming_unsupported">Dit bestandstype kan niet worden geopend. Deel in plaats daarvan een video, GIF of afbeelding.</string>
+</resources>

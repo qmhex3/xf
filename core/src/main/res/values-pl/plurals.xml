@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="estimate">
+        <item quantity="one">≈ %1$d klatka · ~%2$s MB</item>
+        <item quantity="few">≈ %1$d klatki · ~%2$s MB</item>
+        <item quantity="many">≈ %1$d klatek · ~%2$s MB</item>
+        <item quantity="other">≈ %1$d klatki · ~%2$s MB</item>
+    </plurals>
+    <plurals name="plan_frames">
+        <item quantity="one">%1$d klatka</item>
+        <item quantity="few">%1$d klatki</item>
+        <item quantity="many">%1$d klatek</item>
+        <item quantity="other">%1$d klatki</item>
+    </plurals>
+    <plurals name="reduced_quality">
+        <item quantity="one">Jedna klatka została zapisana w obniżonej rozdzielczości, ponieważ dekoder urządzenia nie mógł zwrócić jej w pełnym rozmiarze.</item>
+        <item quantity="few">%1$d klatki zostały zapisane w obniżonej rozdzielczości, ponieważ dekoder urządzenia nie mógł zwrócić ich w pełnym rozmiarze.</item>
+        <item quantity="many">%1$d klatek zostało zapisanych w obniżonej rozdzielczości, ponieważ dekoder urządzenia nie mógł zwrócić ich w pełnym rozmiarze.</item>
+        <item quantity="other">%1$d klatki zostało zapisanych w obniżonej rozdzielczości, ponieważ dekoder urządzenia nie mógł zwrócić ich w pełnym rozmiarze.</item>
+    </plurals>
+    <plurals name="reduced_quality_to">
+        <item quantity="one">Jedna klatka została zapisana w rozdzielczości %4$d×%5$d zamiast źródłowej %2$d×%3$d, aby zmieściła się w pamięci urządzenia.</item>
+        <item quantity="few">%1$d klatki zostały zapisane w rozdzielczości %4$d×%5$d zamiast źródłowej %2$d×%3$d, aby zmieściły się w pamięci urządzenia.</item>
+        <item quantity="many">%1$d klatek zostało zapisanych w rozdzielczości %4$d×%5$d zamiast źródłowej %2$d×%3$d, aby zmieściły się w pamięci urządzenia.</item>
+        <item quantity="other">%1$d klatki zostało zapisanych w rozdzielczości %4$d×%5$d zamiast źródłowej %2$d×%3$d, aby zmieściły się w pamięci urządzenia.</item>
+    </plurals>
+    <plurals name="frame_count">
+        <item quantity="one">%1$d klatka</item>
+        <item quantity="few">%1$d klatki</item>
+        <item quantity="many">%1$d klatek</item>
+        <item quantity="other">%1$d klatki</item>
+    </plurals>
+    <plurals name="content_frames">
+        <item quantity="one">%1$d klatka</item>
+        <item quantity="few">%1$d klatki</item>
+        <item quantity="many">%1$d klatek</item>
+        <item quantity="other">%1$d klatki</item>
+    </plurals>
+    <plurals name="important_picked">
+        <item quantity="one">Zaznaczono kluczowy moment</item>
+        <item quantity="few">Zaznaczono %1$d kluczowe momenty</item>
+        <item quantity="many">Zaznaczono %1$d kluczowych momentów</item>
+        <item quantity="other">Zaznaczono %1$d kluczowego momentu</item>
+    </plurals>
+    <plurals name="sharpest_picked">
+        <item quantity="one">Zaznaczono najostrzejszą klatkę</item>
+        <item quantity="few">Zaznaczono %1$d najostrzejsze klatki</item>
+        <item quantity="many">Zaznaczono %1$d najostrzejszych klatek</item>
+        <item quantity="other">Zaznaczono %1$d najostrzejszej klatki</item>
+    </plurals>
+    <plurals name="duplicates_picked">
+        <item quantity="one">Zaznaczono %1$d zduplikowaną klatkę</item>
+        <item quantity="few">Zaznaczono %1$d zduplikowane klatki</item>
+        <item quantity="many">Zaznaczono %1$d zduplikowanych klatek</item>
+        <item quantity="other">Zaznaczono %1$d zduplikowanej klatki</item>
+    </plurals>
+    <plurals name="integrity_dup">
+        <item quantity="one">%1$d klatka ma ten sam znacznik czasu.</item>
+        <item quantity="few">%1$d klatki mają ten sam znacznik czasu.</item>
+        <item quantity="many">%1$d klatek ma ten sam znacznik czasu.</item>
+        <item quantity="other">%1$d klatki ma ten sam znacznik czasu.</item>
+    </plurals>
+    <plurals name="crop_all_hint">
+        <item quantity="one">Ten sam obszar dla %1$d klatki</item>
+        <item quantity="few">Ten sam obszar dla %1$d klatek</item>
+        <item quantity="many">Ten sam obszar dla %1$d klatek</item>
+        <item quantity="other">Ten sam obszar dla %1$d klatki</item>
+    </plurals>
+    <plurals name="crop_all_applied">
+        <item quantity="one">Przycięcie zastosowano do %1$d klatki</item>
+        <item quantity="few">Przycięcie zastosowano do %1$d klatek</item>
+        <item quantity="many">Przycięcie zastosowano do %1$d klatek</item>
+        <item quantity="other">Przycięcie zastosowano do %1$d klatki</item>
+    </plurals>
+    <plurals name="jump_back">
+        <item quantity="one">%1$d klatka wstecz</item>
+        <item quantity="few">%1$d klatki wstecz</item>
+        <item quantity="many">%1$d klatek wstecz</item>
+        <item quantity="other">%1$d klatki wstecz</item>
+    </plurals>
+    <plurals name="jump_forward">
+        <item quantity="one">%1$d klatka do przodu</item>
+        <item quantity="few">%1$d klatki do przodu</item>
+        <item quantity="many">%1$d klatek do przodu</item>
+        <item quantity="other">%1$d klatki do przodu</item>
+    </plurals>
+    <plurals name="jump_size">
+        <item quantity="one">Rozmiar skoku: %1$d klatka (dotknij, aby zmienić)</item>
+        <item quantity="few">Rozmiar skoku: %1$d klatki (dotknij, aby zmienić)</item>
+        <item quantity="many">Rozmiar skoku: %1$d klatek (dotknij, aby zmienić)</item>
+        <item quantity="other">Rozmiar skoku: %1$d klatki (dotknij, aby zmienić)</item>
+    </plurals>
+    <plurals name="queue_unsaved">
+        <item quantity="one">%1$d klatka w kolejce nie jest zapisana. Naciśnij wstecz ponownie, aby wyjść bez zapisywania.</item>
+        <item quantity="few">%1$d klatki w kolejce nie są zapisane. Naciśnij wstecz ponownie, aby wyjść bez zapisywania.</item>
+        <item quantity="many">%1$d klatek w kolejce nie jest zapisanych. Naciśnij wstecz ponownie, aby wyjść bez zapisywania.</item>
+        <item quantity="other">%1$d klatki w kolejce nie jest zapisanych. Naciśnij wstecz ponownie, aby wyjść bez zapisywania.</item>
+    </plurals>
+    <plurals name="share_limited">
+        <item quantity="one">Udostępniana jest tylko pierwsza %1$d klatka</item>
+        <item quantity="few">Udostępniane są tylko pierwsze %1$d klatki</item>
+        <item quantity="many">Udostępnianych jest tylko pierwszych %1$d klatek</item>
+        <item quantity="other">Udostępniane jest tylko pierwsze %1$d klatki</item>
+    </plurals>
+    <plurals name="frames_deleted">
+        <item quantity="one">%1$d klatkę przeniesiono do Usuniętych</item>
+        <item quantity="few">%1$d klatki przeniesiono do Usuniętych</item>
+        <item quantity="many">%1$d klatek przeniesiono do Usuniętych</item>
+        <item quantity="other">%1$d klatki przeniesiono do Usuniętych</item>
+    </plurals>
+    <plurals name="batch_videos">
+        <item quantity="one">%1$d wideo</item>
+        <item quantity="few">%1$d wideo</item>
+        <item quantity="many">%1$d wideo</item>
+        <item quantity="other">%1$d wideo</item>
+    </plurals>
+    <plurals name="projects_deleted">
+        <item quantity="one">Projekt usunięty</item>
+        <item quantity="few">Usunięto %1$d projekty</item>
+        <item quantity="many">Usunięto %1$d projektów</item>
+        <item quantity="other">Usunięto %1$d projektu</item>
+    </plurals>
+    <plurals name="projects_restored">
+        <item quantity="one">Projekt przywrócony</item>
+        <item quantity="few">Przywrócono %1$d projekty</item>
+        <item quantity="many">Przywrócono %1$d projektów</item>
+        <item quantity="other">Przywrócono %1$d projektu</item>
+    </plurals>
+    <plurals name="saved_deleted_n">
+        <item quantity="one">Obraz usunięty</item>
+        <item quantity="few">Usunięto %1$d obrazy</item>
+        <item quantity="many">Usunięto %1$d obrazów</item>
+        <item quantity="other">Usunięto %1$d obrazu</item>
+    </plurals>
+    <plurals name="saved_restored_n">
+        <item quantity="one">Obraz przywrócony</item>
+        <item quantity="few">Przywrócono %1$d obrazy</item>
+        <item quantity="many">Przywrócono %1$d obrazów</item>
+        <item quantity="other">Przywrócono %1$d obrazu</item>
+    </plurals>
+    <plurals name="saved_pruned_n">
+        <item quantity="one">Usunięto 1 zapisany element, ponieważ jego pliku nie ma już na urządzeniu</item>
+        <item quantity="few">Usunięto %1$d zapisane elementy, ponieważ ich plików nie ma już na urządzeniu</item>
+        <item quantity="many">Usunięto %1$d zapisanych elementów, ponieważ ich plików nie ma już na urządzeniu</item>
+        <item quantity="other">Usunięto %1$d zapisanego elementu, ponieważ ich plików nie ma już na urządzeniu</item>
+    </plurals>
+    <plurals name="confirm_delete_projects_n">
+        <item quantity="one">Usunąć ten projekt?</item>
+        <item quantity="few">Usunąć %1$d projekty?</item>
+        <item quantity="many">Usunąć %1$d projektów?</item>
+        <item quantity="other">Usunąć %1$d projektu?</item>
+    </plurals>
+    <plurals name="confirm_delete_saved_n">
+        <item quantity="one">Usunąć ten zapisany obraz?</item>
+        <item quantity="few">Usunąć %1$d zapisane obrazy?</item>
+        <item quantity="many">Usunąć %1$d zapisanych obrazów?</item>
+        <item quantity="other">Usunąć %1$d zapisanego obrazu?</item>
+    </plurals>
+    <plurals name="backup_saved_many_n">
+        <item quantity="one">Projekt wyeksportowano do wybranego folderu</item>
+        <item quantity="few">Wyeksportowano %1$d projekty do wybranego folderu</item>
+        <item quantity="many">Wyeksportowano %1$d projektów do wybranego folderu</item>
+        <item quantity="other">Wyeksportowano %1$d projektu do wybranego folderu</item>
+    </plurals>
+    <plurals name="export_done_many_n">
+        <item quantity="one">Projekt wyeksportowany</item>
+        <item quantity="few">Wyeksportowano %1$d projekty</item>
+        <item quantity="many">Wyeksportowano %1$d projektów</item>
+        <item quantity="other">Wyeksportowano %1$d projektu</item>
+    </plurals>
+    <plurals name="saved_export_done_n">
+        <item quantity="one">Wyeksportowano 1 obraz</item>
+        <item quantity="few">Wyeksportowano %1$d obrazy</item>
+        <item quantity="many">Wyeksportowano %1$d obrazów</item>
+        <item quantity="other">Wyeksportowano %1$d obrazu</item>
+    </plurals>
+    <plurals name="onboarding_pick_burst">
+        <item quantity="one">%1$d kolejna klatka</item>
+        <item quantity="few">%1$d kolejne klatki</item>
+        <item quantity="many">%1$d kolejnych klatek</item>
+        <item quantity="other">%1$d kolejnej klatki</item>
+    </plurals>
+    <plurals name="onboarding_pick_excluded">
+        <item quantity="one">Wykluczono: %1$d klatkę</item>
+        <item quantity="few">Wykluczono: %1$d klatki</item>
+        <item quantity="many">Wykluczono: %1$d klatek</item>
+        <item quantity="other">Wykluczono: %1$d klatki</item>
+    </plurals>
+    <plurals name="rating_stat">
+        <item quantity="one">%1$d udany zapis do tej pory</item>
+        <item quantity="few">%1$d udane zapisy do tej pory</item>
+        <item quantity="many">%1$d udanych zapisów do tej pory</item>
+        <item quantity="other">%1$d udanego zapisu do tej pory</item>
+    </plurals>
+</resources>
