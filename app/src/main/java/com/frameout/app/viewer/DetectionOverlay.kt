@@ -57,7 +57,7 @@ internal fun DetectionOverlay(
 ) {
     if (detections.isEmpty() || imageWidth <= 0 || imageHeight <= 0) return
     val palette = rememberDetectionPalette()
-    val lang = com.frameout.core.util.AppLang.of(LocalConfiguration.current.locales[0].language)
+    val lang = com.frameout.core.util.AppLang.of(LocalConfiguration.current.locales[0].toLanguageTag())
     val measurer = rememberTextMeasurer()
     Canvas(modifier.fillMaxSize()) {
         val fit = minOf(size.width / imageWidth, size.height / imageHeight)

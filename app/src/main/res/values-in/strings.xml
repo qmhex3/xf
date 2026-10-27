@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Frame out</string>
+    <string name="shortcut_capture_short">Tangkap frame</string>
+    <string name="shortcut_capture_long">Tangkap frame dari video terakhir</string>
+    <string name="tile_capture_label">Tangkap frame</string>
+    <string name="incoming_copy_failed">Tidak dapat mempertahankan akses ke video yang dibagikan. Buka video dari galeri atau kosongkan ruang penyimpanan, lalu bagikan lagi.</string>
+    <string name="incoming_unsupported">Jenis file ini tidak dapat dibuka. Silakan bagikan video, GIF, atau gambar.</string>
+</resources>

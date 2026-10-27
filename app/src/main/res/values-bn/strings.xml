@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Frame out</string>
+    <string name="shortcut_capture_short">ফ্রেম ক্যাপচার করুন</string>
+    <string name="shortcut_capture_long">সর্বশেষ ভিডিও থেকে ফ্রেম ক্যাপচার করুন</string>
+    <string name="tile_capture_label">ফ্রেম ক্যাপচার করুন</string>
+    <string name="incoming_copy_failed">শেয়ার করা ভিডিওতে অ্যাক্সেস ধরে রাখা যায়নি। এটি গ্যালারি থেকে খুলুন, অথবা স্টোরেজ খালি করে আবার শেয়ার করুন।</string>
+    <string name="incoming_unsupported">এই ধরনের ফাইল খোলা যায় না। এর পরিবর্তে একটি ভিডিও, GIF বা ছবি শেয়ার করুন।</string>
+</resources>

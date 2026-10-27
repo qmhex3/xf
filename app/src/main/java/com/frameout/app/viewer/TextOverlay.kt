@@ -39,7 +39,7 @@ import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 
-private const val HANDLE_RADIUS_DP = 13f
+private const val TEXT_HANDLE_RADIUS_DP = 13f
 private const val HANDLE_HIT_DP = 26f
 private const val BODY_SLOP_DP = 10f
 private const val TAP_SLOP_DP = 8f
@@ -229,7 +229,7 @@ private fun DrawScope.drawSelection(input: TextOverlayInput, t: Transform) {
     }
     drawPath(path, Color.Black.copy(alpha = 0.45f), style = Stroke(width = 3.5.dp.toPx()))
     drawPath(path, Color.White, style = Stroke(width = 1.5.dp.toPx()))
-    val r = HANDLE_RADIUS_DP.dp.toPx()
+    val r = TEXT_HANDLE_RADIUS_DP.dp.toPx()
     drawHandle(box.topLeft, r, Color(0xFFFF3B30)) { drawCross(it, r * 0.42f) }
     drawHandle(box.bottomRight, r, Color(0xFF0A84FF)) { drawResizeArrow(it, r * 0.45f) }
 }

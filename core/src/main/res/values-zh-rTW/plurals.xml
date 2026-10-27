@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="estimate">
+        <item quantity="other">≈ %1$d 影格 · 約 %2$s MB</item>
+    </plurals>
+    <plurals name="plan_frames">
+        <item quantity="other">%1$d 影格</item>
+    </plurals>
+    <plurals name="reduced_quality">
+        <item quantity="other">有 %1$d 影格因裝置解碼器無法返回完整尺寸，已以較低解析度儲存。</item>
+    </plurals>
+    <plurals name="reduced_quality_to">
+        <item quantity="other">有 %1$d 影格為適應裝置記憶體，已以 %4$d×%5$d 而非源尺寸 %2$d×%3$d 儲存。</item>
+    </plurals>
+    <plurals name="frame_count">
+        <item quantity="other">%1$d 影格</item>
+    </plurals>
+    <plurals name="content_frames">
+        <item quantity="other">%1$d 影格</item>
+    </plurals>
+    <plurals name="important_picked">
+        <item quantity="other">已選中 %1$d 個關鍵時刻</item>
+    </plurals>
+    <plurals name="sharpest_picked">
+        <item quantity="other">已選中 %1$d 個最清晰的影格</item>
+    </plurals>
+    <plurals name="duplicates_picked">
+        <item quantity="other">已選中 %1$d 個重複影格</item>
+    </plurals>
+    <plurals name="integrity_dup">
+        <item quantity="other">有 %1$d 影格的時間戳相同。</item>
+    </plurals>
+    <plurals name="crop_all_hint">
+        <item quantity="other">%1$d 影格使用相同區域</item>
+    </plurals>
+    <plurals name="crop_all_applied">
+        <item quantity="other">已將裁剪應用程式到 %1$d 影格</item>
+    </plurals>
+    <plurals name="jump_back">
+        <item quantity="other">後退 %1$d 影格</item>
+    </plurals>
+    <plurals name="jump_forward">
+        <item quantity="other">前進 %1$d 影格</item>
+    </plurals>
+    <plurals name="jump_size">
+        <item quantity="other">跳轉幅度：%1$d 影格（點按更改）</item>
+    </plurals>
+    <plurals name="queue_unsaved">
+        <item quantity="other">有 %1$d 個隊列中的影格尚未儲存。再按一次返回將不儲存直接離開。</item>
+    </plurals>
+    <plurals name="share_limited">
+        <item quantity="other">僅分享前 %1$d 影格</item>
+    </plurals>
+    <plurals name="frames_deleted">
+        <item quantity="other">%1$d 影格已移至「已刪除」</item>
+    </plurals>
+    <plurals name="batch_videos">
+        <item quantity="other">%1$d 個影片</item>
+    </plurals>
+    <plurals name="projects_deleted">
+        <item quantity="other">已刪除 %1$d 個專案</item>
+    </plurals>
+    <plurals name="projects_restored">
+        <item quantity="other">已恢復 %1$d 個專案</item>
+    </plurals>
+    <plurals name="saved_deleted_n">
+        <item quantity="other">已刪除 %1$d 張圖片</item>
+    </plurals>
+    <plurals name="saved_restored_n">
+        <item quantity="other">已恢復 %1$d 張圖片</item>
+    </plurals>
+    <plurals name="saved_pruned_n">
+        <item quantity="other">有 %1$d 個已儲存專案因檔案已不在裝置上而被移除</item>
+    </plurals>
+    <plurals name="confirm_delete_projects_n">
+        <item quantity="other">刪除 %1$d 個專案？</item>
+    </plurals>
+    <plurals name="confirm_delete_saved_n">
+        <item quantity="other">刪除 %1$d 張已儲存的圖片？</item>
+    </plurals>
+    <plurals name="backup_saved_many_n">
+        <item quantity="other">%1$d 個專案已匯出到所選資料夾</item>
+    </plurals>
+    <plurals name="export_done_many_n">
+        <item quantity="other">已匯出 %1$d 個專案</item>
+    </plurals>
+    <plurals name="saved_export_done_n">
+        <item quantity="other">已匯出 %1$d 張圖片</item>
+    </plurals>
+    <plurals name="onboarding_pick_burst">
+        <item quantity="other">連續 %1$d 影格</item>
+    </plurals>
+    <plurals name="onboarding_pick_excluded">
+        <item quantity="other">已排除：%1$d 影格</item>
+    </plurals>
+    <plurals name="rating_stat">
+        <item quantity="other">目前已成功儲存 %1$d 次</item>
+    </plurals>
+</resources>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="estimate">
+        <item quantity="other">≈ %1$d frame · ~%2$s MB</item>
+    </plurals>
+    <plurals name="plan_frames">
+        <item quantity="other">%1$d frame</item>
+    </plurals>
+    <plurals name="reduced_quality">
+        <item quantity="other">%1$d frame disimpan dengan resolusi lebih rendah karena dekoder perangkat tidak dapat menghasilkannya dalam ukuran penuh.</item>
+    </plurals>
+    <plurals name="reduced_quality_to">
+        <item quantity="other">%1$d frame disimpan pada %4$d×%5$d, bukan %2$d×%3$d sesuai sumber, agar muat di memori perangkat.</item>
+    </plurals>
+    <plurals name="frame_count">
+        <item quantity="other">%1$d frame</item>
+    </plurals>
+    <plurals name="content_frames">
+        <item quantity="other">%1$d frame</item>
+    </plurals>
+    <plurals name="important_picked">
+        <item quantity="other">%1$d momen penting dipilih</item>
+    </plurals>
+    <plurals name="sharpest_picked">
+        <item quantity="other">%1$d frame paling tajam dipilih</item>
+    </plurals>
+    <plurals name="duplicates_picked">
+        <item quantity="other">%1$d frame duplikat dipilih</item>
+    </plurals>
+    <plurals name="integrity_dup">
+        <item quantity="other">%1$d frame memiliki stempel waktu yang sama.</item>
+    </plurals>
+    <plurals name="crop_all_hint">
+        <item quantity="other">Area yang sama untuk %1$d frame</item>
+    </plurals>
+    <plurals name="crop_all_applied">
+        <item quantity="other">Pangkas diterapkan pada %1$d frame</item>
+    </plurals>
+    <plurals name="jump_back">
+        <item quantity="other">Mundur %1$d frame</item>
+    </plurals>
+    <plurals name="jump_forward">
+        <item quantity="other">Maju %1$d frame</item>
+    </plurals>
+    <plurals name="jump_size">
+        <item quantity="other">Ukuran lompatan: %1$d frame (ketuk untuk mengubah)</item>
+    </plurals>
+    <plurals name="queue_unsaved">
+        <item quantity="other">%1$d frame dalam antrean belum disimpan. Tekan kembali sekali lagi untuk keluar tanpa menyimpan.</item>
+    </plurals>
+    <plurals name="share_limited">
+        <item quantity="other">Hanya membagikan %1$d frame pertama</item>
+    </plurals>
+    <plurals name="frames_deleted">
+        <item quantity="other">%1$d frame dipindahkan ke Dihapus</item>
+    </plurals>
+    <plurals name="batch_videos">
+        <item quantity="other">%1$d video</item>
+    </plurals>
+    <plurals name="projects_deleted">
+        <item quantity="other">%1$d proyek dihapus</item>
+    </plurals>
+    <plurals name="projects_restored">
+        <item quantity="other">%1$d proyek dipulihkan</item>
+    </plurals>
+    <plurals name="saved_deleted_n">
+        <item quantity="other">%1$d gambar dihapus</item>
+    </plurals>
+    <plurals name="saved_restored_n">
+        <item quantity="other">%1$d gambar dipulihkan</item>
+    </plurals>
+    <plurals name="saved_pruned_n">
+        <item quantity="other">%1$d item tersimpan dihapus karena file-nya sudah tidak ada di perangkat</item>
+    </plurals>
+    <plurals name="confirm_delete_projects_n">
+        <item quantity="other">Hapus %1$d proyek?</item>
+    </plurals>
+    <plurals name="confirm_delete_saved_n">
+        <item quantity="other">Hapus %1$d gambar tersimpan?</item>
+    </plurals>
+    <plurals name="backup_saved_many_n">
+        <item quantity="other">%1$d proyek diekspor ke folder yang dipilih</item>
+    </plurals>
+    <plurals name="export_done_many_n">
+        <item quantity="other">%1$d proyek diekspor</item>
+    </plurals>
+    <plurals name="saved_export_done_n">
+        <item quantity="other">%1$d gambar diekspor</item>
+    </plurals>
+    <plurals name="onboarding_pick_burst">
+        <item quantity="other">%1$d frame berurutan</item>
+    </plurals>
+    <plurals name="onboarding_pick_excluded">
+        <item quantity="other">Dikecualikan: %1$d frame</item>
+    </plurals>
+    <plurals name="rating_stat">
+        <item quantity="other">%1$d penyimpanan berhasil sejauh ini</item>
+    </plurals>
+</resources>

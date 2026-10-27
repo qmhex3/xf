@@ -10,7 +10,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class TagLanguagesTest {
-    private val translated = listOf("tr", "ru", "fa", "ur", "fr", "pt", "hi", "ko", "ja", "zh", "de", "ro", "es", "uk", "it", "nb", "ms")
+    private val translated = listOf("tr", "ru", "fa", "ur", "fr", "pt", "hi", "ko", "ja", "zh", "zh-TW", "de", "ro", "es", "uk", "it", "nb", "ms", "id", "bn", "th", "vi")
 
     @Test
     fun appLangMapsSupportedAndFallsBack() {
@@ -23,10 +23,24 @@ class TagLanguagesTest {
         assertEquals("pt", AppLang.of("pt-BR"))
         assertEquals("pt", AppLang.of("pt_PT"))
         assertEquals("hi", AppLang.of("hi-IN"))
+        assertEquals("bn", AppLang.of("bn-BD"))
+        assertEquals("bn", AppLang.of("bn_IN"))
+        assertEquals("th", AppLang.of("th-TH"))
+        assertEquals("th", AppLang.of("th"))
+        assertEquals("vi", AppLang.of("vi-VN"))
+        assertEquals("vi", AppLang.of("vi"))
+        assertEquals("vi", AppLang.of("VI"))
+        assertEquals("vi", AppLang.of("vi_VN"))
         assertEquals("ko", AppLang.of("ko-KR"))
         assertEquals("ja", AppLang.of("ja-JP"))
         assertEquals("zh", AppLang.of("zh-CN"))
-        assertEquals("zh", AppLang.of("zh_TW"))
+        assertEquals("zh-TW", AppLang.of("zh_TW"))
+        assertEquals("zh-TW", AppLang.of("zh-Hant"))
+        assertEquals("zh-TW", AppLang.of("zh-Hant-TW"))
+        assertEquals("zh-TW", AppLang.of("zh-HK"))
+        assertEquals("zh", AppLang.of("zh-Hans-CN"))
+        assertEquals("zh", AppLang.of("zh-Hans-TW"))
+        assertEquals("zh", AppLang.of("zh"))
         assertEquals("de", AppLang.of("de-DE"))
         assertEquals("de", AppLang.of("de_AT"))
         assertEquals("ro", AppLang.of("ro-RO"))
@@ -45,6 +59,10 @@ class TagLanguagesTest {
         assertEquals("ms", AppLang.of("ms-MY"))
         assertEquals("ms", AppLang.of("MS"))
         assertEquals("ms", AppLang.of("ms_BN"))
+        assertEquals("id", AppLang.of("id-ID"))
+        assertEquals("id", AppLang.of("ID"))
+        assertEquals("id", AppLang.of("in"))
+        assertEquals("id", AppLang.of("in_ID"))
         assertEquals("en", AppLang.of("sv"))
         assertEquals("en", AppLang.of(null))
     }
@@ -56,6 +74,7 @@ class TagLanguagesTest {
         assertEquals("Voiture", TagNames.display("l:Car", "fr"))
         assertEquals("Carro", TagNames.display("l:Car", "pt"))
         assertEquals("कार", TagNames.display("l:Car", "hi"))
+        assertEquals("গাড়ি", TagNames.display("l:Car", "bn"))
         assertEquals("자동차", TagNames.display("l:Car", "ko"))
         assertEquals("自動車", TagNames.display("l:Car", "ja"))
         assertEquals("汽车", TagNames.display("l:Car", "zh"))
@@ -66,6 +85,9 @@ class TagLanguagesTest {
         assertEquals("Automobile", TagNames.display("l:Car", "it"))
         assertEquals("Bil", TagNames.display("l:Car", "nb"))
         assertEquals("Kereta", TagNames.display("l:Car", "ms"))
+        assertEquals("Mobil", TagNames.display("l:Car", "id"))
+        assertEquals("รถยนต์", TagNames.display("l:Car", "th"))
+        assertEquals("Ô tô", TagNames.display("l:Car", "vi"))
         assertEquals("Unknown thing", TagNames.display("l:Unknown thing", "ko"))
         assertEquals("Unknown thing", TagNames.display("l:Unknown thing", "zh"))
         assertEquals("Unknown thing", TagNames.display("l:Unknown thing", "hi"))
@@ -80,6 +102,9 @@ class TagLanguagesTest {
         assertEquals("Unknown thing", TagNames.display("l:Unknown thing", "it"))
         assertEquals("Unknown thing", TagNames.display("l:Unknown thing", "nb"))
         assertEquals("Unknown thing", TagNames.display("l:Unknown thing", "ms"))
+        assertEquals("Unknown thing", TagNames.display("l:Unknown thing", "id"))
+        assertEquals("Unknown thing", TagNames.display("l:Unknown thing", "th"))
+        assertEquals("Unknown thing", TagNames.display("l:Unknown thing", "vi"))
     }
 
     @Test

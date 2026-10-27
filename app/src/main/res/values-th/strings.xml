@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Frame out</string>
+    <string name="shortcut_capture_short">จับภาพเฟรม</string>
+    <string name="shortcut_capture_long">จับภาพเฟรมจากวิดีโอล่าสุด</string>
+    <string name="tile_capture_label">จับภาพเฟรม</string>
+    <string name="incoming_copy_failed">ไม่สามารถคงสิทธิ์เข้าถึงวิดีโอที่แชร์มาได้ ลองเปิดจากแกลเลอรี หรือเพิ่มพื้นที่ว่างแล้วแชร์อีกครั้ง</string>
+    <string name="incoming_unsupported">ไม่สามารถเปิดไฟล์ประเภทนี้ได้ โปรดแชร์วิดีโอ GIF หรือรูปภาพแทน</string>
+</resources>

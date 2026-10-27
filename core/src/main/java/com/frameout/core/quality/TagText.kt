@@ -29,6 +29,7 @@ class TagText(
             "ko" -> TagTextKo.text
             "ja" -> TagTextJa.text
             "zh" -> TagTextZh.text
+            "zh-TW" -> TagTextZhTw.text
             "hi" -> TagTextHi.text
             "de" -> TagTextDe.text
             "ro" -> TagTextRo.text
@@ -37,6 +38,10 @@ class TagText(
             "it" -> TagTextIt.text
             "nb" -> TagTextNb.text
             "ms" -> TagTextMs.text
+            "id" -> TagTextId.text
+            "bn" -> TagTextBn.text
+            "th" -> TagTextTh.text
+            "vi" -> TagTextVi.text
             else -> null
         }
     }

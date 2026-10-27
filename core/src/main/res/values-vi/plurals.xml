@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="estimate">
+        <item quantity="other">≈ %1$d khung hình · ~%2$s MB</item>
+    </plurals>
+    <plurals name="plan_frames">
+        <item quantity="other">%1$d khung hình</item>
+    </plurals>
+    <plurals name="reduced_quality">
+        <item quantity="other">Đã lưu %1$d khung hình với độ phân giải thấp hơn vì bộ giải mã của thiết bị không thể trả về kích thước đầy đủ.</item>
+    </plurals>
+    <plurals name="reduced_quality_to">
+        <item quantity="other">Đã lưu %1$d khung hình ở %4$d×%5$d thay vì kích thước gốc %2$d×%3$d để vừa với bộ nhớ của thiết bị.</item>
+    </plurals>
+    <plurals name="frame_count">
+        <item quantity="other">%1$d khung hình</item>
+    </plurals>
+    <plurals name="content_frames">
+        <item quantity="other">%1$d khung hình</item>
+    </plurals>
+    <plurals name="important_picked">
+        <item quantity="other">Đã chọn %1$d khoảnh khắc chính</item>
+    </plurals>
+    <plurals name="sharpest_picked">
+        <item quantity="other">Đã chọn %1$d khung hình nét nhất</item>
+    </plurals>
+    <plurals name="duplicates_picked">
+        <item quantity="other">Đã chọn %1$d khung hình trùng lặp</item>
+    </plurals>
+    <plurals name="integrity_dup">
+        <item quantity="other">%1$d khung hình có cùng dấu thời gian.</item>
+    </plurals>
+    <plurals name="crop_all_hint">
+        <item quantity="other">Cùng một vùng cho %1$d khung hình</item>
+    </plurals>
+    <plurals name="crop_all_applied">
+        <item quantity="other">Đã áp dụng cắt cho %1$d khung hình</item>
+    </plurals>
+    <plurals name="jump_back">
+        <item quantity="other">Lùi %1$d khung hình</item>
+    </plurals>
+    <plurals name="jump_forward">
+        <item quantity="other">Tiến %1$d khung hình</item>
+    </plurals>
+    <plurals name="jump_size">
+        <item quantity="other">Bước nhảy: %1$d khung hình (nhấn để thay đổi)</item>
+    </plurals>
+    <plurals name="queue_unsaved">
+        <item quantity="other">%1$d khung hình trong hàng đợi chưa được lưu. Nhấn quay lại lần nữa để thoát mà không lưu.</item>
+    </plurals>
+    <plurals name="share_limited">
+        <item quantity="other">Chỉ chia sẻ %1$d khung hình đầu tiên</item>
+    </plurals>
+    <plurals name="frames_deleted">
+        <item quantity="other">Đã chuyển %1$d khung hình vào mục Đã xóa</item>
+    </plurals>
+    <plurals name="batch_videos">
+        <item quantity="other">%1$d video</item>
+    </plurals>
+    <plurals name="projects_deleted">
+        <item quantity="other">Đã xóa %1$d dự án</item>
+    </plurals>
+    <plurals name="projects_restored">
+        <item quantity="other">Đã khôi phục %1$d dự án</item>
+    </plurals>
+    <plurals name="saved_deleted_n">
+        <item quantity="other">Đã xóa %1$d ảnh</item>
+    </plurals>
+    <plurals name="saved_restored_n">
+        <item quantity="other">Đã khôi phục %1$d ảnh</item>
+    </plurals>
+    <plurals name="saved_pruned_n">
+        <item quantity="other">Đã gỡ %1$d mục đã lưu vì tệp của chúng không còn trên thiết bị</item>
+    </plurals>
+    <plurals name="confirm_delete_projects_n">
+        <item quantity="other">Xóa %1$d dự án?</item>
+    </plurals>
+    <plurals name="confirm_delete_saved_n">
+        <item quantity="other">Xóa %1$d ảnh đã lưu?</item>
+    </plurals>
+    <plurals name="backup_saved_many_n">
+        <item quantity="other">Đã xuất %1$d dự án vào thư mục đã chọn</item>
+    </plurals>
+    <plurals name="export_done_many_n">
+        <item quantity="other">Đã xuất %1$d dự án</item>
+    </plurals>
+    <plurals name="saved_export_done_n">
+        <item quantity="other">Đã xuất %1$d ảnh</item>
+    </plurals>
+    <plurals name="onboarding_pick_burst">
+        <item quantity="other">%1$d khung hình liên tiếp</item>
+    </plurals>
+    <plurals name="onboarding_pick_excluded">
+        <item quantity="other">Đã loại: %1$d khung hình</item>
+    </plurals>
+    <plurals name="rating_stat">
+        <item quantity="other">%1$d lần lưu thành công cho đến nay</item>
+    </plurals>
+</resources>

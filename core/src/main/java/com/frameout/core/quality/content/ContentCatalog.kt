@@ -19,7 +19,7 @@ object ContentCatalog {
         val names = selected(ids).map { it.title(lang) }
         val separator = when (lang) {
             "ar", "fa", "ur" -> "، "
-            "zh" -> "、"
+            "zh", "zh-TW" -> "、"
             else -> ", "
         }
         if (names.size <= limit) return names.joinToString(separator)

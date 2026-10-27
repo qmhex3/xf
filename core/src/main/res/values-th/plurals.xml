@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="estimate">
+        <item quantity="other">≈ %1$d เฟรม · ~%2$s MB</item>
+    </plurals>
+    <plurals name="plan_frames">
+        <item quantity="other">%1$d เฟรม</item>
+    </plurals>
+    <plurals name="reduced_quality">
+        <item quantity="other">บันทึก %1$d เฟรมด้วยความละเอียดที่ลดลง เนื่องจากตัวถอดรหัสของอุปกรณ์ไม่สามารถส่งคืนในขนาดเต็มได้</item>
+    </plurals>
+    <plurals name="reduced_quality_to">
+        <item quantity="other">บันทึก %1$d เฟรมที่ %4$d×%5$d แทนขนาดต้นฉบับ %2$d×%3$d เพื่อให้พอดีกับหน่วยความจำของอุปกรณ์</item>
+    </plurals>
+    <plurals name="frame_count">
+        <item quantity="other">%1$d เฟรม</item>
+    </plurals>
+    <plurals name="content_frames">
+        <item quantity="other">%1$d เฟรม</item>
+    </plurals>
+    <plurals name="important_picked">
+        <item quantity="other">เลือก %1$d ช่วงเวลาสำคัญแล้ว</item>
+    </plurals>
+    <plurals name="sharpest_picked">
+        <item quantity="other">เลือก %1$d เฟรมที่คมชัดที่สุดแล้ว</item>
+    </plurals>
+    <plurals name="duplicates_picked">
+        <item quantity="other">เลือก %1$d เฟรมซ้ำแล้ว</item>
+    </plurals>
+    <plurals name="integrity_dup">
+        <item quantity="other">%1$d เฟรมมีเวลาเดียวกัน</item>
+    </plurals>
+    <plurals name="crop_all_hint">
+        <item quantity="other">พื้นที่เดียวกันสำหรับ %1$d เฟรม</item>
+    </plurals>
+    <plurals name="crop_all_applied">
+        <item quantity="other">ใช้การครอปกับ %1$d เฟรมแล้ว</item>
+    </plurals>
+    <plurals name="jump_back">
+        <item quantity="other">ย้อนกลับ %1$d เฟรม</item>
+    </plurals>
+    <plurals name="jump_forward">
+        <item quantity="other">ข้ามไปข้างหน้า %1$d เฟรม</item>
+    </plurals>
+    <plurals name="jump_size">
+        <item quantity="other">ขนาดการข้าม: %1$d เฟรม (แตะเพื่อเปลี่ยน)</item>
+    </plurals>
+    <plurals name="queue_unsaved">
+        <item quantity="other">%1$d เฟรมในคิวยังไม่ได้บันทึก กดย้อนกลับอีกครั้งเพื่อออกโดยไม่บันทึก</item>
+    </plurals>
+    <plurals name="share_limited">
+        <item quantity="other">แชร์เพียง %1$d เฟรมแรกเท่านั้น</item>
+    </plurals>
+    <plurals name="frames_deleted">
+        <item quantity="other">ย้าย%1$d เฟรมไปยังรายการที่ลบแล้ว</item>
+    </plurals>
+    <plurals name="batch_videos">
+        <item quantity="other">%1$d วิดีโอ</item>
+    </plurals>
+    <plurals name="projects_deleted">
+        <item quantity="other">ลบ %1$d โปรเจกต์แล้ว</item>
+    </plurals>
+    <plurals name="projects_restored">
+        <item quantity="other">กู้คืน %1$d โปรเจกต์แล้ว</item>
+    </plurals>
+    <plurals name="saved_deleted_n">
+        <item quantity="other">ลบ %1$d รูปภาพแล้ว</item>
+    </plurals>
+    <plurals name="saved_restored_n">
+        <item quantity="other">กู้คืน %1$d รูปภาพแล้ว</item>
+    </plurals>
+    <plurals name="saved_pruned_n">
+        <item quantity="other">นำรายการที่บันทึกไว้ %1$d รายการออกแล้ว เนื่องจากไม่พบไฟล์ในอุปกรณ์อีกต่อไป</item>
+    </plurals>
+    <plurals name="confirm_delete_projects_n">
+        <item quantity="other">ลบ %1$d โปรเจกต์ใช่ไหม</item>
+    </plurals>
+    <plurals name="confirm_delete_saved_n">
+        <item quantity="other">ลบ %1$d รูปภาพที่บันทึกไว้ใช่ไหม</item>
+    </plurals>
+    <plurals name="backup_saved_many_n">
+        <item quantity="other">ส่งออก %1$d โปรเจกต์ไปยังโฟลเดอร์ที่เลือกแล้ว</item>
+    </plurals>
+    <plurals name="export_done_many_n">
+        <item quantity="other">ส่งออก %1$d โปรเจกต์แล้ว</item>
+    </plurals>
+    <plurals name="saved_export_done_n">
+        <item quantity="other">ส่งออก %1$d รูปภาพแล้ว</item>
+    </plurals>
+    <plurals name="onboarding_pick_burst">
+        <item quantity="other">%1$d เฟรมต่อเนื่อง</item>
+    </plurals>
+    <plurals name="onboarding_pick_excluded">
+        <item quantity="other">ไม่รวม: %1$d เฟรม</item>
+    </plurals>
+    <plurals name="rating_stat">
+        <item quantity="other">บันทึกสำเร็จแล้ว %1$d ครั้ง</item>
+    </plurals>
+</resources>

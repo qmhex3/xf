@@ -7,7 +7,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class StringResourcesTest {
-    private val locales = listOf("values-ar", "values-tr", "values-ru", "values-fa", "values-ur", "values-fr", "values-pt", "values-hi", "values-ko", "values-ja", "values-zh", "values-de", "values-ro", "values-es", "values-uk", "values-it", "values-nb", "values-ms")
+    private val locales = listOf("values-ar", "values-tr", "values-ru", "values-fa", "values-ur", "values-fr", "values-pt", "values-hi", "values-ko", "values-ja", "values-zh", "values-zh-rTW", "values-de", "values-ro", "values-es", "values-uk", "values-it", "values-nb", "values-ms", "values-in", "values-bn", "values-th", "values-vi")
 
     private fun parse(dir: String, file: String) =
         DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(File("src/main/res/$dir/$file"))
@@ -130,6 +130,26 @@ class StringResourcesTest {
     }
 
     @Test
+    fun indonesianPluralsHaveOnlyOther() {
+        plurals("values-in").forEach { (name, quantities) -> assertEquals(name, listOf("other"), quantities) }
+    }
+
+    @Test
+    fun bengaliPluralsHaveOneAndOther() {
+        plurals("values-bn").forEach { (name, quantities) -> assertEquals(name, listOf("one", "other"), quantities) }
+    }
+
+    @Test
+    fun thaiPluralsHaveOnlyOther() {
+        plurals("values-th").forEach { (name, quantities) -> assertEquals(name, listOf("other"), quantities) }
+    }
+
+    @Test
+    fun vietnamesePluralsHaveOnlyOther() {
+        plurals("values-vi").forEach { (name, quantities) -> assertEquals(name, listOf("other"), quantities) }
+    }
+
+    @Test
     fun koreanPluralsHaveOnlyOther() {
         plurals("values-ko").forEach { (name, quantities) -> assertEquals(name, listOf("other"), quantities) }
     }
@@ -142,5 +162,10 @@ class StringResourcesTest {
     @Test
     fun chinesePluralsHaveOnlyOther() {
         plurals("values-zh").forEach { (name, quantities) -> assertEquals(name, listOf("other"), quantities) }
+    }
+
+    @Test
+    fun traditionalChinesePluralsHaveOnlyOther() {
+        plurals("values-zh-rTW").forEach { (name, quantities) -> assertEquals(name, listOf("other"), quantities) }
     }
 }

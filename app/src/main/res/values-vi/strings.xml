@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Frame out</string>
+    <string name="shortcut_capture_short">Chụp khung hình</string>
+    <string name="shortcut_capture_long">Chụp một khung hình từ video gần nhất</string>
+    <string name="tile_capture_label">Chụp khung hình</string>
+    <string name="incoming_copy_failed">Không thể giữ quyền truy cập vào video được chia sẻ. Hãy mở video từ thư viện ảnh, hoặc giải phóng bộ nhớ rồi chia sẻ lại.</string>
+    <string name="incoming_unsupported">Không thể mở loại tệp này. Hãy chia sẻ video, GIF hoặc ảnh.</string>
+</resources>

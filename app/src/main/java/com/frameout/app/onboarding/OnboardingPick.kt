@@ -178,7 +178,7 @@ private fun PickFooter(phase: State<Float>) {
 
 @Composable
 internal fun PickChips(modifier: Modifier = Modifier) {
-    val lang = com.frameout.core.util.AppLang.of(LocalConfiguration.current.locales[0].language)
+    val lang = com.frameout.core.util.AppLang.of(LocalConfiguration.current.locales[0].toLanguageTag())
     val labels = remember(lang) {
         listOf(TagRules.GOOD_FACE, TagRules.EYES_CLOSED, TagRules.TEXT, TagRules.CODE, "l:Sunset", "l:Sea")
             .map { TagNames.display(it, lang) }

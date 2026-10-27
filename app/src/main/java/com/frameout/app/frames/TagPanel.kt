@@ -29,7 +29,7 @@ import com.frameout.designsystem.theme.frameHairline
 @Composable
 fun TagPanel(state: FramesState, onToggle: (String) -> Unit, onClose: () -> Unit) {
     val colors = FrameTheme.colors
-    val lang = com.frameout.core.util.AppLang.of(LocalConfiguration.current.locales[0].language)
+    val lang = com.frameout.core.util.AppLang.of(LocalConfiguration.current.locales[0].toLanguageTag())
     val grouped = remember(state.refineCounts) { state.refineCounts.groupBy { TagNames.group(it.tag) } }
     FramesSheet(state.tagsOpen && state.filter == FrameFilter.Tagged, FrameStrings.refineTitle(), onClose) {
         if (state.refineCounts.isEmpty()) {

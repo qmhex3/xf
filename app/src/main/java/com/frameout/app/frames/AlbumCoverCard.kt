@@ -87,7 +87,7 @@ private val FILM_BLACK = Color(0xFF0B0B0B)
 
 @Composable
 internal fun AlbumCoverCard(label: String, count: Int, tag: String, cover: suspend (String) -> AlbumCover?, columns: Int, onClick: () -> Unit) {
-    val lang = com.frameout.core.util.AppLang.of(LocalConfiguration.current.locales[0].language)
+    val lang = com.frameout.core.util.AppLang.of(LocalConfiguration.current.locales[0].toLanguageTag())
     val calm = LocalSystemA11y.current.reduceMotion
     val albumCover = produceState<AlbumCover?>(null, tag) { value = cover(tag) }.value
     val lanes = albumCover?.lanes.orEmpty()

@@ -32,7 +32,7 @@ private fun engineIcon(engine: SearchEngine): Int = when (engine.id) {
 
 @Composable
 fun ImageSearchPanel(visible: Boolean, onPick: (SearchEngine) -> Unit, onClose: () -> Unit) {
-    val lang = com.frameout.core.util.AppLang.of(LocalConfiguration.current.locales[0].language)
+    val lang = com.frameout.core.util.AppLang.of(LocalConfiguration.current.locales[0].toLanguageTag())
     val maxHeight = (LocalConfiguration.current.screenHeightDp * 0.7f).dp
     BottomSheetFrame(visible, onClose, SearchStrings.title()) {
         Column(Modifier.heightIn(max = maxHeight).verticalScroll(rememberScrollState()).padding(horizontal = 16.dp)) {

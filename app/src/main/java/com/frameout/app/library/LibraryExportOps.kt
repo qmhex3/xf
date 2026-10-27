@@ -71,7 +71,7 @@ internal fun LibraryViewModel.exportProjects(kind: ProjectExportKind) {
     }
 }
 
-private class ExportTally {
+internal class ExportTally {
     var done = 0
     var failed = 0
     var live = 0

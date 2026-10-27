@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="estimate">
+        <item quantity="one">≈ %1$d ফ্রেম · ~%2$s MB</item>
+        <item quantity="other">≈ %1$d ফ্রেম · ~%2$s MB</item>
+    </plurals>
+    <plurals name="plan_frames">
+        <item quantity="one">%1$d ফ্রেম</item>
+        <item quantity="other">%1$d ফ্রেম</item>
+    </plurals>
+    <plurals name="reduced_quality">
+        <item quantity="one">ডিভাইসের ডিকোডার পূর্ণ আকারে ফেরত দিতে না পারায় একটি ফ্রেম কম রেজোলিউশনে সংরক্ষণ করা হয়েছে।</item>
+        <item quantity="other">ডিভাইসের ডিকোডার পূর্ণ আকারে ফেরত দিতে না পারায় %1$d টি ফ্রেম কম রেজোলিউশনে সংরক্ষণ করা হয়েছে।</item>
+    </plurals>
+    <plurals name="reduced_quality_to">
+        <item quantity="one">ডিভাইসের মেমরিতে আঁটানোর জন্য একটি ফ্রেম মূল %2$d×%3$d এর বদলে %4$d×%5$d আকারে সংরক্ষণ করা হয়েছে।</item>
+        <item quantity="other">ডিভাইসের মেমরিতে আঁটানোর জন্য %1$d টি ফ্রেম মূল %2$d×%3$d এর বদলে %4$d×%5$d আকারে সংরক্ষণ করা হয়েছে।</item>
+    </plurals>
+    <plurals name="frame_count">
+        <item quantity="one">%1$d ফ্রেম</item>
+        <item quantity="other">%1$d ফ্রেম</item>
+    </plurals>
+    <plurals name="content_frames">
+        <item quantity="one">%1$d ফ্রেম</item>
+        <item quantity="other">%1$d ফ্রেম</item>
+    </plurals>
+    <plurals name="important_picked">
+        <item quantity="one">গুরুত্বপূর্ণ মুহূর্তটি বেছে নেওয়া হয়েছে</item>
+        <item quantity="other">%1$d টি গুরুত্বপূর্ণ মুহূর্ত বেছে নেওয়া হয়েছে</item>
+    </plurals>
+    <plurals name="sharpest_picked">
+        <item quantity="one">সবচেয়ে স্পষ্ট ফ্রেমটি বেছে নেওয়া হয়েছে</item>
+        <item quantity="other">সবচেয়ে স্পষ্ট %1$d টি ফ্রেম বেছে নেওয়া হয়েছে</item>
+    </plurals>
+    <plurals name="duplicates_picked">
+        <item quantity="one">%1$d টি ডুপ্লিকেট ফ্রেম বেছে নেওয়া হয়েছে</item>
+        <item quantity="other">%1$d টি ডুপ্লিকেট ফ্রেম বেছে নেওয়া হয়েছে</item>
+    </plurals>
+    <plurals name="integrity_dup">
+        <item quantity="one">%1$d টি ফ্রেমের টাইমস্ট্যাম্প একই।</item>
+        <item quantity="other">%1$d টি ফ্রেমের টাইমস্ট্যাম্প একই।</item>
+    </plurals>
+    <plurals name="crop_all_hint">
+        <item quantity="one">%1$d টি ফ্রেমের জন্য একই এলাকা</item>
+        <item quantity="other">%1$d টি ফ্রেমের জন্য একই এলাকা</item>
+    </plurals>
+    <plurals name="crop_all_applied">
+        <item quantity="one">%1$d টি ফ্রেমে ক্রপ প্রয়োগ করা হয়েছে</item>
+        <item quantity="other">%1$d টি ফ্রেমে ক্রপ প্রয়োগ করা হয়েছে</item>
+    </plurals>
+    <plurals name="jump_back">
+        <item quantity="one">%1$d ফ্রেম পিছনে</item>
+        <item quantity="other">%1$d ফ্রেম পিছনে</item>
+    </plurals>
+    <plurals name="jump_forward">
+        <item quantity="one">%1$d ফ্রেম সামনে</item>
+        <item quantity="other">%1$d ফ্রেম সামনে</item>
+    </plurals>
+    <plurals name="jump_size">
+        <item quantity="one">লাফের মাপ: %1$d ফ্রেম (বদলাতে ট্যাপ করুন)</item>
+        <item quantity="other">লাফের মাপ: %1$d ফ্রেম (বদলাতে ট্যাপ করুন)</item>
+    </plurals>
+    <plurals name="queue_unsaved">
+        <item quantity="one">সারিতে থাকা %1$d টি ফ্রেম সংরক্ষিত হয়নি। সংরক্ষণ না করে বেরোতে আবার ব্যাক চাপুন।</item>
+        <item quantity="other">সারিতে থাকা %1$d টি ফ্রেম সংরক্ষিত হয়নি। সংরক্ষণ না করে বেরোতে আবার ব্যাক চাপুন।</item>
+    </plurals>
+    <plurals name="share_limited">
+        <item quantity="one">শুধু প্রথম %1$d টি ফ্রেম শেয়ার করা হচ্ছে</item>
+        <item quantity="other">শুধু প্রথম %1$d টি ফ্রেম শেয়ার করা হচ্ছে</item>
+    </plurals>
+    <plurals name="frames_deleted">
+        <item quantity="one">%1$d টি ফ্রেম মুছে ফেলা তালিকায় সরানো হয়েছে</item>
+        <item quantity="other">%1$d টি ফ্রেম মুছে ফেলা তালিকায় সরানো হয়েছে</item>
+    </plurals>
+    <plurals name="batch_videos">
+        <item quantity="one">%1$d টি ভিডিও</item>
+        <item quantity="other">%1$d টি ভিডিও</item>
+    </plurals>
+    <plurals name="projects_deleted">
+        <item quantity="one">প্রজেক্ট মুছে ফেলা হয়েছে</item>
+        <item quantity="other">%1$d টি প্রজেক্ট মুছে ফেলা হয়েছে</item>
+    </plurals>
+    <plurals name="projects_restored">
+        <item quantity="one">প্রজেক্ট পুনরুদ্ধার করা হয়েছে</item>
+        <item quantity="other">%1$d টি প্রজেক্ট পুনরুদ্ধার করা হয়েছে</item>
+    </plurals>
+    <plurals name="saved_deleted_n">
+        <item quantity="one">ছবি মুছে ফেলা হয়েছে</item>
+        <item quantity="other">%1$d টি ছবি মুছে ফেলা হয়েছে</item>
+    </plurals>
+    <plurals name="saved_restored_n">
+        <item quantity="one">ছবি পুনরুদ্ধার করা হয়েছে</item>
+        <item quantity="other">%1$d টি ছবি পুনরুদ্ধার করা হয়েছে</item>
+    </plurals>
+    <plurals name="saved_pruned_n">
+        <item quantity="one">ফাইলটি আর ডিভাইসে না থাকায় 1টি সংরক্ষিত আইটেম সরানো হয়েছে</item>
+        <item quantity="other">ফাইলগুলো আর ডিভাইসে না থাকায় %1$d টি সংরক্ষিত আইটেম সরানো হয়েছে</item>
+    </plurals>
+    <plurals name="confirm_delete_projects_n">
+        <item quantity="one">এই প্রজেক্টটি মুছবেন?</item>
+        <item quantity="other">%1$d টি প্রজেক্ট মুছবেন?</item>
+    </plurals>
+    <plurals name="confirm_delete_saved_n">
+        <item quantity="one">এই সংরক্ষিত ছবিটি মুছবেন?</item>
+        <item quantity="other">%1$d টি সংরক্ষিত ছবি মুছবেন?</item>
+    </plurals>
+    <plurals name="backup_saved_many_n">
+        <item quantity="one">প্রজেক্টটি বেছে নেওয়া ফোল্ডারে এক্সপোর্ট করা হয়েছে</item>
+        <item quantity="other">%1$d টি প্রজেক্ট বেছে নেওয়া ফোল্ডারে এক্সপোর্ট করা হয়েছে</item>
+    </plurals>
+    <plurals name="export_done_many_n">
+        <item quantity="one">প্রজেক্ট এক্সপোর্ট করা হয়েছে</item>
+        <item quantity="other">%1$d টি প্রজেক্ট এক্সপোর্ট করা হয়েছে</item>
+    </plurals>
+    <plurals name="saved_export_done_n">
+        <item quantity="one">1টি ছবি এক্সপোর্ট করা হয়েছে</item>
+        <item quantity="other">%1$d টি ছবি এক্সপোর্ট করা হয়েছে</item>
+    </plurals>
+    <plurals name="onboarding_pick_burst">
+        <item quantity="one">টানা %1$d টি ফ্রেম</item>
+        <item quantity="other">টানা %1$d টি ফ্রেম</item>
+    </plurals>
+    <plurals name="onboarding_pick_excluded">
+        <item quantity="one">বাদ: %1$d টি ফ্রেম</item>
+        <item quantity="other">বাদ: %1$d টি ফ্রেম</item>
+    </plurals>
+    <plurals name="rating_stat">
+        <item quantity="one">এ পর্যন্ত %1$d বার সফলভাবে সংরক্ষণ করা হয়েছে</item>
+        <item quantity="other">এ পর্যন্ত %1$d বার সফলভাবে সংরক্ষণ করা হয়েছে</item>
+    </plurals>
+</resources>

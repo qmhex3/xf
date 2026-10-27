@@ -7,7 +7,7 @@ import java.util.Locale
 object LocaleHelper {
     fun apply(context: Context, language: String): Context {
         val tag = if (language == "auto") {
-            AppLang.of(Resources.getSystem().configuration.locales.get(0).language)
+            AppLang.of(Resources.getSystem().configuration.locales.get(0).toLanguageTag())
         } else {
             language
         }

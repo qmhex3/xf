@@ -71,7 +71,7 @@ internal fun FramesAlbums(
     onColumns: (Int) -> Unit
 ) {
     val adaptive = rememberFrameAdaptive()
-    val lang = com.frameout.core.util.AppLang.of(LocalConfiguration.current.locales[0].language)
+    val lang = com.frameout.core.util.AppLang.of(LocalConfiguration.current.locales[0].toLanguageTag())
     val grouped = remember(state.tagCounts) { state.tagCounts.groupBy { TagNames.group(it.tag) } }
     if (state.tagCounts.isEmpty()) {
         AlbumsEmpty(state, onRescan)
@@ -139,7 +139,7 @@ private fun AlbumsEmpty(state: FramesState, onRescan: () -> Unit) {
 @Composable
 internal fun FramesAlbumBar(state: FramesState, onBack: () -> Unit, onRemove: (String) -> Unit, onRefine: () -> Unit) {
     val colors = FrameTheme.colors
-    val lang = com.frameout.core.util.AppLang.of(LocalConfiguration.current.locales[0].language)
+    val lang = com.frameout.core.util.AppLang.of(LocalConfiguration.current.locales[0].toLanguageTag())
     Row(Modifier.fillMaxWidth().padding(start = 4.dp, end = 16.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
         HeaderButton(FrameIcons.Back, FrameStrings.back(), onBack)
         LazyRow(Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(vertical = 4.dp)) {
