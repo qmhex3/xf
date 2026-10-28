@@ -11,8 +11,13 @@ object AdsBackendImpl : AdsBackend {
     override fun initialize(context: Context, ready: () -> Unit) = Unit
     override fun loadInterstitial(context: Context, unitId: String, result: (AdLoad) -> Unit) = Unit
     override fun interstitialReady(): Boolean = false
-    override fun showInterstitial(activity: Activity, closed: () -> Unit): Boolean = false
+    override fun showInterstitial(activity: Activity, shown: () -> Unit, closed: (Boolean) -> Unit): Boolean = false
     override fun loadRewarded(context: Context, unitId: String, result: (AdLoad) -> Unit) = Unit
     override fun rewardedReady(): Boolean = false
     override fun showRewarded(activity: Activity, earned: () -> Unit, closed: () -> Unit): Boolean = false
+    override fun preloadBanner(context: Context, unitId: String, widthDp: Int, result: (AdLoad) -> Unit) = Unit
+    override fun bannerReady(): Boolean = false
+    override fun bannerHeightDp(context: Context, widthDp: Int): Int = 0
+    override fun setBannerActive(active: Boolean) = Unit
+    override fun bindActivity(activity: Activity?) = Unit
 }

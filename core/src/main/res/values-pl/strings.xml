@@ -898,6 +898,9 @@
     <string name="pro_name_insights">Tekst na żywo i tagi</string>
     <string name="pro_included">W zestawie</string>
     <string name="pro_included_more">+%1$d więcej</string>
+    <string name="pro_grid_title">Wszystko w Pro</string>
+    <string name="pro_name_noads">Bez reklam</string>
+    <string name="pro_feature_noads">Na stałe usuwa banery i reklamy pełnoekranowe</string>
     <string name="pro_try_hint">Dotknij koloru, aby wypróbować go na tym ekranie</string>
     <string name="pro_smart_count">8 klatek na wejściu, 4 zachowane</string>
     <string name="pro_save_size">Rozmiar −66%</string>

@@ -898,6 +898,9 @@
     <string name="pro_name_insights">متن زنده و برچسب‌ها</string>
     <string name="pro_included">همراه با این</string>
     <string name="pro_included_more">+%1$d مورد دیگر</string>
+    <string name="pro_grid_title">همه چیز در Pro</string>
+    <string name="pro_name_noads">بدون تبلیغ</string>
+    <string name="pro_feature_noads">تبلیغات بنری و تمام‌صفحه را برای همیشه حذف می‌کند</string>
     <string name="pro_try_hint">برای امتحان روی این صفحه، روی یک رنگ بزنید</string>
     <string name="pro_smart_count">۸ فریم ورودی، ۴ فریم نگه‌داشته‌شده</string>
     <string name="pro_save_size">حجم −۶۶٪</string>

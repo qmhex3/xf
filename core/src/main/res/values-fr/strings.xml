@@ -898,6 +898,9 @@
     <string name="pro_name_insights">Texte en direct et étiquettes</string>
     <string name="pro_included">Inclus avec cette offre</string>
     <string name="pro_included_more">+%1$d de plus</string>
+    <string name="pro_grid_title">Tout dans Pro</string>
+    <string name="pro_name_noads">Sans publicité</string>
+    <string name="pro_feature_noads">Supprime définitivement les bannières et les publicités plein écran</string>
     <string name="pro_try_hint">Touchez une couleur pour l’essayer sur cet écran</string>
     <string name="pro_smart_count">8 images en entrée, 4 conservées</string>
     <string name="pro_save_size">Taille −66 %</string>

@@ -898,6 +898,9 @@
     <string name="pro_name_insights">Live text and tags</string>
     <string name="pro_included">Included with this</string>
     <string name="pro_included_more">+%1$d more</string>
+    <string name="pro_grid_title">Everything in Pro</string>
+    <string name="pro_name_noads">No ads</string>
+    <string name="pro_feature_noads">Removes banner and full-screen ads for good</string>
     <string name="pro_try_hint">Tap a color to try it on this screen</string>
     <string name="pro_smart_count">8 frames in, 4 kept</string>
     <string name="pro_save_size">Size −66%</string>

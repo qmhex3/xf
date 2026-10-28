@@ -17,8 +17,12 @@ class ProGate(private val entitlements: Entitlements, val isPro: Boolean) {
     fun locked(free: Boolean): Boolean = enforced && !isPro && !free
 
     fun run(feature: ProFeature, item: String = "", action: () -> Unit) {
-        if (entitlements.tryOnce(feature, item)) action() else entitlements.showPaywall(feature)
+        if (entitlements.rewarded(feature) || entitlements.tryOnce(feature, item)) action() else entitlements.showPaywall(feature)
     }
+
+    fun rewarded(feature: ProFeature): Boolean = entitlements.rewarded(feature)
+
+    fun showPro() = entitlements.showPaywall(ProFeature.General)
 
     fun require(feature: ProFeature, action: () -> Unit) {
         if (entitlements.permits(feature)) action() else entitlements.showPaywall(feature)

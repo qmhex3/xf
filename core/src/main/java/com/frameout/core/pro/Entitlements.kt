@@ -12,6 +12,7 @@ class Entitlements(context: Context, val enforced: Boolean, legacyInstall: Boole
     private val prefs: SharedPreferences = runCatching { buildEncryptedPrefs(context) }
         .getOrElse { context.applicationContext.getSharedPreferences(FALLBACK_FILE, Context.MODE_PRIVATE) }
     private val tickets = HashMap<ProFeature, Long>()
+    private val rewards = HashMap<ProFeature, Long>()
     private val triedItems = HashSet<String>()
 
     private val _isPro = MutableStateFlow(false)
@@ -66,7 +67,14 @@ class Entitlements(context: Context, val enforced: Boolean, legacyInstall: Boole
     }
 
     fun grantTicket(feature: ProFeature, durationMs: Long) {
-        synchronized(tickets) { tickets[feature] = System.currentTimeMillis() + durationMs }
+        val until = System.currentTimeMillis() + durationMs
+        synchronized(tickets) { tickets[feature] = until }
+        synchronized(rewards) { rewards[feature] = until }
+    }
+
+    fun rewarded(feature: ProFeature): Boolean {
+        val until = synchronized(rewards) { rewards[feature] } ?: return false
+        return System.currentTimeMillis() < until
     }
 
     fun gate(feature: ProFeature, free: Boolean, item: String, action: () -> Unit) {

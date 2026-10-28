@@ -898,6 +898,9 @@
     <string name="pro_name_insights">لائیو ٹیکسٹ اور ٹیگز</string>
     <string name="pro_included">اس میں شامل ہے</string>
     <string name="pro_included_more">+%1$d مزید</string>
+    <string name="pro_grid_title">Pro میں سب کچھ</string>
+    <string name="pro_name_noads">کوئی اشتہار نہیں</string>
+    <string name="pro_feature_noads">بینر اور فل اسکرین اشتہارات ہمیشہ کے لیے ہٹا دیتا ہے</string>
     <string name="pro_try_hint">اس اسکرین پر آزمانے کے لیے کسی رنگ کو ٹیپ کریں</string>
     <string name="pro_smart_count">8 فریمز میں سے 4 رکھے گئے</string>
     <string name="pro_save_size">سائز −66%</string>

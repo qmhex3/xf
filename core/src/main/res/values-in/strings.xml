@@ -898,6 +898,9 @@
     <string name="pro_name_insights">Teks langsung dan tag</string>
     <string name="pro_included">Termasuk di dalamnya</string>
     <string name="pro_included_more">+%1$d lainnya</string>
+    <string name="pro_grid_title">Semua di Pro</string>
+    <string name="pro_name_noads">Tanpa iklan</string>
+    <string name="pro_feature_noads">Menghapus iklan banner dan layar penuh selamanya</string>
     <string name="pro_try_hint">Ketuk warna untuk mencobanya di layar ini</string>
     <string name="pro_smart_count">8 frame masuk, 4 dipertahankan</string>
     <string name="pro_save_size">Ukuran −66%</string>

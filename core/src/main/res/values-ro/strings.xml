@@ -898,6 +898,9 @@
     <string name="pro_name_insights">Text live și etichete</string>
     <string name="pro_included">Inclus în acest pachet</string>
     <string name="pro_included_more">+%1$d în plus</string>
+    <string name="pro_grid_title">Tot ce include Pro</string>
+    <string name="pro_name_noads">Fără reclame</string>
+    <string name="pro_feature_noads">Elimină definitiv reclamele banner și pe tot ecranul</string>
     <string name="pro_try_hint">Atinge o culoare pentru a o încerca pe acest ecran</string>
     <string name="pro_smart_count">8 cadre intrate, 4 păstrate</string>
     <string name="pro_save_size">Dimensiune −66%</string>

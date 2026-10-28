@@ -15,6 +15,7 @@ if [ "$FOUND" -eq 0 ]; then
   exit 1
 fi
 EXPECTED_ABIS=("arm64-v8a" "armeabi-v7a" "x86_64")
+if [ "${ARM64_ONLY:-}" = "true" ]; then EXPECTED_ABIS=("arm64-v8a"); fi
 for abi in "${EXPECTED_ABIS[@]}"; do
   found=0
   while IFS= read -r apk; do

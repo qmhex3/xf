@@ -898,6 +898,9 @@
     <string name="pro_name_insights">লাইভ টেক্সট ও ট্যাগ</string>
     <string name="pro_included">এর সাথে অন্তর্ভুক্ত</string>
     <string name="pro_included_more">+আরও %1$d টি</string>
+    <string name="pro_grid_title">Pro-তে সবকিছু</string>
+    <string name="pro_name_noads">কোনো বিজ্ঞাপন নেই</string>
+    <string name="pro_feature_noads">ব্যানার ও ফুল-স্ক্রিন বিজ্ঞাপন চিরতরে সরিয়ে দেয়</string>
     <string name="pro_try_hint">এই স্ক্রিনে চেষ্টা করতে একটি রঙে ট্যাপ করুন</string>
     <string name="pro_smart_count">8টি ফ্রেম ঢুকেছে, 4টি রাখা হয়েছে</string>
     <string name="pro_save_size">আকার −66%</string>

@@ -3,7 +3,7 @@ package com.frameout.core.util
 import java.util.Locale
 
 object AppLang {
-    val supported: List<String> = listOf("ar", "en", "tr", "ru", "fa", "ur", "fr", "pt", "hi", "ko", "ja", "zh", "zh-TW", "de", "ro", "es", "uk", "it", "nb", "ms", "id", "bn", "th", "vi", "nl", "pl")
+    val supported: List<String> = listOf("ar", "en", "tr", "ru", "fa", "ur", "fr", "pt", "hi", "ko", "ja", "zh", "zh-TW", "de", "ro", "es", "uk", "it", "nb", "ms", "id", "bn", "th", "vi", "nl", "pl", "sv", "fil")
 
     private val traditionalRegions = setOf("tw", "hk", "mo")
 
@@ -17,6 +17,7 @@ object AppLang {
         val normalized = when (code) {
             "no", "nn" -> "nb"
             "in" -> "id"
+            "tl" -> "fil"
             else -> code
         }
         return if (normalized in supported) normalized else "en"

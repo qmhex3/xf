@@ -898,6 +898,9 @@
     <string name="pro_name_insights">Testo dal vivo e tag</string>
     <string name="pro_included">Incluso con questo</string>
     <string name="pro_included_more">+%1$d altri</string>
+    <string name="pro_grid_title">Tutto in Pro</string>
+    <string name="pro_name_noads">Niente pubblicità</string>
+    <string name="pro_feature_noads">Rimuove per sempre banner e annunci a schermo intero</string>
     <string name="pro_try_hint">Tocca un colore per provarlo su questa schermata</string>
     <string name="pro_smart_count">8 fotogrammi in ingresso, 4 conservati</string>
     <string name="pro_save_size">Dimensione −66%</string>

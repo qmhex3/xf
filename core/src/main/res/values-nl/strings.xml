@@ -898,6 +898,9 @@
     <string name="pro_name_insights">Livetekst en tags</string>
     <string name="pro_included">Hierbij inbegrepen</string>
     <string name="pro_included_more">+%1$d meer</string>
+    <string name="pro_grid_title">Alles in Pro</string>
+    <string name="pro_name_noads">Geen advertenties</string>
+    <string name="pro_feature_noads">Verwijdert banner- en volledigschermadvertenties voorgoed</string>
     <string name="pro_try_hint">Tik op een kleur om hem op dit scherm uit te proberen</string>
     <string name="pro_smart_count">8 frames erin, 4 bewaard</string>
     <string name="pro_save_size">Grootte −66%</string>

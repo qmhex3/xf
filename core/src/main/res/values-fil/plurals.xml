@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="estimate">
+        <item quantity="one">≈ %1$d frame · ~%2$s MB</item>
+        <item quantity="other">≈ %1$d frame · ~%2$s MB</item>
+    </plurals>
+    <plurals name="plan_frames">
+        <item quantity="one">%1$d frame</item>
+        <item quantity="other">%1$d frame</item>
+    </plurals>
+    <plurals name="reduced_quality">
+        <item quantity="one">Na-save sa mas mababang resolusyon ang %1$d frame dahil hindi naibalik ng decoder ng device ang mga ito sa buong laki.</item>
+        <item quantity="other">Na-save sa mas mababang resolusyon ang %1$d frame dahil hindi naibalik ng decoder ng device ang mga ito sa buong laki.</item>
+    </plurals>
+    <plurals name="reduced_quality_to">
+        <item quantity="one">Na-save ang %1$d frame sa %4$d×%5$d sa halip na sa orihinal na %2$d×%3$d para magkasya sa memory ng device.</item>
+        <item quantity="other">Na-save ang %1$d frame sa %4$d×%5$d sa halip na sa orihinal na %2$d×%3$d para magkasya sa memory ng device.</item>
+    </plurals>
+    <plurals name="frame_count">
+        <item quantity="one">%1$d frame</item>
+        <item quantity="other">%1$d frame</item>
+    </plurals>
+    <plurals name="content_frames">
+        <item quantity="one">%1$d frame</item>
+        <item quantity="other">%1$d frame</item>
+    </plurals>
+    <plurals name="important_picked">
+        <item quantity="one">Napili ang %1$d mahalagang sandali</item>
+        <item quantity="other">Napili ang %1$d mahalagang sandali</item>
+    </plurals>
+    <plurals name="sharpest_picked">
+        <item quantity="one">Napili ang %1$d pinakamalinaw na frame</item>
+        <item quantity="other">Napili ang %1$d pinakamalinaw na frame</item>
+    </plurals>
+    <plurals name="duplicates_picked">
+        <item quantity="one">Napili ang %1$d duplicate na frame</item>
+        <item quantity="other">Napili ang %1$d duplicate na frame</item>
+    </plurals>
+    <plurals name="integrity_dup">
+        <item quantity="one">%1$d frame ang may parehong timestamp.</item>
+        <item quantity="other">%1$d frame ang may parehong timestamp.</item>
+    </plurals>
+    <plurals name="crop_all_hint">
+        <item quantity="one">Parehong bahagi para sa %1$d frame</item>
+        <item quantity="other">Parehong bahagi para sa %1$d frame</item>
+    </plurals>
+    <plurals name="crop_all_applied">
+        <item quantity="one">Nailapat ang crop sa %1$d frame</item>
+        <item quantity="other">Nailapat ang crop sa %1$d frame</item>
+    </plurals>
+    <plurals name="jump_back">
+        <item quantity="one">Paurong ng %1$d frame</item>
+        <item quantity="other">Paurong ng %1$d frame</item>
+    </plurals>
+    <plurals name="jump_forward">
+        <item quantity="one">Pasulong ng %1$d frame</item>
+        <item quantity="other">Pasulong ng %1$d frame</item>
+    </plurals>
+    <plurals name="jump_size">
+        <item quantity="one">Laki ng laktaw: %1$d frame (i-tap para palitan)</item>
+        <item quantity="other">Laki ng laktaw: %1$d frame (i-tap para palitan)</item>
+    </plurals>
+    <plurals name="queue_unsaved">
+        <item quantity="one">%1$d frame sa pila ang hindi pa na-save. Pindutin muli ang back para umalis nang hindi nagse-save.</item>
+        <item quantity="other">%1$d frame sa pila ang hindi pa na-save. Pindutin muli ang back para umalis nang hindi nagse-save.</item>
+    </plurals>
+    <plurals name="share_limited">
+        <item quantity="one">Ang unang %1$d frame lang ang ibabahagi</item>
+        <item quantity="other">Ang unang %1$d frame lang ang ibabahagi</item>
+    </plurals>
+    <plurals name="frames_deleted">
+        <item quantity="one">%1$d frame ang inilipat sa Nabura</item>
+        <item quantity="other">%1$d frame ang inilipat sa Nabura</item>
+    </plurals>
+    <plurals name="batch_videos">
+        <item quantity="one">%1$d video</item>
+        <item quantity="other">%1$d video</item>
+    </plurals>
+    <plurals name="projects_deleted">
+        <item quantity="one">Nabura ang %1$d proyekto</item>
+        <item quantity="other">Nabura ang %1$d proyekto</item>
+    </plurals>
+    <plurals name="projects_restored">
+        <item quantity="one">Naibalik ang %1$d proyekto</item>
+        <item quantity="other">Naibalik ang %1$d proyekto</item>
+    </plurals>
+    <plurals name="saved_deleted_n">
+        <item quantity="one">Nabura ang %1$d larawan</item>
+        <item quantity="other">Nabura ang %1$d larawan</item>
+    </plurals>
+    <plurals name="saved_restored_n">
+        <item quantity="one">Naibalik ang %1$d larawan</item>
+        <item quantity="other">Naibalik ang %1$d larawan</item>
+    </plurals>
+    <plurals name="saved_pruned_n">
+        <item quantity="one">Inalis ang %1$d na-save na item dahil wala na ang mga file nila sa device</item>
+        <item quantity="other">Inalis ang %1$d na-save na item dahil wala na ang mga file nila sa device</item>
+    </plurals>
+    <plurals name="confirm_delete_projects_n">
+        <item quantity="one">Burahin ang %1$d proyekto?</item>
+        <item quantity="other">Burahin ang %1$d proyekto?</item>
+    </plurals>
+    <plurals name="confirm_delete_saved_n">
+        <item quantity="one">Burahin ang %1$d na-save na larawan?</item>
+        <item quantity="other">Burahin ang %1$d na-save na larawan?</item>
+    </plurals>
+    <plurals name="backup_saved_many_n">
+        <item quantity="one">Na-export ang %1$d proyekto sa napiling folder</item>
+        <item quantity="other">Na-export ang %1$d proyekto sa napiling folder</item>
+    </plurals>
+    <plurals name="export_done_many_n">
+        <item quantity="one">Na-export ang %1$d proyekto</item>
+        <item quantity="other">Na-export ang %1$d proyekto</item>
+    </plurals>
+    <plurals name="saved_export_done_n">
+        <item quantity="one">Na-export ang %1$d larawan</item>
+        <item quantity="other">Na-export ang %1$d larawan</item>
+    </plurals>
+    <plurals name="onboarding_pick_burst">
+        <item quantity="one">%1$d magkakasunod na frame</item>
+        <item quantity="other">%1$d magkakasunod na frame</item>
+    </plurals>
+    <plurals name="onboarding_pick_excluded">
+        <item quantity="one">Hindi isinama: %1$d frame</item>
+        <item quantity="other">Hindi isinama: %1$d frame</item>
+    </plurals>
+    <plurals name="rating_stat">
+        <item quantity="one">%1$d matagumpay na pag-save sa ngayon</item>
+        <item quantity="other">%1$d matagumpay na pag-save sa ngayon</item>
+    </plurals>
+</resources>

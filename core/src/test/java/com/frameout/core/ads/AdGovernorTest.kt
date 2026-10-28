@@ -136,4 +136,74 @@ class AdGovernorTest {
         val low = AdRules.forTier(CountryTier.Low)
         assertTrue(low.maxPerDay < rules.maxPerDay && low.minGapMs > rules.minGapMs)
     }
+
+    @Test
+    fun actionsSurviveRestartSoQuickSessionsDoNotAvoidAds() {
+        val store = FakeAdStore()
+        val first = governor(store, 3)
+        ready(first)
+        val second = AdGovernor(store, rules)
+        second.startSession(0L)
+        assertEquals(AdVerdict.Allow, second.check(AdPlacement.ScreenBreak, true, true, 3 * minute, t0 + 3 * minute))
+    }
+
+    @Test
+    fun allowedAdIsOwedUntilSettled() {
+        val store = FakeAdStore()
+        val g = governor(store)
+        ready(g)
+        assertTrue(!g.owes(t0))
+        assertEquals(AdVerdict.Allow, check(g, 3 * minute))
+        assertTrue(g.owes(t0 + 3 * minute))
+        g.settle()
+        assertTrue(!g.owes(t0 + 3 * minute))
+    }
+
+    @Test
+    fun closingTheAppWithoutWatchingKeepsTheDebt() {
+        val store = FakeAdStore()
+        val first = governor(store)
+        ready(first)
+        assertEquals(AdVerdict.Allow, check(first, 3 * minute))
+        first.recordShown(3 * minute, t0 + 3 * minute)
+
+        val second = AdGovernor(store, rules)
+        second.startSession(0L)
+        assertTrue(second.owes(t0 + 10 * minute))
+        assertEquals(deny(DenyReason.Warmup), second.check(AdPlacement.ScreenBreak, true, true, 10_000L, t0 + 10 * minute))
+        assertEquals(AdVerdict.Allow, second.check(AdPlacement.ScreenBreak, true, true, 30_000L, t0 + 10 * minute))
+    }
+
+    @Test
+    fun debtSkipsActionCountButNotDailyCap() {
+        val store = FakeAdStore()
+        val g = AdGovernor(store, rules.copy(maxPerDay = 1))
+        repeat(3) { g.startSession(0L) }
+        ready(g)
+        assertEquals(AdVerdict.Allow, g.check(AdPlacement.ScreenBreak, true, true, 3 * minute, t0 + 3 * minute))
+        g.recordShown(3 * minute, t0 + 3 * minute)
+        assertEquals(deny(DenyReason.DailyCap), g.check(AdPlacement.ScreenBreak, true, true, 20 * minute, t0 + 20 * minute))
+        val next = AdGovernor(store, rules.copy(maxPerDay = 1))
+        next.startSession(0L)
+        assertEquals(AdVerdict.Allow, next.check(AdPlacement.ScreenBreak, true, true, 30_000L, t0 + day + minute))
+    }
+
+    @Test
+    fun settledDebtNeedsFreshActions() {
+        val g = governor()
+        ready(g)
+        assertEquals(AdVerdict.Allow, check(g, 3 * minute))
+        g.recordShown(3 * minute, t0 + 3 * minute)
+        g.settle()
+        assertEquals(deny(DenyReason.NotEnoughActions), check(g, 20 * minute))
+    }
+
+    @Test
+    fun staleDebtExpires() {
+        val g = governor()
+        ready(g)
+        assertEquals(AdVerdict.Allow, check(g, 3 * minute))
+        assertTrue(g.owes(t0 + 13 * day))
+        assertTrue(!g.owes(t0 + 15 * day))
+    }
 }

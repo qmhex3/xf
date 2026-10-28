@@ -898,6 +898,9 @@
     <string name="pro_name_insights">Живий текст і теги</string>
     <string name="pro_included">Входить до складу</string>
     <string name="pro_included_more">Ще +%1$d</string>
+    <string name="pro_grid_title">Усе в Pro</string>
+    <string name="pro_name_noads">Без реклами</string>
+    <string name="pro_feature_noads">Назавжди прибирає банери та повноекранну рекламу</string>
     <string name="pro_try_hint">Торкніться кольору, щоб приміряти його на цьому екрані</string>
     <string name="pro_smart_count">8 кадрів на вході, 4 збережено</string>
     <string name="pro_save_size">Розмір −66%</string>

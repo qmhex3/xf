@@ -53,7 +53,7 @@ Debug builds always use Google test ad units. Release builds with ads refuse to 
 
 ## Policy alignment
 
-- INTERNET only for optional image search (and Google Play Billing in the store build), contains ads (declare Ads = Yes in Play Console and complete Data safety for the ad SDK; add the ad provider's consent flow for EEA/UK)
+- INTERNET for optional image search and the signed announcements file (notifications + in-app cross-promo; no identifiers sent) (and Google Play Billing in the store build), contains ads (declare Ads = Yes in Play Console and complete Data safety for the ad SDK; add the ad provider's consent flow for EEA/UK)
 - LGPL FFmpeg (and BSD-2 dav1d) only when codec pack is used; licenses and versions are listed in About and in NOTICE.md
 - Privacy policy: PRIVACY.md
 - Notices: NOTICE.md

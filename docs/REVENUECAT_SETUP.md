@@ -28,7 +28,8 @@
 
 - شغّل نسخة debug مع `-PstoreBuild=true` (بدونها الدفع غير مفعّل أصلاً في التطبيق).
 - شراء Test Store يظهر نافذة محلية بدل Google Play.
-- لواجهة الدفع الداخلية القديمة (مع شراء عبر RevenueCat) استخدم `-PrevenueCatPaywall=false`.
+- واجهة الدفع الداخلية (تصميم التطبيق) هي الافتراضية في كل النسخ، والشراء يتم عبر RevenueCat.
+- شاشة Paywall من لوحة RevenueCat اختيارية فقط: `-PrevenueCatPaywall=true` (تظهر فارغة إن لم تضبط Paywall في اللوحة).
 
 ## 4. قبل النشر
 

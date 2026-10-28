@@ -898,6 +898,9 @@
     <string name="pro_name_insights">نص حيّ ووسوم</string>
     <string name="pro_included">يأتي معها</string>
     <string name="pro_included_more">+%1$d أخرى</string>
+    <string name="pro_grid_title">كل ما في Pro</string>
+    <string name="pro_name_noads">بدون إعلانات</string>
+    <string name="pro_feature_noads">يزيل إعلانات البانر وملء الشاشة نهائياً</string>
     <string name="pro_try_hint">اضغط على لون لتجرّبه على هذه الشاشة</string>
     <string name="pro_smart_count">8 إطارات، يبقى 4</string>
     <string name="pro_save_size">حجم أقل 66%</string>

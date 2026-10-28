@@ -2,10 +2,14 @@ package com.frameout.app.ads
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
 import com.frameout.app.BuildConfig
 import com.frameout.app.FrameOutApp
@@ -21,9 +25,11 @@ private fun rememberHub(): AdsHub = (LocalContext.current.applicationContext as 
 @Composable
 fun AdBannerSlot() {
     val hub = rememberHub()
-    val visible by hub.bannerVisible.collectAsState()
-    if (!visible) return
-    Box(Modifier.fillMaxWidth()) {
+    val state by hub.bannerState.collectAsState()
+    if (state == BannerState.Hidden) return
+    val widthDp = LocalConfiguration.current.screenWidthDp
+    val reserved = remember(widthDp) { hub.bannerHeightDp(widthDp) }
+    Box(Modifier.fillMaxWidth().heightIn(min = reserved.dp)) {
         AdBannerView(Modifier.fillMaxWidth(), BuildConfig.ADMOB_BANNER_ID, hub::onBannerResult)
     }
 }

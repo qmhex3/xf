@@ -32,9 +32,15 @@ class ProCatalogTest {
     }
 
     @Test
-    fun onlyIndigoAccentIsFree() {
+    fun onlyIndigoAndOceanAccentsAreFree() {
         assertTrue(ProCatalog.accentIsFree("indigo"))
+        assertTrue(ProCatalog.accentIsFree("ocean"))
+        assertFalse(ProCatalog.accentIsFree("emerald"))
         assertFalse(ProCatalog.accentIsFree("rose"))
+        assertFalse(ProCatalog.accentIsFree("dynamic"))
+        assertTrue(ProCatalog.accentIsProOnly("black"))
+        assertTrue(ProCatalog.accentIsProOnly("dynamic"))
+        assertFalse(ProCatalog.accentIsProOnly("emerald"))
     }
 
     @Test

@@ -54,7 +54,7 @@ Details: STORE.md · Privacy: PRIVACY.md · Notices: NOTICE.md
 - No binary assets in repo
 - Manual DI (AppContainer)
 - Compose foundation only (no Material3)
-- INTERNET only for optional image search (nothing is sent unless you pick an engine); ads are an opt-in build flag (-PadsEnabled=true) and absent from default builds, see docs/ADS_SETUP_AR.md
+- INTERNET for optional image search (nothing is sent unless you pick an engine) and a signed announcements file (see PRIVACY.md); ads are an opt-in build flag (-PadsEnabled=true) and absent from default builds, see docs/ADS_SETUP_AR.md
 
 ## Version
 

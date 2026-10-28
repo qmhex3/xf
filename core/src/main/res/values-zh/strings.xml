@@ -898,6 +898,9 @@
     <string name="pro_name_insights">实时文字和标签</string>
     <string name="pro_included">包含在内</string>
     <string name="pro_included_more">另有 %1$d 项</string>
+    <string name="pro_grid_title">Pro 全部功能</string>
+    <string name="pro_name_noads">无广告</string>
+    <string name="pro_feature_noads">永久移除横幅和全屏广告</string>
     <string name="pro_try_hint">点按一种颜色，即可在此界面试用</string>
     <string name="pro_smart_count">输入 8 帧，保留 4 帧</string>
     <string name="pro_save_size">体积 −66%</string>

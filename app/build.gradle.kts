@@ -7,6 +7,7 @@ val expectedCert = (System.getenv("CERT_SHA256") ?: providers.gradleProperty("ce
     .lowercase().filter { it in "0123456789abcdef" }
 
 val storeBuild = providers.gradleProperty("storeBuild").orElse("false").get() == "true"
+val abiSplit = providers.gradleProperty("abiSplit").orElse("false").get() == "true"
 val grandfather = providers.gradleProperty("grandfatherExisting").orElse("true").get() == "true"
 val paywallCutoffMs = providers.gradleProperty("paywallCutoffMs").orNull
     ?: System.currentTimeMillis().toString()
@@ -14,7 +15,10 @@ val revenueCatDebugKey = providers.gradleProperty("revenueCatTestKey")
     .orElse("test_sIwyqhzVezorxUrlHNemPlSBEDQ").get()
 val revenueCatReleaseKey = System.getenv("REVENUECAT_API_KEY")
     ?: providers.gradleProperty("revenueCatApiKey").orElse("").get()
-val revenueCatPaywall = providers.gradleProperty("revenueCatPaywall").orElse("true").get() == "true"
+// شاشة الشراء الافتراضية هي تصميم التطبيق الداخلي (PaywallSheet) في كل النسخ.
+// شاشة RevenueCat Paywall من اللوحة اختيارية فقط: -PrevenueCatPaywall=true
+// (تظهر فارغة إن لم تضبط Paywall لهذا المفتاح في لوحة RevenueCat).
+val revenueCatPaywall = providers.gradleProperty("revenueCatPaywall").orElse("false").get() == "true"
 val appProjectPath = project.path
 
 val adsEnabled = providers.gradleProperty("adsEnabled").orElse("false").get() == "true"
@@ -125,7 +129,7 @@ android {
     }
 
     androidResources {
-        localeFilters += listOf("en", "ar", "tr", "ru", "fa", "ur", "fr", "pt", "hi", "ko", "ja", "zh", "de", "ro", "es", "uk", "it", "nb", "ms", "id", "in", "bn", "th", "vi", "nl", "pl")
+        localeFilters += listOf("en", "ar", "tr", "ru", "fa", "ur", "fr", "pt", "hi", "ko", "ja", "zh", "de", "ro", "es", "uk", "it", "nb", "ms", "id", "in", "bn", "th", "vi", "nl", "pl", "sv", "fil")
     }
 
     buildFeatures {
@@ -169,9 +173,9 @@ android {
 
     splits {
         abi {
-            isEnable = !storeBuild
+            isEnable = !storeBuild || abiSplit
             reset()
-            include("armeabi-v7a", "arm64-v8a", "x86_64")
+            if (abiSplit) include("arm64-v8a") else include("armeabi-v7a", "arm64-v8a", "x86_64")
             isUniversalApk = false
         }
     }
@@ -189,6 +193,7 @@ dependencies {
     implementation(project(":engine"))
     implementation(project(":designsystem"))
     implementation(project(":codecpack"))
+    implementation(libs.androidx.work.runtime)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)

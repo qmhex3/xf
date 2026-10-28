@@ -898,6 +898,9 @@
     <string name="pro_name_insights">Live tekst og etiketter</string>
     <string name="pro_included">Inkludert i dette</string>
     <string name="pro_included_more">+%1$d til</string>
+    <string name="pro_grid_title">Alt i Pro</string>
+    <string name="pro_name_noads">Ingen reklame</string>
+    <string name="pro_feature_noads">Fjerner banner- og fullskjermreklame for godt</string>
     <string name="pro_try_hint">Trykk på en farge for å prøve den på denne skjermen</string>
     <string name="pro_smart_count">8 bilder inn, 4 beholdt</string>
     <string name="pro_save_size">Størrelse −66 %</string>

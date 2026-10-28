@@ -898,6 +898,9 @@
     <string name="pro_name_insights">Canlı metin ve etiketler</string>
     <string name="pro_included">Bununla birlikte gelenler</string>
     <string name="pro_included_more">+%1$d daha</string>
+    <string name="pro_grid_title">Pro\'daki her şey</string>
+    <string name="pro_name_noads">Reklamsız</string>
+    <string name="pro_feature_noads">Banner ve tam ekran reklamları kalıcı olarak kaldırır</string>
     <string name="pro_try_hint">Bu ekranda denemek için bir renge dokun</string>
     <string name="pro_smart_count">8 kare girdi, 4 tutuldu</string>
     <string name="pro_save_size">Boyut −%66</string>

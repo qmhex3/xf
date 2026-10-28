@@ -898,6 +898,9 @@
     <string name="pro_name_insights">실시간 텍스트 및 태그</string>
     <string name="pro_included">이 기능에 포함</string>
     <string name="pro_included_more">+%1$d개 더</string>
+    <string name="pro_grid_title">Pro의 모든 기능</string>
+    <string name="pro_name_noads">광고 없음</string>
+    <string name="pro_feature_noads">배너 및 전체 화면 광고를 영구적으로 제거합니다</string>
     <string name="pro_try_hint">색상을 탭하여 이 화면에 적용해 보세요</string>
     <string name="pro_smart_count">8개 중 4개 유지</string>
     <string name="pro_save_size">크기 −66%</string>

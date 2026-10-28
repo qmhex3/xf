@@ -40,6 +40,7 @@ object AdsBackendImpl : AdsBackend {
             { UserMessagingPlatform.loadAndShowConsentFormIfRequired(activity) { done(info.canRequestAds()) } },
             { done(info.canRequestAds()) }
         )
+        if (info.canRequestAds()) done(true)
     }
 
     private fun consentParams(activity: Activity): ConsentRequestParameters {
@@ -83,10 +84,10 @@ object AdsBackendImpl : AdsBackend {
     override fun interstitialReady(): Boolean =
         interstitial != null && SystemClock.elapsedRealtime() - interstitialAt < TTL_MS
 
-    override fun showInterstitial(activity: Activity, closed: () -> Unit): Boolean {
+    override fun showInterstitial(activity: Activity, shown: () -> Unit, closed: (Boolean) -> Unit): Boolean {
         val ad = interstitial?.takeIf { interstitialReady() } ?: return false
         interstitial = null
-        ad.fullScreenContentCallback = fullScreen(closed)
+        ad.fullScreenContentCallback = fullScreen(shown, closed)
         ad.show(activity)
         return true
     }
@@ -112,13 +113,39 @@ object AdsBackendImpl : AdsBackend {
     override fun showRewarded(activity: Activity, earned: () -> Unit, closed: () -> Unit): Boolean {
         val ad = rewarded?.takeIf { rewardedReady() } ?: return false
         rewarded = null
-        ad.fullScreenContentCallback = fullScreen(closed)
+        ad.fullScreenContentCallback = fullScreen({}) { closed() }
         ad.show(activity, OnUserEarnedRewardListener { earned() })
         return true
     }
 
-    private fun fullScreen(closed: () -> Unit) = object : FullScreenContentCallback() {
-        override fun onAdDismissedFullScreenContent() = closed()
-        override fun onAdFailedToShowFullScreenContent(error: AdError) = closed()
+    private fun fullScreen(shown: () -> Unit, closed: (Boolean) -> Unit) = object : FullScreenContentCallback() {
+        private var onScreen = false
+        private var finished = false
+
+        override fun onAdShowedFullScreenContent() {
+            onScreen = true
+            shown()
+        }
+
+        override fun onAdDismissedFullScreenContent() = finish(onScreen)
+        override fun onAdFailedToShowFullScreenContent(error: AdError) = finish(false)
+
+        private fun finish(completed: Boolean) {
+            if (finished) return
+            finished = true
+            closed(completed)
+        }
     }
+
+    override fun preloadBanner(context: Context, unitId: String, widthDp: Int, result: (AdLoad) -> Unit) {
+        BannerCache.obtain(context, unitId, widthDp, result)
+    }
+
+    override fun bannerReady(): Boolean = BannerCache.loaded
+
+    override fun bannerHeightDp(context: Context, widthDp: Int): Int = BannerCache.heightDp(context, widthDp)
+
+    override fun setBannerActive(active: Boolean) = BannerCache.setActive(active)
+
+    override fun bindActivity(activity: Activity?) = BannerCache.bind(activity)
 }

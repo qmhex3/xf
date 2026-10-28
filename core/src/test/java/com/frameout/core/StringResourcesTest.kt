@@ -7,7 +7,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class StringResourcesTest {
-    private val locales = listOf("values-ar", "values-tr", "values-ru", "values-fa", "values-ur", "values-fr", "values-pt", "values-hi", "values-ko", "values-ja", "values-zh", "values-zh-rTW", "values-de", "values-ro", "values-es", "values-uk", "values-it", "values-nb", "values-ms", "values-in", "values-bn", "values-th", "values-vi", "values-nl", "values-pl")
+    private val locales = listOf("values-ar", "values-tr", "values-ru", "values-fa", "values-ur", "values-fr", "values-pt", "values-hi", "values-ko", "values-ja", "values-zh", "values-zh-rTW", "values-de", "values-ro", "values-es", "values-uk", "values-it", "values-nb", "values-ms", "values-in", "values-bn", "values-th", "values-vi", "values-nl", "values-pl", "values-sv", "values-fil")
 
     private fun parse(dir: String, file: String) =
         DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(File("src/main/res/$dir/$file"))
@@ -157,6 +157,16 @@ class StringResourcesTest {
     @Test
     fun polishPluralsCoverOneFewManyOther() {
         plurals("values-pl").forEach { (name, quantities) -> assertEquals(name, listOf("one", "few", "many", "other"), quantities) }
+    }
+
+    @Test
+    fun swedishPluralsHaveOneAndOther() {
+        plurals("values-sv").forEach { (name, quantities) -> assertEquals(name, listOf("one", "other"), quantities) }
+    }
+
+    @Test
+    fun filipinoPluralsHaveOneAndOther() {
+        plurals("values-fil").forEach { (name, quantities) -> assertEquals(name, listOf("one", "other"), quantities) }
     }
 
     @Test

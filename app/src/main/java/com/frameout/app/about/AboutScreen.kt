@@ -101,6 +101,7 @@ private fun AboutCards(body: Animatable<Float, AnimationVector1D>) {
         ConnectGroup()
         AboutCard(ModeStrings.aboutLicensesTitle(), ModeStrings.aboutLicensesBody(), FrameIcons.Info, colors.accentC)
         Column { CodecPackLicenseSection() }
+        com.frameout.app.remote.PromoSlot(Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
     }
 }
 

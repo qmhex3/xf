@@ -25,6 +25,7 @@ class FrameOutApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        com.frameout.app.remote.RemoteWorker.schedule(this)
         StringSource.init(this)
         com.frameout.core.util.DiagLog.init(this)
         com.frameout.core.quality.ArabicOcr.init(this)

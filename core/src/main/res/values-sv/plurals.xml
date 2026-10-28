@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="estimate">
+        <item quantity="one">≈ %1$d bildruta · ~%2$s MB</item>
+        <item quantity="other">≈ %1$d bildrutor · ~%2$s MB</item>
+    </plurals>
+    <plurals name="plan_frames">
+        <item quantity="one">%1$d bildruta</item>
+        <item quantity="other">%1$d bildrutor</item>
+    </plurals>
+    <plurals name="reduced_quality">
+        <item quantity="one">En bildruta sparades i lägre upplösning eftersom enhetens avkodare inte kunde returnera den i full storlek.</item>
+        <item quantity="other">%1$d bildrutor sparades i lägre upplösning eftersom enhetens avkodare inte kunde returnera dem i full storlek.</item>
+    </plurals>
+    <plurals name="reduced_quality_to">
+        <item quantity="one">En bildruta sparades i %4$d×%5$d i stället för källans %2$d×%3$d för att rymmas i enhetens minne.</item>
+        <item quantity="other">%1$d bildrutor sparades i %4$d×%5$d i stället för källans %2$d×%3$d för att rymmas i enhetens minne.</item>
+    </plurals>
+    <plurals name="frame_count">
+        <item quantity="one">%1$d bildruta</item>
+        <item quantity="other">%1$d bildrutor</item>
+    </plurals>
+    <plurals name="content_frames">
+        <item quantity="one">%1$d bildruta</item>
+        <item quantity="other">%1$d bildrutor</item>
+    </plurals>
+    <plurals name="important_picked">
+        <item quantity="one">Markerade nyckelögonblicket</item>
+        <item quantity="other">Markerade %1$d nyckelögonblick</item>
+    </plurals>
+    <plurals name="sharpest_picked">
+        <item quantity="one">Markerade den skarpaste bildrutan</item>
+        <item quantity="other">Markerade de %1$d skarpaste bildrutorna</item>
+    </plurals>
+    <plurals name="duplicates_picked">
+        <item quantity="one">Markerade %1$d dubblettbildruta</item>
+        <item quantity="other">Markerade %1$d dubblettbildrutor</item>
+    </plurals>
+    <plurals name="integrity_dup">
+        <item quantity="one">%1$d bildruta har samma tidsstämpel.</item>
+        <item quantity="other">%1$d bildrutor har samma tidsstämpel.</item>
+    </plurals>
+    <plurals name="crop_all_hint">
+        <item quantity="one">Samma område för %1$d bildruta</item>
+        <item quantity="other">Samma område för %1$d bildrutor</item>
+    </plurals>
+    <plurals name="crop_all_applied">
+        <item quantity="one">Beskärningen tillämpades på %1$d bildruta</item>
+        <item quantity="other">Beskärningen tillämpades på %1$d bildrutor</item>
+    </plurals>
+    <plurals name="jump_back">
+        <item quantity="one">Bakåt %1$d bildruta</item>
+        <item quantity="other">Bakåt %1$d bildrutor</item>
+    </plurals>
+    <plurals name="jump_forward">
+        <item quantity="one">Framåt %1$d bildruta</item>
+        <item quantity="other">Framåt %1$d bildrutor</item>
+    </plurals>
+    <plurals name="jump_size">
+        <item quantity="one">Hoppstorlek: %1$d bildruta (tryck för att ändra)</item>
+        <item quantity="other">Hoppstorlek: %1$d bildrutor (tryck för att ändra)</item>
+    </plurals>
+    <plurals name="queue_unsaved">
+        <item quantity="one">%1$d bildruta i kön är inte sparad. Tryck på bakåt igen för att lämna utan att spara.</item>
+        <item quantity="other">%1$d bildrutor i kön är inte sparade. Tryck på bakåt igen för att lämna utan att spara.</item>
+    </plurals>
+    <plurals name="share_limited">
+        <item quantity="one">Delar bara den första bildrutan (%1$d)</item>
+        <item quantity="other">Delar bara de första %1$d bildrutorna</item>
+    </plurals>
+    <plurals name="frames_deleted">
+        <item quantity="one">%1$d bildruta flyttades till Borttagna</item>
+        <item quantity="other">%1$d bildrutor flyttades till Borttagna</item>
+    </plurals>
+    <plurals name="batch_videos">
+        <item quantity="one">%1$d video</item>
+        <item quantity="other">%1$d videor</item>
+    </plurals>
+    <plurals name="projects_deleted">
+        <item quantity="one">Projektet har tagits bort</item>
+        <item quantity="other">%1$d projekt har tagits bort</item>
+    </plurals>
+    <plurals name="projects_restored">
+        <item quantity="one">Projektet har återställts</item>
+        <item quantity="other">%1$d projekt har återställts</item>
+    </plurals>
+    <plurals name="saved_deleted_n">
+        <item quantity="one">Bilden har tagits bort</item>
+        <item quantity="other">%1$d bilder har tagits bort</item>
+    </plurals>
+    <plurals name="saved_restored_n">
+        <item quantity="one">Bilden har återställts</item>
+        <item quantity="other">%1$d bilder har återställts</item>
+    </plurals>
+    <plurals name="saved_pruned_n">
+        <item quantity="one">1 sparat objekt togs bort eftersom dess fil inte längre finns på enheten</item>
+        <item quantity="other">%1$d sparade objekt togs bort eftersom deras filer inte längre finns på enheten</item>
+    </plurals>
+    <plurals name="confirm_delete_projects_n">
+        <item quantity="one">Ta bort det här projektet?</item>
+        <item quantity="other">Ta bort %1$d projekt?</item>
+    </plurals>
+    <plurals name="confirm_delete_saved_n">
+        <item quantity="one">Ta bort den här sparade bilden?</item>
+        <item quantity="other">Ta bort %1$d sparade bilder?</item>
+    </plurals>
+    <plurals name="backup_saved_many_n">
+        <item quantity="one">Projektet exporterades till den valda mappen</item>
+        <item quantity="other">%1$d projekt exporterades till den valda mappen</item>
+    </plurals>
+    <plurals name="export_done_many_n">
+        <item quantity="one">Projektet exporterades</item>
+        <item quantity="other">%1$d projekt exporterades</item>
+    </plurals>
+    <plurals name="saved_export_done_n">
+        <item quantity="one">Exporterade 1 bild</item>
+        <item quantity="other">Exporterade %1$d bilder</item>
+    </plurals>
+    <plurals name="onboarding_pick_burst">
+        <item quantity="one">%1$d bildruta i följd</item>
+        <item quantity="other">%1$d bildrutor i följd</item>
+    </plurals>
+    <plurals name="onboarding_pick_excluded">
+        <item quantity="one">Utesluten: %1$d bildruta</item>
+        <item quantity="other">Uteslutna: %1$d bildrutor</item>
+    </plurals>
+    <plurals name="rating_stat">
+        <item quantity="one">%1$d lyckad sparning hittills</item>
+        <item quantity="other">%1$d lyckade sparningar hittills</item>
+    </plurals>
+</resources>

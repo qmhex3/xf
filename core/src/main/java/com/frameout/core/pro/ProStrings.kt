@@ -84,6 +84,10 @@ object ProStrings {
         ProFeature.General -> s(R.string.pro_subtitle)
     }
 
+    fun gridTitle() = s(R.string.pro_grid_title)
+    fun noAdsName() = s(R.string.pro_name_noads)
+    fun noAdsLine() = s(R.string.pro_feature_noads)
+
     fun doneTitle(): String = s(R.string.pro_done_title)
 
     fun doneBody(): String = s(R.string.pro_done_body)

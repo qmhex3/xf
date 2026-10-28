@@ -30,7 +30,9 @@ private val AppLanguages = listOf(
     AppLanguage("th", "ไทย"),
     AppLanguage("vi", "Tiếng Việt"),
     AppLanguage("nl", "Nederlands"),
-    AppLanguage("pl", "Polski")
+    AppLanguage("pl", "Polski"),
+    AppLanguage("sv", "Svenska"),
+    AppLanguage("fil", "Filipino")
 )
 
 internal fun languageOptions(): List<ChoiceOption> = buildList {

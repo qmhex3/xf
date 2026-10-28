@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Frame out</string>
+    <string name="shortcut_capture_short">Fånga bildruta</string>
+    <string name="shortcut_capture_long">Fånga en bildruta från den senaste videon</string>
+    <string name="tile_capture_label">Fånga bildruta</string>
+    <string name="incoming_copy_failed">Åtkomsten till en delad video kunde inte behållas. Öppna den från galleriet i stället, eller frigör lagringsutrymme och dela igen.</string>
+    <string name="incoming_unsupported">Den här filtypen kan inte öppnas. Dela en video, GIF eller bild i stället.</string>
+</resources>

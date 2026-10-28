@@ -177,8 +177,9 @@ private fun PaywallBody(
     Column(modifier.verticalScroll(rememberScrollState()).padding(bottom = 6.dp)) {
         if (kind == null) PaywallHero() else PaywallShowcase(kind, FrameTheme.accent, onAccent)
         PaywallHeader(feature, trialsLeft, Modifier.revealed(reveal, 0))
-        if (kind == null) FeatureMarquee(Modifier.padding(top = 14.dp).revealed(reveal, 2)) else IncludedWithThis(kind, motion, Modifier.padding(top = 12.dp))
+        if (kind == null) ProFeatureList(motion, null, Modifier.padding(top = 16.dp)) else IncludedWithThis(kind, motion, Modifier.padding(top = 12.dp))
         PlanList(offers, selected?.plan, onPick, Modifier.padding(start = 16.dp, end = 16.dp, top = 18.dp).revealed(reveal, 3))
         TrialTimeline(selected?.freeTrial == true, selected?.trialDays ?: 0, Modifier.padding(start = 16.dp, end = 16.dp, top = 12.dp).revealed(reveal, 4))
+        if (kind != null) ProFeatureList(motion, feature, Modifier.padding(top = 22.dp, bottom = 8.dp))
     }
 }

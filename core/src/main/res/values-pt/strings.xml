@@ -898,6 +898,9 @@
     <string name="pro_name_insights">Texto ao vivo e tags</string>
     <string name="pro_included">Incluído nisto</string>
     <string name="pro_included_more">+%1$d mais</string>
+    <string name="pro_grid_title">Tudo no Pro</string>
+    <string name="pro_name_noads">Sem anúncios</string>
+    <string name="pro_feature_noads">Remove de vez os anúncios de banner e de tela cheia</string>
     <string name="pro_try_hint">Toque em uma cor para testá-la nesta tela</string>
     <string name="pro_smart_count">8 quadros entram, 4 mantidos</string>
     <string name="pro_save_size">Tamanho −66%</string>

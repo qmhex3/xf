@@ -898,6 +898,9 @@
     <string name="pro_name_insights">Văn bản trực tiếp và thẻ</string>
     <string name="pro_included">Bao gồm trong gói này</string>
     <string name="pro_included_more">+%1$d mục khác</string>
+    <string name="pro_grid_title">Mọi thứ trong Pro</string>
+    <string name="pro_name_noads">Không quảng cáo</string>
+    <string name="pro_feature_noads">Gỡ bỏ vĩnh viễn quảng cáo biểu ngữ và toàn màn hình</string>
     <string name="pro_try_hint">Nhấn vào một màu để thử trên màn hình này</string>
     <string name="pro_smart_count">Vào 8 khung hình, giữ 4</string>
     <string name="pro_save_size">Dung lượng −66%</string>

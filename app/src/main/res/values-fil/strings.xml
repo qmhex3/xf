@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Frame out</string>
+    <string name="shortcut_capture_short">Kunin ang frame</string>
+    <string name="shortcut_capture_long">Kunin ang frame mula sa pinakabagong video</string>
+    <string name="tile_capture_label">Kunin ang frame</string>
+    <string name="incoming_copy_failed">Hindi napanatili ang access sa ibinahaging video. Buksan na lang ito mula sa gallery, o magbakante ng espasyo at ibahagi muli.</string>
+    <string name="incoming_unsupported">Hindi mabubuksan ang ganitong uri ng file. Mag-share na lang ng video, GIF o larawan.</string>
+</resources>

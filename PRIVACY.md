@@ -1,6 +1,6 @@
 # Frame out Privacy Policy
 
-Last updated: 2026-10-19
+Last updated: 2026-10-28
 
 ## Summary
 
@@ -8,7 +8,15 @@ Frame out is a local video frame extraction app. Your videos and frames are proc
 
 ## Network
 
-The app declares the INTERNET permission only for optional image search: when you pick a search engine, the chosen frame is uploaded to that site inside a private in-app browser (cookies and cache are cleared on close). Apart from that and the advertising described below, nothing else is sent.
+The app declares the INTERNET permission for three purposes: (1) optional image search, (2) advertising and purchase verification (below), and (3) downloading the signed announcements file described under "Announcements and promotions". For image search: when you pick a search engine, the chosen frame is uploaded to that site inside a private in-app browser (cookies and cache are cleared on close). Apart from that and the advertising described below, nothing else is sent.
+
+## Announcements and promotions
+
+The app periodically downloads one small public file (text, links and optionally images or video) from static file hosting to show occasional notifications (for example an occasion greeting, an update note or an important notice) and an in-app card introducing our other apps. These are not AdMob ads and nothing opens unless you tap the card.
+
+- The request is an ordinary download of a public file. No account, advertising ID or device identifier is attached, and content is not personalised. As with any website, the hosting provider may log the IP address and time of the request under its own policy; we do not use those logs to identify you.
+- The file is digitally signed (ECDSA P-256). The app ignores any file whose signature, app ID or expiry does not verify, and checks the SHA-256 of every image or video before showing it. Media is cached temporarily on the device.
+- You can turn off the "Announcements" notification channel or the notification permission in Android settings at any time.
 
 ## Advertising
 
@@ -34,14 +42,14 @@ Uninstalling the app removes private app storage. Gallery exports remain until t
 |------------|---------|
 | READ_MEDIA_VIDEO / READ_MEDIA_IMAGES / READ_EXTERNAL_STORAGE (legacy) | Read videos and images the user selects |
 | READ_MEDIA_VISUAL_USER_SELECTED | Partial media access on Android 14+ |
-| POST_NOTIFICATIONS | Progress for background extraction |
+| POST_NOTIFICATIONS | Progress for background extraction and occasional announcements |
 | FOREGROUND_SERVICE / DATA_SYNC / MEDIA_PROCESSING | Continue extraction while the app is backgrounded |
 | WAKE_LOCK | Keep CPU available during long extraction |
 | com.android.vending.BILLING (Google Play build) | Added by the Google Play Billing Library so the app can show prices and check whether you own Pro |
 | ACCESS_NETWORK_STATE | Required by the bundled on-device ML Kit analyzers; no data leaves the device through it |
 | ACCESS_MEDIA_LOCATION | Read the GPS tag stored in a selected video or image so it can be copied into frames you export or capture when the keep-location setting is on. The app never requests live device location |
 
-No contacts, microphone, camera, or accounts access. The app does not use GPS or any live device location, and uses the network only for the optional image search described above and, in the Google Play build, for purchases handled by Google Play. It only reads the location metadata already embedded in media you choose, and only when the keep-location setting is on, to write it into the images you export or capture from that media. This metadata stays on the device and is never transmitted. Gallery exports and shares can carry that metadata, so check the result before sharing it.
+No contacts, microphone, camera, or accounts access. The app does not use GPS or any live device location, and uses the network only for the optional image search, advertising, the signed announcements file described above and, in the Google Play build, for purchases handled by Google Play. It only reads the location metadata already embedded in media you choose, and only when the keep-location setting is on, to write it into the images you export or capture from that media. This metadata stays on the device and is never transmitted. Gallery exports and shares can carry that metadata, so check the result before sharing it.
 
 ## Sharing
 

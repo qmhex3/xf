@@ -44,6 +44,8 @@ class TagText(
             "vi" -> TagTextVi.text
             "nl" -> TagTextNl.text
             "pl" -> TagTextPl.text
+            "sv" -> TagTextSv.text
+            "fil" -> TagTextFil.text
             else -> null
         }
     }

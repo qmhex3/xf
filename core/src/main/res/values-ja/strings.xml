@@ -898,6 +898,9 @@
     <string name="pro_name_insights">ライブテキストとタグ</string>
     <string name="pro_included">これに含まれるもの</string>
     <string name="pro_included_more">ほか%1$d件</string>
+    <string name="pro_grid_title">Proのすべて</string>
+    <string name="pro_name_noads">広告なし</string>
+    <string name="pro_feature_noads">バナー広告と全画面広告をずっと非表示にします</string>
     <string name="pro_try_hint">色をタップするとこの画面で試せます</string>
     <string name="pro_smart_count">8フレーム中4フレームを残す</string>
     <string name="pro_save_size">サイズ −66%</string>

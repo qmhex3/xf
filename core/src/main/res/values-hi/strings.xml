@@ -898,6 +898,9 @@
     <string name="pro_name_insights">लाइव टेक्स्ट और टैग</string>
     <string name="pro_included">इसके साथ शामिल</string>
     <string name="pro_included_more">+%1$d और</string>
+    <string name="pro_grid_title">Pro में सब कुछ</string>
+    <string name="pro_name_noads">कोई विज्ञापन नहीं</string>
+    <string name="pro_feature_noads">बैनर और फ़ुल-स्क्रीन विज्ञापन हमेशा के लिए हटाता है</string>
     <string name="pro_try_hint">इस स्क्रीन पर आज़माने के लिए कोई रंग टैप करें</string>
     <string name="pro_smart_count">8 फ़्रेम आए, 4 रखे गए</string>
     <string name="pro_save_size">आकार −66%</string>
